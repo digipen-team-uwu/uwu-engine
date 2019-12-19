@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Spine Animation</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="spine-animation">Spine Animation</h1>
+<ul>
+<li><a href="#spine-animation">Spine Animation</a>
+<ul>
+<li><a href="#load-a-spine-skeleton-data">Load a spine skeleton data</a></li>
+<li><a href="#create-a-new-spine-animation-component">Create a new spine animation component</a></li>
+<li><a href="#get-a-spine-animation-component">Get a spine animation component</a></li>
+<li><a href="#what-to-do-with-a-spine-animation">What to do with a spine animation</a>
+<ul>
+<li><a href="#update-the-animation">Update the animation</a></li>
+<li><a href="#change-currently-playing-animation">Change currently playing animation</a></li>
+<li><a href="#pause-and-start-playing-the-animation">Pause and start playing the animation</a></li>
+<li><a href="#get-raw-animation">Get Raw animation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>This component is part of the <a href="../../README.html">UWU Engine</a>.</p>
+<p>This is a full implementation of spine c runtime.</p>
+<p>A spine animation component stores all the data about the current animation state and animation sequence data.<br>
+It can't be used without a corresponding <a href="SpineSkeleton.html">spine skeleton</a>.</p>
+<p>To use this component, include</p>
+<pre><code class="language-cpp"><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"SpineAnimationComponentManager.h"</span></span>
+</div></code></pre>
+<h2 id="load-a-spine-skeleton-data">Load a spine skeleton data</h2>
+<p>To load a skeleton, you need a <code>spine atlas</code> file for texture atlas data and a <code>spine json</code> skeleton data. Go to <a href="../Stateless/SpineData.html">Spine Data Manager</a> to learn more about how to load a spine skeleton</p>
+<h2 id="create-a-new-spine-animation-component">Create a new spine animation component</h2>
+<p>To create and attach a new spine animation component, call this function</p>
+<pre><code class="language-cpp"><div>SpineAnimationComponentManager::SetAnimation(EntityID ID, SpineData&amp; spineData);
+SpineAnimationComponentManager::SetAnimation(EntityID ID, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* name);
+</div></code></pre>
+<p>You can either call this function by providing a <a href="../Stateless/SpineData.html">spine data</a> or provide the name of spine data that's already being loaded in the engine.</p>
+<h2 id="get-a-spine-animation-component">Get a spine animation component</h2>
+<p>Get a spine animation component of an <a href="../Systems/EntityManager.html">entity</a> by calling this function</p>
+<pre><code class="language-cpp"><div>SpineAnimation&amp; animation = SpineAnimationComponentManager::GetAnimation(EntityID);
+</div></code></pre>
+<h2 id="what-to-do-with-a-spine-animation">What to do with a spine animation</h2>
+<h3 id="update-the-animation">Update the animation</h3>
+<p>Update the animation by calling this function</p>
+<pre><code class="language-cpp"><div>animation.UpdateAnimation(<span class="hljs-keyword">float</span> dt);
+</div></code></pre>
+<p>You can provide any time step you want to this function to forward the animation.</p>
+<h3 id="change-currently-playing-animation">Change currently playing animation</h3>
+<p>Change the currently playing animation by calling this function</p>
+<pre><code class="language-cpp"><div>animation.ChangeAnimation(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* animationName, <span class="hljs-keyword">bool</span> isLooping);
+</div></code></pre>
+<p>The animation name have to be an existing animation name of the skeleton this animation is attached to or the whole engine will crash.<br>
+<code>TODO:: Fix this after logging system is in place</code><br>
+You can choose to let this animation loop or not by providing the <code>isLooping</code> boolean.</p>
+<h3 id="pause-and-start-playing-the-animation">Pause and start playing the animation</h3>
+<p>You can pause the animation by calling</p>
+<pre><code class="language-cpp"><div>animation.StopPlaying();
+</div></code></pre>
+<p>And start playing the animation by calling</p>
+<pre><code class="language-cpp"><div>animation.StartPlaying();
+</div></code></pre>
+<p>You can also check if the animation is currently playing by calling</p>
+<pre><code class="language-cpp"><div><span class="hljs-keyword">bool</span> isPlaying = animation.IsPlaying();
+</div></code></pre>
+<h3 id="get-raw-animation">Get Raw animation</h3>
+<p>There's a lot you can do with the raw spine animation instance, you can get that with</p>
+<pre><code class="language-cpp"><div>spAnimationState* spAnimation = animation.GetAnimationState();
+</div></code></pre>
+<p>To see what you can do with raw spine animation instance, check the <a href="http://esotericsoftware.com/spine-api-reference">official spine api</a>.</p>
+
+    </body>
+    </html>

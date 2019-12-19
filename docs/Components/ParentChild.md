@@ -1,0 +1,1 @@
+The hierarchical component allows any entity to have as many child objects as it needs. Parents can access the IDs of all their children and children can access the id of their parent.

@@ -1,0 +1,23 @@
+[submodule "lib/magic_enum"]
+	url = https://github.com/Neargye/magic_enum.git
+[submodule "lib/glfw"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "lib/rectpack2D"]
+	path = lib/rectpack2D
+	url = https://github.com/TeamHypersomnia/rectpack2D.git
+[submodule "lib/rapidjson"]
+	path = lib/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "lib/glew"]
+	path = lib/glew
+	url = https://github.com/Perlmint/glew-cmake.git
+[submodule "lib/stb"]
+	path = lib/stb
+	url = https://github.com/nothings/stb.git

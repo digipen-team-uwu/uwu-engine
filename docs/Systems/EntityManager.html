@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Entity Manager</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="entity-manager">Entity Manager</h1>
+<p>This is a system of <a href="../../README.html">UWU Engine</a></p>
+<p>This is part of our data oriented ECS engine implementation. The entity manager stores all the entity ID and type information. It also manages the life time of all entities.</p>
+<p>All component managers need to communicate with entity manager for indexing into it's corresponding container. The entity manager is also responsible for signaling all component managers when an entity gets destroyed.</p>
+
+    </body>
+    </html>

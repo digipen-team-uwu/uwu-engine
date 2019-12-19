@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Spine Skeleton</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="spine-skeleton">Spine Skeleton</h1>
+<ul>
+<li><a href="#spine-skeleton">Spine Skeleton</a>
+<ul>
+<li><a href="#load-a-spine-skeleton-data">Load a spine skeleton data</a></li>
+<li><a href="#create-a-new-spine-skeleton-component">Create a new spine skeleton component</a></li>
+<li><a href="#get-a-spine-skeleton-component">Get a spine skeleton component</a></li>
+<li><a href="#what-to-do-with-a-spine-skeleton">What to do with a spine skeleton</a>
+<ul>
+<li><a href="#change-skin">Change skin</a></li>
+<li><a href="#get-raw-skeleton">Get Raw skeleton</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>This component is part of the <a href="../../README.html">UWU Engine</a>.</p>
+<p>This is a full implementation of spine c runtime.</p>
+<p>Spine skeleton is an renderable instance of <a href="../Stateless/SpineData.html">spine data</a>.</p>
+<p>To use this component, include</p>
+<pre><code class="language-cpp"><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"SpineSkeletonComponentManager"</span></span>
+</div></code></pre>
+<h2 id="load-a-spine-skeleton-data">Load a spine skeleton data</h2>
+<p>To load a skeleton, you need a <code>spine atlas</code> file for texture atlas data and a <code>spine json</code> skeleton data. Go to <a href="../Stateless/SpineData.html">Spine Data Manager</a> to learn more about how to load a spine skeleton</p>
+<h2 id="create-a-new-spine-skeleton-component">Create a new spine skeleton component</h2>
+<p>To create and attach a new spine skeleton component, call this function</p>
+<pre><code class="language-cpp"><div>SpineSkeletonComponentManager::SetSkeleton(EntityID ID, SpineData&amp; spineData);
+SpineSkeletonComponentManager::SetSkeleton(EntityID ID, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* name);
+</div></code></pre>
+<p>You can either call this function by providing a <a href="../Stateless/SpineData.html">spine data</a> or provide the name of spine data that's already being loaded in the engine.</p>
+<h2 id="get-a-spine-skeleton-component">Get a spine skeleton component</h2>
+<p>Get a spine skeleton component of an <a href="../Systems/EntityManager.html">entity</a> by calling this function</p>
+<pre><code class="language-cpp"><div>SpineSkeleton&amp; skeleton = SpineSkeletonComponentManager::GetSkeleton(EntityID);
+</div></code></pre>
+<h2 id="what-to-do-with-a-spine-skeleton">What to do with a spine skeleton</h2>
+<h3 id="change-skin">Change skin</h3>
+<p>You can change the skin of the current animation by simply calling.</p>
+<pre><code class="language-cpp"><div>skeleton.ChangeSkin(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* skinName);
+</div></code></pre>
+<p>The skin name need to be a name that the skeleton has, the whole engine will crash if a non-existing skin name is used with this function.<br>
+<code>TODO:: Fix this after logging system is in place</code></p>
+<h3 id="get-raw-skeleton">Get Raw skeleton</h3>
+<p>There's a lot you can do with the raw spine skeleton instance, you can get that with</p>
+<pre><code class="language-cpp"><div>spSkeleton* spSkeleton = skeleton.GetSkeleton();
+</div></code></pre>
+<p>To see what you can do with raw spine skeleton instance, check the <a href="http://esotericsoftware.com/spine-api-reference">official spine api</a>.</p>
+
+    </body>
+    </html>

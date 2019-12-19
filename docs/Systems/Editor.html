@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Editor</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="editor">Editor</h1>
+<ul>
+<li><a href="#launching-the-editor">Launching the Editor</a></li>
+<li><a href="#closing-the-editor">Closing the Editor</a></li>
+</ul>
+<p>This system uses the Dear ImGui library to create a GUI editor for existing game objects.</p>
+<p>In order to launch the Editor from your code, you must first include the file Editor.h.</p>
+<h2 id="launching-the-editor">Launching the Editor</h2>
+<p>Since all the relevant Editor functions are static, you can launch it without having a reference to a specific instantiation of the Editor.
+The code to launch the Editor then looks like this:</p>
+<pre><code class="language-cpp"><div>Editor::Start();
+</div></code></pre>
+<h2 id="closing-the-editor">Closing the Editor</h2>
+<p>For safety's sake, it is important to close the Editor down before transferring between game states. This is different from destructing the Editor.
+To do so, simply call</p>
+<pre><code class="language-cpp"><div>Editor::Stop();
+</div></code></pre>
+<p>This will safely close the editor until is is reopened using Start.</p>
+
+    </body>
+    </html>

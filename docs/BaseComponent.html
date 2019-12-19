@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Base Component</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="base-component">Base Component</h1>
+<ul>
+<li><a href="#base-component">Base Component</a>
+<ul>
+<li><a href="#interface">Interface</a></li>
+<li><a href="#creating-a-new-component">Creating A New Component</a>
+<ul>
+<li><a href="#class-declaration">Class Declaration</a></li>
+<li><a href="#required-implementations">Required Implementations</a></li>
+<li><a href="#specific-implementation">Specific Implementation</a></li>
+<li><a href="#registration">Registration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The base component is a component of <a href="../README.html">uwu Engine</a>.</p>
+<p>It automatically registers itself into the <a href="./Systems/EntityManager.html">Entity Manager</a> which will handle construction, initialization, updating, and deconstruction of the component.
+It is relatively easy to add new components to the engine.
+The base component is available in the <code>BaseComponent.h</code> header.</p>
+<h2 id="interface">Interface</h2>
+<p>The base component has a simple interface. The IsActive method returns a boolean that represents whether the component has been activated for a certain entity.</p>
+<h2 id="creating-a-new-component">Creating A New Component</h2>
+<h3 id="class-declaration">Class Declaration</h3>
+<p>Any new component needs to first extend the BaseComponent class. It also needs to templatize the BaseComponent on itself, i.e.</p>
+<pre><code class="language-cpp"><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyNewComponent</span> :</span> <span class="hljs-keyword">public</span> BaseComponent&lt;MyNewComponent&gt;
+{
+...
+}
+</div></code></pre>
+<p>Note that it <strong>must</strong> be publicly inherited.</p>
+<h3 id="required-implementations">Required Implementations</h3>
+<p>There are only a few more things to implement to make the new component work correctly. First, it must implement a default constructor and a destructor. It also needs to implement the functions InitObject and ShutdownObject, which take an entity's ID number and return void. It also needs to implement a function Update that has no parameters and returns void.</p>
+<pre><code class="language-cpp"><div>MyNewComponent();
+~MyNewComponent();
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InitObject</span><span class="hljs-params">(EntityID ID)</span> override</span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ShutdownObject</span><span class="hljs-params">(EntityID ID)</span> override</span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span><span class="hljs-params">()</span> override</span>;
+</div></code></pre>
+<p>The constructor should initialize any data that the entire system needs. The destructor should release this data.
+The InitObject function should initialize any data the component needs for the given entity. The ShutdownObject function should flush the data a component was using for a given entity. The Update function will be run once per frame, and should handle any state changes that the system needs. If any of these functions are not required, they should have a blank implementation in the header file.</p>
+<h3 id="specific-implementation">Specific Implementation</h3>
+<p>Now, the component can be implemented. <strong>All members and methods must be static.</strong> If you need a dynamically allocated member, use a static pointer and allocate it appropriately. The only exception to this is if your component has further children (such as the <a href="./Components/Behavior.html">Behavior Component</a>.)
+Note: It is preferable to initialize static data members in the static initializer instead of the constructor.</p>
+<h3 id="registration">Registration</h3>
+<p>Immediately following the declaration of the class, it is time to set up the auto-registration. You can choose what order your component updates in, as it pertains to the SystemOrder. All components update within the <a href="./Systems/EntityManager.html">Entity Manager</a>, but some components need to update in a particular order. If this is the case, add an entry to the <code>ComponentUpdateOrder</code> enumeration for your system. If the order your component updates in does not matter, simply use <code>ComponentUpdateOrder::LAST</code>. To enable the auto-registration:</p>
+<pre><code class="language-cpp"><div><span class="hljs-keyword">size_t</span> RegisterComponentHelper&lt;MyNewComponent&gt;::RegisterComponentHelper_ID = EntityManager::AddComponent&lt;MyNewComponent&gt;(ComponentUpdateOrder:LAST);
+</div></code></pre>
+<p>Whew. With that line, registration will be completed for you and there is nothing else to do. Your component is complete!</p>
+
+    </body>
+    </html>

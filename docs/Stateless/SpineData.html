@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Spine Data</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="spine-data">Spine Data</h1>
+<p>Spine data is how a spine skeleton and animation data are being loaded in <a href="../../README.html">UWU Engine</a>.</p>
+<p>This is a full implementation of spine c runtime.</p>
+<p>To load a spine data, you need to include</p>
+<pre><code class="language-cpp"><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"SpineData.h"</span></span>
+</div></code></pre>
+<h2 id="how-to-load-a-spine-data">How to load a spine data</h2>
+<p>This is easy, you just call this</p>
+<pre><code class="language-cpp"><div>SpineDataManager::LoadData(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * name, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* atlasPath, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* jsonPath);
+SpineDataManager::LoadData(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* name, SpineData&amp; data);
+</div></code></pre>
+<p>Provide the <code>spine json path</code> and <code>spine atlas path</code> and the name of this spine skeleton data, then everything will be good to go.</p>
+<h2 id="generate-skeleton-and-animation-component">Generate skeleton and animation component</h2>
+<p>Check <a href="../Components/SpineSkeleton.html">spine skeleton</a> and <a href="../Components/SpineAnimation.html">spine animation</a> to learn about how to use the spine data to generate skeleton and animation components.</p>
+
+    </body>
+    </html>

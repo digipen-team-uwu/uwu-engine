@@ -1,0 +1,1 @@
+The debug manager displays the velocities and colliders of all objects as lines on demand.

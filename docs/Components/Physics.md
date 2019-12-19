@@ -1,0 +1,1 @@
+The physics component stores all data needed to update the transform realistically, such as velocity, acceleration, and mass. It also iterates through all the components every frame to update all physics.

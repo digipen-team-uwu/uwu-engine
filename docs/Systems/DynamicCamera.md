@@ -1,0 +1,1 @@
+The dynamic camera system will make the camera smoothly interpolate towards an input camera position. You can also give the camera inner bounds that it wont move if its in, and if any objects of type "camerabounds" exist, the camera will only move within them.

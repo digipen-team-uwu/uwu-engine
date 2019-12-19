@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Base System</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="base-system">Base System</h1>
+<p>Base system is the &quot;base system&quot; of the <a href="../../README.html">UWU Engine</a></p>
+<p>Systems are where all the engine logics are being stored in.</p>
+<p>All systems need to inherit from the according specialized base system class and implement their constructor, destructor and update function for system initialization, shutdown and update. The systems will be registered by the system updater when it inherits the base system class specialization.</p>
+<p>The system init order, update order are specified in <code>SystemOrder.h</code>.</p>
+
+    </body>
+    </html>

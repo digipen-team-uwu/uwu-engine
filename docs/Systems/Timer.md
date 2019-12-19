@@ -1,0 +1,1 @@
+The timer module defines a timer class that automatically updates itself in the engine. By defining a timer and starting it, the timer will count down and then set a flag within itself (to be polled by the user) when it is finished.
