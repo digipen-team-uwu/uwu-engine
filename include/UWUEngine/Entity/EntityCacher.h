@@ -6,6 +6,7 @@
 #include <array>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include <UWUEngine/Physics/Colliders/Collider.h>
+#include <document.h>
 
 
 struct BaseCachedBehavior;

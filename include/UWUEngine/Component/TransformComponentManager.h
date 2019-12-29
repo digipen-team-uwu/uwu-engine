@@ -16,7 +16,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/BaseComponent.h>
 #include <UWUEngine/Component/MeshComponentManager.h>
-#include <UWUEngine/Editor.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 
 class TransformComponentManager : public BaseComponent<TransformComponentManager>

@@ -10,7 +10,7 @@ Copyright 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 
-#include <UWUEngine/Entity/EntityFactory.h>
+#include <UWUEngine/Editor.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Serialization.h>

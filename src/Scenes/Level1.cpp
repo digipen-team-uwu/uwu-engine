@@ -3,6 +3,7 @@
 #include <UWUEngine/constants.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Engine.h>
+#include <UWUEngine/Editor.h>
 #include <UWUEngine/Serialization.h>
 #include <iomanip>
 #include <UWUEngine/Input/InputManager.h>

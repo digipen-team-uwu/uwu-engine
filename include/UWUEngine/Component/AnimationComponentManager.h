@@ -14,7 +14,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <glm/glm.hpp>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/BaseComponent.h>
-#include <UWUEngine/Editor.h>
 #include <array>
 
 class AnimationComponentManager : public BaseComponent<AnimationComponentManager>

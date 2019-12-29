@@ -1,5 +1,6 @@
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Engine.h>
+#include <UWUEngine/Editor.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Serialization.h>

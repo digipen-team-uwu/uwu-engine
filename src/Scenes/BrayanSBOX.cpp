@@ -17,6 +17,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/LightingComponentManager.h>
 #include <UWUEngine/Engine.h>
+#include <UWUEngine/Editor.h>
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Graphics/Camera.h>

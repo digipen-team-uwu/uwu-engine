@@ -10,6 +10,7 @@
 */
 /******************************************************************************/
 #include <UWUEngine/Behaviors/HUDBehaviors.h>
+#include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Component/ParentChildComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>

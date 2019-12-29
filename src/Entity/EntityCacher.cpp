@@ -1,4 +1,5 @@
 #include <UWUEngine/Entity/EntityCacher.h>
+#include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
