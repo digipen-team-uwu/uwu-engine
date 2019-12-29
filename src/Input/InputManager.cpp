@@ -17,6 +17,8 @@
 #include <array>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Helper.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
 
 namespace ic = InputConstants;
 
@@ -61,12 +63,14 @@ void InputManager::PushInput(std::map<int, ic::InputResult> &map, int key, int a
 
 void InputManager::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mod)
 {
+  ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
   if (action != GLFW_REPEAT)
     PushInput(keys, key, action);
 }
 
 void InputManager::MouseCallback(GLFWwindow* window, int button, int action, int mods)
 {
+  ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
   PushInput(mouse, button, action);
 }
 
@@ -78,6 +82,7 @@ void InputManager::MousePosCallback(GLFWwindow* window, double xPos, double yPos
 
 void InputManager::ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
+  ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
   scrollVec.x = static_cast<float>(xOffset);
   if(scrollVec.y < ic::MAX_SCROLL && scrollVec.y > -ic::MAX_SCROLL)
     scrollVec.y += static_cast<float>(yOffset) * ic::SCROLL_RATE;

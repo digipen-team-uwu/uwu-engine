@@ -24,6 +24,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
+#include <UWUEngine/Debugs/TraceLogger.h>
 #include <sstream>
 #include <UWUEngine/Serialization.h>
 #include "glm/glm.hpp"
@@ -237,7 +238,6 @@ void Editor::CreateEditorWindow()
     // If this doesn't work for any reason, crash the program
     if (ImGui::Begin("Editor", &open, 0))
     {
-
         // Set width settings (negative value sets a fixed width)
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
