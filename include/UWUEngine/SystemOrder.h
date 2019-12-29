@@ -3,6 +3,7 @@
 enum class SystemUpdateOrder
 {
   FIRST        = 0,
+  Event        = 9200,
   FrameRate    = 9250,
   StateMachine = 9300,
   Editor       = 9350,
@@ -28,6 +29,7 @@ enum class SystemInitOrder
 {
   Trace         = 0, // Don't put anything before this one
   FIRST         = 1,
+  Event         = 9400,
   Window        = 9450,
   Editor        = 9500,
   Input         = 9550,
