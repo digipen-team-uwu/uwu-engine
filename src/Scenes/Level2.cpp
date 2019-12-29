@@ -78,7 +78,6 @@ void GameStateMachine::Enter_Level2()
     BehaviorComponentManager::Activate(sight);
     BehaviorComponentManager::Activate(perception);
     TextureAtlaser::LoadAtlasPage();
-    Editor::Start();
 }
 
 void GameStateMachine::Load_Level2()
@@ -140,7 +139,6 @@ void GameStateMachine::Update_Level2(float dt)
 void GameStateMachine::Exit_Level2()
 {
   DynamicCamera::SetTrackingSpeed(0);
-    Editor::Stop();
 	EntityManager::DestroyAll();
     TextureAtlaser::ClearData();
 }

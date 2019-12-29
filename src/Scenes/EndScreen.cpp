@@ -36,10 +36,6 @@ void GameStateMachine::Enter_End()
   }
 
   TextureAtlaser::LoadAtlasPage();
-
-#ifdef _DEBUG
-  Editor::Start();
-#endif
 }
 
 void GameStateMachine::Load_End()
@@ -58,8 +54,4 @@ void GameStateMachine::Exit_End()
 {
   EntityManager::DestroyAll();
   TextureAtlaser::ClearData();
-
-#ifdef _DEBUG
-  Editor::Stop();
-#endif
 }

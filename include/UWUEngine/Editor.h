@@ -22,7 +22,13 @@ public:
 
   void Update() override;
 
-  static void Start();
-  static void Stop();
   static bool IsActive();
+
+private:
+  //Data
+  static bool isActive;
+
+  //Function
+  static void ToggleActivate();
+  static void MainMenu();
 };

@@ -22,7 +22,6 @@ void GameStateMachine::Load_YiPlayGround()
 {
   objects = DeserializeLevel("BrayanSBOX");
   TextureAtlaser::LoadAtlasPage();
-  Editor::Start();
 }
 
 void GameStateMachine::Enter_YiPlayGround()

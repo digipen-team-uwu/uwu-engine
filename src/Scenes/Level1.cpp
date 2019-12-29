@@ -96,7 +96,6 @@ void GameStateMachine::Enter_Level1()
     //TextureAtlaser::LoadAtlasPage();
     //EntityManager::Destroy(dontlook);
     TextureAtlaser::LoadAtlasPage();
-    Editor::Start();
 }
 
 void GameStateMachine::Update_Level1(float dt)
@@ -174,7 +173,6 @@ void GameStateMachine::Update_Level1(float dt)
 	if (InputManager::KeyPressed('r'))
 	{
 		//Engine::editor.Stop();
-        Editor::Stop();
 		EntityManager::DestroyAll();
 		std::vector<EntityID> newObjects = DeserializeLevel("level1");
 
@@ -189,7 +187,6 @@ void GameStateMachine::Update_Level1(float dt)
 			glm::vec3 ransum = { Random::Range(0.1f, 0.4f),Random::Range(0.5f, 0.9f),Random::Range(0.7f, 0.9f) };
 			TextureComponentManager::SetColor(players[i], { ransum.x,ransum.y,ransum.z,1.0f });
 		}
-		Editor::Start();
 	}
   
 }
@@ -197,7 +194,6 @@ void GameStateMachine::Update_Level1(float dt)
 void GameStateMachine::Exit_Level1()
 {
 	//Engine::editor.Stop();
-    Editor::Stop();
 	EntityManager::DestroyAll();
     TextureAtlaser::ClearData();
 }

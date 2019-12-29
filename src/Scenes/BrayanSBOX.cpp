@@ -57,11 +57,7 @@ void GameStateMachine::Enter_BrayanSBOX()
   Lighting::Activate();
   TextureAtlaser::LoadAtlasPage();
 
-  SoundInterface::playSound("music_calm1", true);
-
-#ifdef _DEBUG
-  Editor::Start();
-#endif
+  //SoundInterface::playSound("music_calm1", true);
 }
 
 
@@ -148,8 +144,4 @@ void GameStateMachine::Exit_BrayanSBOX()
   SoundInterface::stopAllSounds();
   EntityManager::DestroyAll();
   TextureAtlaser::ClearData();
-
-  #ifdef _DEBUG_
-  Editor::Stop();
-#endif
 }
