@@ -12,6 +12,7 @@
 
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Entity/EntityIDManager.h>
+#include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <magic_enum.hpp>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
@@ -284,9 +285,8 @@ void EntityManager::LevelSerialize(std::ofstream &stream)
                 // Print the current object's type
                 stream << Tabs::ONE << R"("type" : ")" << magic_enum::enum_name(types[id]) << "\",\n";
 
-                // TODO::This should not be a editor function
-                //if(Editor::HasName(id))
-                //  stream << Tabs::TWO << R"("name" : ")" << Editor::GetName(id) << "\",\n";
+                if(EditorEntityViewer::HasName(id))
+                  stream << Tabs::TWO << R"("name" : ")" << EditorEntityViewer::GetName(id) << "\",\n";
             
                 // Serialize the transform component
                 if (TransformComponentManager::IsActive(id))

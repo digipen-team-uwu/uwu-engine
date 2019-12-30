@@ -13,6 +13,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Entity/EntityCacher.h>
+#include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <document.h>
 #include <filereadstream.h>
@@ -91,8 +92,7 @@ EntityID EntityFactory::CreateObject(EntityManager::Type type)
 
     // Construct all relevant components
     if (doc.HasMember("name"))
-      // TODO::This should not be a editor function
-      //Editor::SetName(resultID, doc["name"].GetString());
+      EditorEntityViewer::SetName(resultID, doc["name"].GetString());
 
     // Check for a texture component
     CheckTexture(doc, resultID, filePath.str().c_str());
@@ -207,8 +207,7 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
     CheckCollider(object, resultID, filePath);
 
     if (object.HasMember("name"))
-      // TODO::This should not be a editor function
-      //Editor::SetName(resultID, object["name"].GetString());
+      EditorEntityViewer::SetName(resultID, object["name"].GetString());
 
     if (object.HasMember("behavior"))
     {

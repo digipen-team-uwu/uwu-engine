@@ -22,7 +22,7 @@ public:
   
   struct ParentAndChildren
   {
-    EntityID parent;
+    EntityID parent{0};
     std::vector<EntityID> children;
   };
 private:
