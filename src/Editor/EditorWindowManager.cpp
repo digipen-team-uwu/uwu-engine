@@ -12,21 +12,26 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Editor/EditorWindow.h>
 #include <UWUEngine/Editor/EditorWindowManager.h>
-#include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 
-std::unordered_map<std::string, std::shared_ptr<EditorWindow> > EditorWindowManager::windows;
+#include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
+#include <UWUEngine/Editor/Windows/EditorComponentViewer.h>
+
+using namespace Editors;
+
+std::unordered_map<std::string, std::shared_ptr<Window> > WindowManager::windows;
 
 #define REGISTER_WINDOW(name) \
-std::shared_ptr<EditorWindow> name = std::make_shared<Editor ## name ##>(); \
-windows.insert({(name)->GetName(), name}); \
+  std::shared_ptr<Window> name = std::make_shared<Editors::name>(); \
+  windows.insert({(name)->GetName(), name}); \
 
-void EditorWindowManager::StartUp()
+void WindowManager::StartUp()
 {
   //Register all windows
   REGISTER_WINDOW(EntityViewer)
+  REGISTER_WINDOW(ComponentViewer)
 }
 
-void EditorWindowManager::Update()
+void WindowManager::Update()
 {
   for (auto window : windows)
   {
@@ -34,12 +39,12 @@ void EditorWindowManager::Update()
   }
 }
 
-void EditorWindowManager::ToggleWindow(std::string& name)
+void WindowManager::ToggleWindow(std::string& name)
 {
   windows.find(name)->second->ToggleActive();
 }
 
-std::shared_ptr<EditorWindow> EditorWindowManager::GetWindow(std::string name)
+std::shared_ptr<Window> WindowManager::GetWindow(std::string name)
 {
   return windows.find(name)->second;
 }

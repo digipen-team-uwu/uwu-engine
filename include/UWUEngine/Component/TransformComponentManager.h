@@ -18,6 +18,12 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/MeshComponentManager.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 
+//Forward Declaration
+namespace Editors
+{
+  class Transform;
+}
+
 class TransformComponentManager : public BaseComponent<TransformComponentManager>
 {
     public:
@@ -55,5 +61,5 @@ class TransformComponentManager : public BaseComponent<TransformComponentManager
         static EntityVector<float> rotation_;
         static EntityVector<glm::vec3> scale_;
 
-        friend class Editor;
+        friend class Editors::Transform;
 };

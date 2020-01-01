@@ -14,7 +14,6 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Helper.h>
-
 #include <glm/gtx/vector_angle.hpp>
 #include <magic_enum.hpp>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>

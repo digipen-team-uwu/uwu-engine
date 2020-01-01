@@ -285,8 +285,8 @@ void EntityManager::LevelSerialize(std::ofstream &stream)
                 // Print the current object's type
                 stream << Tabs::ONE << R"("type" : ")" << magic_enum::enum_name(types[id]) << "\",\n";
 
-                if(EditorEntityViewer::HasName(id))
-                  stream << Tabs::TWO << R"("name" : ")" << EditorEntityViewer::GetName(id) << "\",\n";
+                if(Editors::EntityViewer::HasName(id))
+                  stream << Tabs::TWO << R"("name" : ")" << Editors::EntityViewer::GetName(id) << "\",\n";
             
                 // Serialize the transform component
                 if (TransformComponentManager::IsActive(id))

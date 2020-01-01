@@ -12,24 +12,28 @@ Copyright © 2019 DigiPen, All rights reserved.
 #pragma once
 
 #include <string>
+#include <utility>
 
-class EditorWindow
+namespace Editors
 {
-public:
-  EditorWindow(std::string name, bool isActive = false):name(name), isActive(isActive){}
-  virtual ~EditorWindow() = default;
+  class Window
+  {
+  public:
+    Window(std::string name, bool isActive = false) :name(std::move(name)), isActive(isActive) {}
+    virtual ~Window() = default;
 
-  void Render();
-  void ToggleActive();
-  bool IsActive();
-  bool IsWindowNamed(std::string& name) const;
-  const std::string& GetName() const;
+    void Render();
+    void ToggleActive();
+    bool IsActive();
+    bool IsWindowNamed(std::string& name) const;
+    const std::string& GetName() const;
 
-protected:
-  virtual void Setup() = 0;
-  virtual void Update() = 0;
+  protected:
+    virtual void Setup() = 0;
+    virtual void Update() = 0;
 
-private:
-  const std::string name;
-  bool isActive;
-};
+  private:
+    const std::string name;
+    bool isActive;
+  };
+}

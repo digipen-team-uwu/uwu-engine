@@ -37,7 +37,7 @@ Editor::Editor()
   ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
   //Start up the editor window manager
-  EditorWindowManager::StartUp();
+  Editors::WindowManager::StartUp();
 }
 
 Editor::~Editor()
@@ -65,7 +65,7 @@ void Editor::Update()
   MainMenu();
   DockSpace();
   // Update all windows
-  EditorWindowManager::Update();
+  Editors::WindowManager::Update();
   // Show demo window
   ImGui::ShowDemoWindow();
 }
@@ -80,6 +80,29 @@ void Editor::ToggleActivate()
   if (InputManager::KeyPressed(GLFW_KEY_GRAVE_ACCENT))
   {
     isActive = !isActive;
+  }
+}
+
+void Editor::MainMenu()
+{
+  if (ImGui::BeginMainMenuBar())
+  {
+    if (ImGui::BeginMenu("View"))
+    {
+      auto entityViewer = Editors::WindowManager::GetWindow("EntityViewer");
+      if (ImGui::MenuItem("Entity Viewer", nullptr, entityViewer->IsActive()))
+      {
+        entityViewer->ToggleActive();
+      }
+      auto componentViewer = Editors::WindowManager::GetWindow("ComponentViewer");
+      if (ImGui::MenuItem("Component Viewer", nullptr, componentViewer->IsActive()))
+      {
+        componentViewer->ToggleActive();
+      }
+
+      ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
   }
 }
 
@@ -120,22 +143,4 @@ void Editor::DockSpace()
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
   ImGui::End();
-}
-
-void Editor::MainMenu()
-{
-  if (ImGui::BeginMainMenuBar())
-  {
-    if (ImGui::BeginMenu("View"))
-    {
-      auto entityViewer = EditorWindowManager::GetWindow("EntityViewer");
-      if (ImGui::MenuItem("Entity Viewer", nullptr, entityViewer->IsActive()))
-      {
-        entityViewer->ToggleActive();
-      }
-
-      ImGui::EndMenu();
-    }
-    ImGui::EndMainMenuBar();
-  }
 }

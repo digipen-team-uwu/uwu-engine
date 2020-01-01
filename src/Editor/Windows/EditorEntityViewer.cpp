@@ -18,22 +18,24 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <magic_enum.hpp>
 #include <imgui.h>
 
-EntityID EditorEntityViewer::selected{0};
-std::unordered_map<EntityID, std::string> EditorEntityViewer::name;
+using namespace Editors;
+
+EntityID EntityViewer::selected{0};
+std::unordered_map<EntityID, std::string> EntityViewer::name;
 static ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
 
-EditorEntityViewer::EditorEntityViewer():
-EditorWindow("EntityViewer")
+EntityViewer::EntityViewer():
+Window("EntityViewer", true)
 {
 }
 
-EditorEntityViewer::~EditorEntityViewer() = default;
+EntityViewer::~EntityViewer() = default;
 
-void EditorEntityViewer::Setup()
+void EntityViewer::Setup()
 {
 }
 
-void EditorEntityViewer::Update()
+void EntityViewer::Update()
 {
   //Iterate through EntityID container
   for (auto id : EntityManager::GetIDs())
@@ -47,34 +49,34 @@ void EditorEntityViewer::Update()
   }
 }
 
-EntityID EditorEntityViewer::GetSelectedEntity()
+EntityID EntityViewer::GetSelectedEntity()
 {
   return selected;
 }
 
-void EditorEntityViewer::SetName(EntityID ID, std::string name_)
+void EntityViewer::SetName(EntityID ID, std::string name_)
 {
   name[ID] = name_;
 }
 
-std::string EditorEntityViewer::GetName(EntityID ID)
+std::string EntityViewer::GetName(EntityID ID)
 {
   return name[ID];
 }
 
-bool EditorEntityViewer::HasName(EntityID ID)
+bool EntityViewer::HasName(EntityID ID)
 {
   auto name_ = name.find(ID);
   return name_ != name.end();
 }
 
-void EditorEntityViewer::UpdateEntity(EntityID id)
+void EntityViewer::UpdateEntity(EntityID id)
 {
   ImGuiTreeNodeFlags nodeFlags = baseFlags;
   const std::vector<EntityID>& children = ParentChildComponentManager::GetChildren(id);
 
   //Get the name of the child, if there's no name get the type
-  std::string name = HasName(id) ? 
+  const std::string& name = HasName(id) ? 
   GetName(id) :
   magic_enum::enum_name(EntityManager::GetType(id)).data();
 

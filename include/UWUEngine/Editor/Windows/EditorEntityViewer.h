@@ -4,7 +4,7 @@
 \file       EditorEntityViewer.h
 \author     Yi Qian
 \date       2019/12/28
-\brief      Editor window
+\brief      Entity viewer
 
 Copyright © 2019 DigiPen, All rights reserved.
 */
@@ -16,22 +16,33 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 using EntityID = unsigned int;
 
-class EditorEntityViewer final : public EditorWindow
+namespace Editors
 {
-public:
-  EditorEntityViewer();
-  ~EditorEntityViewer() override;
-  void Setup() override;
-  void Update() override;
+  //Forward declaration
+  class ComponentViewer;
 
-  static EntityID GetSelectedEntity();
+  class EntityViewer final : public Window
+  {
+  public:
+    EntityViewer();
+    ~EntityViewer() override;
 
-  static void SetName(EntityID ID, std::string name);
-  static bool HasName(EntityID ID);
-  static std::string GetName(EntityID ID);
+    static EntityID GetSelectedEntity();
 
-private:
-  static void UpdateEntity(EntityID id);
-  static EntityID selected;
-  static std::unordered_map<EntityID, std::string> name;
-};
+    //TODO::Entity names should not be managed by editor
+    static void SetName(EntityID ID, std::string name);
+    static bool HasName(EntityID ID);
+    static std::string GetName(EntityID ID);
+
+  protected:
+    void Setup() override;
+    void Update() override;
+
+  private:
+    static void UpdateEntity(EntityID id);
+    static EntityID selected;
+    static std::unordered_map<EntityID, std::string> name;
+
+    friend ComponentViewer;
+  };
+}

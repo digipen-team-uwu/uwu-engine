@@ -14,17 +14,20 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <unordered_map>
 #include <memory>
 
-//Forward declaration
-class EditorWindow;
-
-class EditorWindowManager
+namespace Editors
 {
-public:
-  static void StartUp();
-  static void Update();
-  static void ToggleWindow(std::string& name);
-  static std::shared_ptr<EditorWindow> GetWindow(std::string name);
+  //Forward declaration
+  class Window;
 
-private:
-  static std::unordered_map<std::string, std::shared_ptr<EditorWindow> > windows;
-};
+  class WindowManager
+  {
+  public:
+    static void StartUp();
+    static void Update();
+    static void ToggleWindow(std::string& name);
+    static std::shared_ptr<Window> GetWindow(std::string name);
+
+  private:
+    static std::unordered_map<std::string, std::shared_ptr<Window> > windows;
+  };
+}

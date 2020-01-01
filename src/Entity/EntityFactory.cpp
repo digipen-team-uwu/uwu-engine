@@ -92,7 +92,7 @@ EntityID EntityFactory::CreateObject(EntityManager::Type type)
 
     // Construct all relevant components
     if (doc.HasMember("name"))
-      EditorEntityViewer::SetName(resultID, doc["name"].GetString());
+      Editors::EntityViewer::SetName(resultID, doc["name"].GetString());
 
     // Check for a texture component
     CheckTexture(doc, resultID, filePath.str().c_str());
@@ -207,7 +207,7 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
     CheckCollider(object, resultID, filePath);
 
     if (object.HasMember("name"))
-      EditorEntityViewer::SetName(resultID, object["name"].GetString());
+      Editors::EntityViewer::SetName(resultID, object["name"].GetString());
 
     if (object.HasMember("behavior"))
     {

@@ -13,7 +13,9 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/EditorWindow.h>
 #include <imgui.h>
 
-void EditorWindow::Render()
+using namespace Editors;
+
+void Window::Render()
 {
   if (!isActive)
   {
@@ -23,26 +25,26 @@ void EditorWindow::Render()
   {
     this->Setup();
     this->Update();
-    ImGui::End();
   }
+  ImGui::End();
 }
 
-void EditorWindow::ToggleActive()
+void Window::ToggleActive()
 {
   isActive = !isActive;
 }
 
-bool EditorWindow::IsActive()
+bool Window::IsActive()
 {
   return isActive;
 }
 
-bool EditorWindow::IsWindowNamed(std::string& name) const
+bool Window::IsWindowNamed(std::string& name) const
 {
   return name == this->name;
 }
 
-const std::string& EditorWindow::GetName() const
+const std::string& Window::GetName() const
 {
   return name;
 }
