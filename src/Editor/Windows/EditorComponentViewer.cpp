@@ -15,6 +15,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 //All the components
 #include <UWUEngine/Editor/Components/EditorTransform.h>
+#include <UWUEngine/Editor/Components/EditorPhysics.h>
 
 #include <imgui.h>
 #include <UWUEngine/Entity/EntityManager.h>
@@ -31,6 +32,7 @@ Window("ComponentViewer", true)
 {
   //Register all the components here
   REGISTER_COMPONENT(Transform)
+  REGISTER_COMPONENT(Physics)
 }
 
 ComponentViewer::~ComponentViewer()
@@ -74,8 +76,14 @@ void ComponentViewer::Update()
   }
 
   //Iterate through all components and get relative data
-  for (auto component : components)
+  for (const auto& component : components)
   {
-    component.second->Render(selected);
+    component.second->UpdateID(selected);
+    //If the component is not active, skip
+    if (!component.second->IsActive())
+    {
+      continue;
+    }
+    component.second->Render();
   }
 }

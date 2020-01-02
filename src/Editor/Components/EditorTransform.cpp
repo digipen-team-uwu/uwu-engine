@@ -20,9 +20,9 @@ Component(std::move(name))
 {
 }
 
-bool Transform::IsActive(EntityID id)
+void Transform::CheckActive(EntityID id)
 {
-  return TransformComponentManager::IsActive(id);
+  isActive = TransformComponentManager::IsActive(id);
 }
 
 void Transform::UpdateUI()
@@ -32,7 +32,7 @@ void Transform::UpdateUI()
   scale.UpdateUI();
 }
 
-void Transform::UpdateID(EntityID id)
+void Transform::UpdateComponent(EntityID id)
 {
   translation.UpdateElement(reinterpret_cast<glm::vec3*>(&TransformComponentManager::translation_[id]));
   rotation.UpdateElement(&TransformComponentManager::rotation_[id]);

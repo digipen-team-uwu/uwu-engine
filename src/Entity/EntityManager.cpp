@@ -18,6 +18,7 @@
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/ParentChildComponentManager.h>
 #include <UWUEngine/Engine.h>
 #include <fstream>
 #include <UWUEngine/Serialization.h>
@@ -140,6 +141,13 @@ void EntityManager::InitComponents()
 
 void EntityManager::Destroy(EntityID id, int idsIndex)
 {
+  //Mark all the children as destroyed
+  for (auto child : ParentChildComponentManager::GetChildren(id))
+  {
+    Destroy(child, idsIndex);
+  }
+  //Remove Name
+  Editors::EntityViewer::RemoveName(id);
   if (idsIndex == -1)
   {
     for (int i = 0; i < ids.size(); ++i)
@@ -162,6 +170,7 @@ void EntityManager::Destroy(EntityID id, int idsIndex)
 
 void EntityManager::DestroyAll()
 {
+  Editors::EntityViewer::RemoveAllNames();
   for (int i = static_cast<int>(ids.size()) - 1; i > -1; --i)
   {
     EntityID id = ids[i];

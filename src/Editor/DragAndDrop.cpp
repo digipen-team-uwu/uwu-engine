@@ -33,9 +33,9 @@ void DragAndDrop::DropCallback(GLFWwindow* window, int count, const char** paths
   GLdouble model2View[16]; //model to view coords
   GLdouble projection[16]; //projection matrix
   glm::vec<2, GLdouble> mousePos; //mouse position
-  GLdouble worldX; //world coord
-  GLdouble worldY; //world coord
-  GLdouble worldZ; //world coord
+  GLdouble worldX = 0.0; //world coord
+  GLdouble worldY = 0.0; //world coord
+  GLdouble worldZ = 0.0; //world coord
 
   glGetDoublev(GL_MODELVIEW_MATRIX, model2View); //get modelview info
   glGetDoublev(GL_PROJECTION_MATRIX, projection); //get projection matrix

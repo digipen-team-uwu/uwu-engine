@@ -30,6 +30,4 @@ private:
 
   //Function
   static void ToggleActivate();
-  static void DockSpace();
-  static void MainMenu();
 };

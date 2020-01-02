@@ -22,7 +22,7 @@ namespace Editors
   class Element
   {
   public:
-    Element(std::string label, T* element):
+    Element(std::string label, T* element = nullptr):
     label(std::move(label)), element(element)
     {}
 
@@ -43,15 +43,18 @@ namespace Editors
     virtual ~Component() = default;
 
     const std::string& GetName() const;
-    void Render(EntityID id);
+    void Render();
+    void UpdateID(EntityID id);
+    bool IsActive() const;
 
   protected:
-    virtual bool IsActive(EntityID id) = 0;
-    virtual void UpdateID(EntityID id) = 0;
+    virtual void CheckActive(EntityID id) = 0;
+    virtual void UpdateComponent(EntityID id) = 0;
     virtual void UpdateUI() = 0;
 
+    bool isActive{ false };
+
   private:
-    bool isActive{false};
     EntityID current{0};
     std::string name;
   };

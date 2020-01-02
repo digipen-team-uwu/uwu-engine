@@ -61,24 +61,8 @@ const std::string& Component::GetName() const
   return name;
 }
 
-void Component::Render(EntityID id)
+void Component::Render()
 {
-  //If the entity id have been updated
-  if (id != current)
-  {
-    //Update isActive flag
-    isActive = IsActive(id);
-    if (isActive)
-    {
-      UpdateID(id);
-    }
-  }
-
-  //If the current entity doesn't have this component, skip
-  if (!isActive)
-  {
-    return;
-  }
   //Render component header
   if (ImGui::CollapsingHeader(name.c_str()))
   {
@@ -86,4 +70,25 @@ void Component::Render(EntityID id)
   }
 
   ImGui::Separator();
+}
+
+void Component::UpdateID(EntityID id)
+{
+  //If new id is the same as the old one, skip
+  if (id == current)
+  {
+    return;
+  }
+  current = id;
+
+  CheckActive(current);
+  if (isActive)
+  {
+    UpdateComponent(current);
+  }
+}
+
+bool Component::IsActive() const
+{
+  return isActive;
 }

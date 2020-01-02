@@ -1,10 +1,10 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       EditorTransform.h
+\file       EditorPhysics.h
 \author     Yi Qian
-\date       2019/12/31
-\brief      Transform Editor
+\date       2020/01/01
+\brief      Physics Editor
 
 Copyright © 2019 DigiPen, All rights reserved.
 */
@@ -12,24 +12,28 @@ Copyright © 2019 DigiPen, All rights reserved.
 #pragma once
 
 #include <UWUEngine/Editor/EditorComponent.h>
+
 #include <glm/glm.hpp>
 
 namespace Editors
 {
-  class Transform final : public Component
+  class Physics final : public Component
   {
   public:
-    Transform(std::string name);
-    ~Transform() override = default;
+    Physics(const std::string& name);
+    ~Physics() override;
 
   protected:
     void CheckActive(EntityID id) override;
-    void UpdateUI() override;
     void UpdateComponent(EntityID id) override;
+    void UpdateUI() override;
 
   private:
-    Element<glm::vec3> translation{"Translation"};
-    Element<float> rotation{"Rotation"};
-    Element<glm::vec3> scale{"Scale"};
+    Element<float> inverseMass{"Inverse mass"};
+    Element<glm::vec3> velocity{"Velocity"};
+    Element<glm::vec3> acceleration{"Acceleration"};
+    Element<glm::vec3> drag{"Drag"};
+
+    Element<float> rotationalVel{"Angular Velocity"};
   };
 }

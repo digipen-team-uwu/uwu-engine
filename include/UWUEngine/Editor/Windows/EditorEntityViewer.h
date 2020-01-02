@@ -33,6 +33,8 @@ namespace Editors
     static void SetName(EntityID ID, std::string name);
     static bool HasName(EntityID ID);
     static std::string GetName(EntityID ID);
+    static void RemoveName(EntityID ID);
+    static void RemoveAllNames();
 
   protected:
     void Setup() override;
@@ -40,6 +42,7 @@ namespace Editors
 
   private:
     static void UpdateEntity(EntityID id);
+    static void RightClickPopUp();
     static EntityID selected;
     static std::unordered_map<EntityID, std::string> name;
 

@@ -11,9 +11,9 @@ Copyright © 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
+#include <UWUEngine/Editor/EditorHelper.h>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/ParentChildComponentManager.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
 
 #include <magic_enum.hpp>
 #include <imgui.h>
@@ -37,6 +37,9 @@ void EntityViewer::Setup()
 
 void EntityViewer::Update()
 {
+  //Generate pop up window
+  RightClickPopUp();
+
   //Iterate through EntityID container
   for (auto id : EntityManager::GetIDs())
   {
@@ -47,6 +50,7 @@ void EntityViewer::Update()
     }
     UpdateEntity(id);
   }
+
 }
 
 EntityID EntityViewer::GetSelectedEntity()
@@ -62,6 +66,16 @@ void EntityViewer::SetName(EntityID ID, std::string name_)
 std::string EntityViewer::GetName(EntityID ID)
 {
   return name[ID];
+}
+
+void EntityViewer::RemoveName(EntityID ID)
+{
+  name.erase(ID);
+}
+
+void EntityViewer::RemoveAllNames()
+{
+  name.clear();
 }
 
 bool EntityViewer::HasName(EntityID ID)
@@ -80,6 +94,7 @@ void EntityViewer::UpdateEntity(EntityID id)
   GetName(id) :
   magic_enum::enum_name(EntityManager::GetType(id)).data();
 
+  //Set Node Flags
   //If children is empty
   if (children.empty())
   {
@@ -90,6 +105,8 @@ void EntityViewer::UpdateEntity(EntityID id)
   {
     nodeFlags |= ImGuiTreeNodeFlags_Selected;
   }
+
+  //Create node
   //If tree is open
   //Create the children tree
   if (ImGui::TreeNodeEx(name.c_str(), nodeFlags))
@@ -105,9 +122,37 @@ void EntityViewer::UpdateEntity(EntityID id)
       ImGui::TreePop();
     }
   }
+
+  //Node Input
   //If the item is being clicked, it's selected
-  if (ImGui::IsItemClicked())
+  if (ImGui::IsItemClicked() || ImGui::IsItemClicked(1))
   {
     selected = id;
+  }
+  ImGui::OpenPopupOnItemClick("Entity Ops");
+}
+
+void EntityViewer::RightClickPopUp()
+{
+  if (ImGui::BeginPopupContextWindow("Entity Ops"))
+  {
+    if (ImGui::Button("New"))
+    {
+      //TODO::Create new entity
+      ImGui::CloseCurrentPopup();
+    }
+    ImGui::SameLine();
+    HelpMarker("This is work in progress");
+    if (ImGui::Button("Delete"))
+    {
+      EntityManager::Destroy(selected);
+      ImGui::CloseCurrentPopup();
+    }
+    if (ImGui::Button("Delete All"))
+    {
+      EntityManager::DestroyAll();
+      ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
   }
 }

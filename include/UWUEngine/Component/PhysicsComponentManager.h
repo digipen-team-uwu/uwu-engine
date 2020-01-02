@@ -18,6 +18,12 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Entity/EntityVector.h>
 #include <UWUEngine/Component/BaseComponent.h>
 
+//Forward declaration
+namespace Editors
+{
+  class Physics;
+}
+
 class PhysicsComponentManager : public BaseComponent<PhysicsComponentManager>
 {
 public:
@@ -81,5 +87,5 @@ private:
 
   static EntityVector<float> restitution_;
 
-  friend class Editor;
+  friend class Editors::Physics;
 };
