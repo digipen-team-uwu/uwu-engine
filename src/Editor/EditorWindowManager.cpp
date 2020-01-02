@@ -44,7 +44,12 @@ void WindowManager::ToggleWindow(std::string& name)
   windows.find(name)->second->ToggleActive();
 }
 
-std::shared_ptr<Window> WindowManager::GetWindow(std::string name)
+std::shared_ptr<const Window> WindowManager::GetWindow(const std::string& name)
 {
   return windows.find(name)->second;
+}
+
+const std::unordered_map<std::string, std::shared_ptr<Window>> WindowManager::GetWindows()
+{
+  return windows;
 }

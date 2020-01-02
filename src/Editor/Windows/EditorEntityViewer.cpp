@@ -25,7 +25,7 @@ std::unordered_map<EntityID, std::string> EntityViewer::name;
 static ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
 
 EntityViewer::EntityViewer():
-Window("EntityViewer", true)
+Window("Entity Viewer", true)
 {
 }
 
@@ -38,7 +38,7 @@ void EntityViewer::Setup()
 void EntityViewer::Update()
 {
   //Generate pop up window
-  RightClickPopUp();
+  PopUpRightClick();
 
   //Iterate through EntityID container
   for (auto id : EntityManager::GetIDs())
@@ -129,10 +129,13 @@ void EntityViewer::UpdateEntity(EntityID id)
   {
     selected = id;
   }
-  ImGui::OpenPopupOnItemClick("Entity Ops");
+  if (ImGui::IsItemClicked(1))
+  {
+    ImGui::OpenPopup("Entity Ops");
+  }
 }
 
-void EntityViewer::RightClickPopUp()
+void EntityViewer::PopUpRightClick()
 {
   if (ImGui::BeginPopupContextWindow("Entity Ops"))
   {

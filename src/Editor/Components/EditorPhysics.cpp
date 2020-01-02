@@ -43,6 +43,5 @@ void Editors::Physics::UpdateUI()
   velocity.UpdateUI();
   acceleration.UpdateUI();
   drag.UpdateUI();
-  ImGui::Separator();
   rotationalVel.UpdateUI();
 }

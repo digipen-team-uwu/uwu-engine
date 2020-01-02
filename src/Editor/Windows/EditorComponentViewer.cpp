@@ -28,7 +28,7 @@ using namespace Editors;
   components.insert({ name ## _->GetName(), name ## _ }); \
 
 ComponentViewer::ComponentViewer():
-Window("ComponentViewer", true)
+Window("Component Viewer", true)
 {
   //Register all the components here
   REGISTER_COMPONENT(Transform)
@@ -39,6 +39,11 @@ ComponentViewer::~ComponentViewer()
 = default;
 
 void ComponentViewer::Setup()
+{
+  
+}
+
+void ComponentViewer::Update()
 {
   //Get selected item id and name
   EntityID selected = EntityViewer::GetSelectedEntity();
@@ -61,19 +66,8 @@ void ComponentViewer::Setup()
   //Display the current entity and name
   ImGui::Text("ID   : %d", selected);
   ImGui::InputText(
-  "Name", name.data(), 50);
+    "Name", name.data(), 50);
   ImGui::Separator();
-}
-
-void ComponentViewer::Update()
-{
-  //Get selected item id
-  EntityID selected = EntityViewer::GetSelectedEntity();
-  //If no entity selected, quit
-  if (!selected)
-  {
-    return;
-  }
 
   //Iterate through all components and get relative data
   for (const auto& component : components)

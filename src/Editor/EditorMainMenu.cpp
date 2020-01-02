@@ -13,8 +13,39 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/EditorMainMenu.h>
 #include <UWUEngine/Editor/EditorWindow.h>
 #include <UWUEngine/Editor/EditorWindowManager.h>
+#include <UWUEngine/Editor/EditorHelper.h>
+#include <UWUEngine/Serialization.h>
 
 #include <imgui.h>
+
+namespace
+{
+  enum class FileMenuActions
+  {
+    DEFAULT,
+    NEW,
+    OPEN,
+    SAVE,
+    SAVE_AS,
+
+    COUNT
+  };
+
+  void PopUpSaveAs()
+  {
+    if (ImGui::BeginPopupModal("Save As"))
+    {
+      static std::string levelName;
+      ImGui::InputText("LevelName", levelName.data(), 20);
+      if (ImGui::Button("Save"))
+      {
+        SerializeLevel(levelName.c_str());
+        ImGui::CloseCurrentPopup();
+      }
+      ImGui::EndPopup();
+    }
+  }
+}
 
 void Editors::DockSpace()
 {
@@ -57,29 +88,57 @@ void Editors::DockSpace()
 
 void Editors::MainMenu()
 {
+  static FileMenuActions fileMenuAction = FileMenuActions::DEFAULT;
+  //Pop Ups
+  PopUpSaveAs();
+
   if (ImGui::BeginMainMenuBar())
   {
     if (ImGui::BeginMenu("File"))
     {
-      ImGui::Text("TODO::File IO");
+      if (ImGui::MenuItem("Open"))
+      {
+        fileMenuAction = FileMenuActions::OPEN;
+      }
+      if (ImGui::MenuItem("Save"))
+      {
+        fileMenuAction = FileMenuActions::SAVE;
+      }
+      if (ImGui::MenuItem("Save As"))
+      {
+        fileMenuAction = FileMenuActions::SAVE_AS;
+      }
       ImGui::EndMenu();
     }
 
     if (ImGui::BeginMenu("View"))
     {
-      auto entityViewer = Editors::WindowManager::GetWindow("EntityViewer");
-      if (ImGui::MenuItem("Entity Viewer", nullptr, entityViewer->IsActive()))
+      for (auto window : WindowManager::GetWindows())
       {
-        entityViewer->ToggleActive();
-      }
-      auto componentViewer = Editors::WindowManager::GetWindow("ComponentViewer");
-      if (ImGui::MenuItem("Component Viewer", nullptr, componentViewer->IsActive()))
-      {
-        componentViewer->ToggleActive();
+        const std::string & windowName = window.first;
+        const auto & windowContent = window.second;
+        if (ImGui::MenuItem(windowName.c_str(), nullptr, windowContent->IsActive()))
+        {
+          windowContent->ToggleActive();
+        }
       }
 
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
   }
+
+  switch (fileMenuAction)
+  {
+  case FileMenuActions::NEW: break;
+  case FileMenuActions::OPEN: break;
+  case FileMenuActions::SAVE:
+    SerializeLevel("BrayanSBOX");
+    break;
+  case FileMenuActions::SAVE_AS:
+    ImGui::OpenPopup("Save As");
+    break;
+  default: ;
+  }
+  fileMenuAction = FileMenuActions::DEFAULT;
 }

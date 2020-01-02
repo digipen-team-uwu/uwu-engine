@@ -21,9 +21,9 @@ void Window::Render()
   {
     return;
   }
+  this->Setup();
   if (ImGui::Begin(name.c_str()))
   {
-    this->Setup();
     this->Update();
   }
   ImGui::End();

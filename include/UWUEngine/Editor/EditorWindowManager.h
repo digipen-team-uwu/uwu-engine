@@ -25,7 +25,8 @@ namespace Editors
     static void StartUp();
     static void Update();
     static void ToggleWindow(std::string& name);
-    static std::shared_ptr<Window> GetWindow(std::string name);
+    static std::shared_ptr<const Window> GetWindow(const std::string& name);
+    static const std::unordered_map<std::string, std::shared_ptr<Window> > GetWindows();
 
   private:
     static std::unordered_map<std::string, std::shared_ptr<Window> > windows;

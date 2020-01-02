@@ -42,7 +42,7 @@ namespace Editors
 
   private:
     static void UpdateEntity(EntityID id);
-    static void RightClickPopUp();
+    static void PopUpRightClick();
     static EntityID selected;
     static std::unordered_map<EntityID, std::string> name;
 
