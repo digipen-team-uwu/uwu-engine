@@ -149,8 +149,8 @@ void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
   glm::vec4 obj1trans = TransformComponentManager::GetTranslation(info.obj1);
   glm::vec4 obj2trans = TransformComponentManager::GetTranslation(info.obj2);
 
-  const float proj1 = ProjectPoint(obj1trans.xy, info.direction);
-  const float proj2 = ProjectPoint(obj2trans.xy, info.direction);
+  const float proj1 = ProjectPoint(obj1trans.xy(), info.direction);
+  const float proj2 = ProjectPoint(obj2trans.xy(), info.direction);
 
   glm::vec2 direction = info.direction * abs(info.depth);
   direction = proj1 > proj2 ? direction : -direction;
@@ -162,8 +162,10 @@ void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
   const glm::vec2 dirObject1 = direction * massRat;
   const glm::vec2 dirObject2 = direction - dirObject1;
 
-  obj1trans.xy += dirObject1;
-  obj2trans.xy -= dirObject2;
+  obj1trans.x += dirObject1.x;
+  obj1trans.y += dirObject1.y;
+  obj2trans.x -= dirObject2.x;
+  obj2trans.y -= dirObject2.y;
 
   TransformComponentManager::SetTranslation(obj1trans, info.obj1);
   TransformComponentManager::SetTranslation(obj2trans, info.obj2);

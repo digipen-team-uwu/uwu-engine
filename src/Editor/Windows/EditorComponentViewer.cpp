@@ -12,6 +12,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Editor/Windows/EditorComponentViewer.h>
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
+#include <UWUEngine/Editor/EditorHelper.h>
 
 //All the components
 #include <UWUEngine/Editor/Components/EditorTransform.h>
@@ -65,8 +66,7 @@ void ComponentViewer::Update()
 
   //Display the current entity and name
   ImGui::Text("ID   : %d", selected);
-  ImGui::InputText(
-    "Name", name.data(), 50);
+  InputText("Name", &name);
   ImGui::Separator();
 
   //Iterate through all components and get relative data

@@ -35,8 +35,8 @@ namespace
   {
     if (ImGui::BeginPopupModal("Save As"))
     {
-      static std::string levelName;
-      ImGui::InputText("LevelName", levelName.data(), 20);
+      static std::string levelName = "DefaultLevelName";
+      Editors::InputText("Level name", &levelName);
       if (ImGui::Button("Save"))
       {
         SerializeLevel(levelName.c_str());
