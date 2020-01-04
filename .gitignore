@@ -343,3 +343,17 @@ healthchecksdb
 GAM200Prototype1/
 
 
+
+cmake-build-debug/
+
+assets/
+
+cmake-build-release-mingw/
+
+data/
+
+logs/
+
+out/
+
+shaders/
