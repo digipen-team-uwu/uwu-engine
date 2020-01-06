@@ -15,9 +15,8 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
-#include <UWUEngine/Component/LightingComponentManager.h>
 #include <UWUEngine/Engine.h>
-#include <UWUEngine/Editor.h>
+#include <UWUEngine/Component/LightingComponentManager.h>
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Graphics/Camera.h>
@@ -38,10 +37,7 @@ void GameStateMachine::Enter_BrayanSBOX()
   {
     if (EntityManager::GetType(i) != Type::Dropped)
     {
-      LightingComponentManager::SetAmbient(i, glm::vec3(0.1f, 0.1f, 0.2f));
-      LightingComponentManager::SetDiffuse(i, glm::vec3(0.5f, 0.5f, 0.5f));
-      LightingComponentManager::SetSpecular(i, glm::vec3(1.0f, 1.0f, 1.0f));
-      LightingComponentManager::SetShininess(i, 32.f);
+      LightingComponentManager::SetShininess(i, 16.0f);
     }
   }
 
@@ -57,7 +53,7 @@ void GameStateMachine::Enter_BrayanSBOX()
   Lighting::Activate();
   TextureAtlaser::LoadAtlasPage();
 
-  //SoundInterface::playSound("music_calm1", true);
+  SoundInterface::playSound("music_calm1", true);
 }
 
 
@@ -72,10 +68,7 @@ void GameStateMachine::Update_BrayanSBOX(float dt)
   {
     if (EntityManager::GetType(i) != Type::Dropped)
     {
-      LightingComponentManager::SetAmbient(i, glm::vec3(0.1f, 0.1f, 0.2f));
-      LightingComponentManager::SetDiffuse(i, glm::vec3(0.5f, 0.5f, 0.5f));
-      LightingComponentManager::SetSpecular(i, glm::vec3(1.0f, 1.0f, 1.0f));
-      LightingComponentManager::SetShininess(i, 32.f);
+      LightingComponentManager::SetShininess(i, 16.0f);
     }
   }
 #ifndef _DEBUG
@@ -144,4 +137,8 @@ void GameStateMachine::Exit_BrayanSBOX()
   SoundInterface::stopAllSounds();
   EntityManager::DestroyAll();
   TextureAtlaser::ClearData();
+
+  #ifdef _DEBUG_
+  Editor::Stop();
+#endif
 }

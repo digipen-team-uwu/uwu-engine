@@ -3,7 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/vec4.hpp>
-#include <iostream>
+// TODO: don't look
+#include <iostream> 
 
 //#define THREADED
 

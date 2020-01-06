@@ -29,9 +29,6 @@ void GameStateMachine::Enter_End()
   auto& ids = EntityManager::GetIDs();
   for (int i = 0; i < ids.size(); ++i)
   {
-    LightingComponentManager::SetAmbient(i, glm::vec3(0.1f, 0.1f, 0.2f));
-    LightingComponentManager::SetDiffuse(i, glm::vec3(0.5f, 0.5f, 0.5f));
-    LightingComponentManager::SetSpecular(i, glm::vec3(1.0f, 1.0f, 1.0f));
     LightingComponentManager::SetShininess(i, 32.f);
   }
 

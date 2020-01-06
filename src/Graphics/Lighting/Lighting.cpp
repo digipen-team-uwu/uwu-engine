@@ -9,23 +9,16 @@
 Copyright 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Graphics/Lighting/Lighting.h>
 #include <UWUEngine/constants.h>
+#include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Graphics/Camera.h>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Input/InputManager.h>
-#include <UWUEngine/FrameRateController.h>
-#include <iostream>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <UWUEngine/Component/LightingComponentManager.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/GamePlay/PlayerController.h>
-
-template<>
-int RegisterSystemHelper<Lighting>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Lighting>(SystemInitOrder::Light, SystemUpdateOrder::Light);
 
 Lighting::LightData Lighting::light_;
 Lighting::MaterialData Lighting::material_;
@@ -37,6 +30,9 @@ std::vector<LightSystem<LightType::SpotLight>> Lighting::SpotLight_{ goc::INITIA
 GLuint Lighting::ssbo_plight_;
 GLuint Lighting::ssbo_dlight_;
 GLuint Lighting::ssbo_splight_;
+
+template<>
+int RegisterSystemHelper<Lighting>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Lighting>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
 
 Lighting::Lighting()
 {
@@ -130,9 +126,9 @@ void Lighting::Update()
 
     light_.Pos_.x = player_pos.x;
     light_.Pos_.y = player_pos.y;
-    light_.Pos_.z = 5000.f;
-    light_.Ambient_ = glm::vec3(0.82, 0.82, 0.83);
-    light_.View_ = light_.Pos_;
+    light_.Pos_.z = 5000.0f;
+    light_.Ambient_ = glm::vec3(0.1f, 0.1f, 0.2f);
+    light_.View_ = Camera::GetCameraPosition();
 
     LightToggle();
     //std::cout << "light pos x: " << light_.Pos_.x << " light pos y: " << light_.Pos_.y << std::endl;
@@ -141,12 +137,12 @@ void Lighting::Update()
     const GLSLShader& shader = ShaderModule::GetEntityShader();
     shader.Use();
     UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Light);
-    //UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Material);
     shader.SetUniform("lightOn", lightOn_);
     shader.UnUse();
     
     //float dt = FrameRateController::GetDeltaTime<float>();
-    //light_.Pos_.y += 800.f * dt * (float)(!!InputManager::KeyHeld('u') - !!InputManager::KeyHeld('j'));
+    //light_.Pos_.z += 800.f * dt * (float)(!!InputManager::KeyHeld('u') - !!InputManager::KeyHeld('j'));
+    //TraceLogger::Log(TraceLogger::TRACE) << light_.Pos_.z << std::endl;
     //light_.Pos_.x -= 800.f * dt * (float)(!!InputManager::KeyHeld('h') - !!InputManager::KeyHeld('k'));
 
     //auto ambient = Lighting::GetLightAmbient();

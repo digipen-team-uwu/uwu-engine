@@ -12,16 +12,16 @@ Copyright 2019 DigiPen, All rights reserved.
 #pragma once
 #include <GL/glew.h>
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Entity/EntityVector.h>
 #include <unordered_map>
+#include <UWUEngine/Entity/EntityVector.h>
 #include <UWUEngine/BaseSystem.h>
 
 using VaoKey = size_t;
 
-class Instances : public BaseSystem<Instances>
+class Instances
 {
 public:
-  Instances();
+  Instances() = default;
   ~Instances();
 
   enum InstanceData
@@ -36,11 +36,6 @@ public:
     AtlasUV,
     AtlasScale,
     AtlasLayer,
-    //LightState,
-
-    Ambient,
-    Diffuse,
-    Specular,
     Shininess,
 
     Total
@@ -67,9 +62,6 @@ public:
     const std::vector<glm::vec2>* atlas_uv_ = NULL,
     const std::vector<glm::vec2>* atlas_scale_ = NULL,
     const std::vector<unsigned>* atlas_layer_ = NULL,
-    const std::vector<glm::vec3>* material_ambient_ = NULL,
-    const std::vector<glm::vec3>* material_diffuse_= NULL,
-    const std::vector<glm::vec3>* material_specular_ = NULL,
     const std::vector<float>* material_shininess_= NULL);
 
   static void CreateInstancedVBO(VaoKey vao_key, GLuint vao, InstanceData name, unsigned size, const void* data, unsigned location, GLenum bufferType);
@@ -83,10 +75,6 @@ public:
     const std::vector<glm::vec2>* atlas_uv_ = NULL,
     const std::vector<glm::vec2>* atlas_scale_ = NULL,
     const std::vector<unsigned>* atlas_layer_ = NULL,
-    const std::vector<int>* light_state = NULL,
-    const std::vector<glm::vec3>* material_ambient_ = NULL,
-    const std::vector<glm::vec3>* material_diffuse_ = NULL,
-    const std::vector<glm::vec3>* material_specular_ = NULL,
     const std::vector<float>* material_shininess_ = NULL);
 
   static void UpdateInstancesHUD(VaoKey vao_key, const std::vector<float>* rotation = NULL,
@@ -129,9 +117,6 @@ private:
       const std::vector<glm::vec2>*& atlas_uv_,
       const std::vector<glm::vec2>*& atlas_scale_,
       const std::vector<unsigned>*& atlas_layer_,
-      const std::vector<glm::vec3>*& material_ambient_,
-      const std::vector<glm::vec3>*& material_diffuse_,
-      const std::vector<glm::vec3>*& material_specular_,
       const std::vector<float>*& material_shininess_);
 
   static void SetNULLsToEntitiesHUD(const std::vector<float>*& rotation,
@@ -144,3 +129,5 @@ private:
       const std::vector<glm::vec2>*& atlas_scale_,
       const std::vector<unsigned>*& atlas_layer_);
 };
+
+//int RegisterSystemHelper<Instances>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Instances>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);

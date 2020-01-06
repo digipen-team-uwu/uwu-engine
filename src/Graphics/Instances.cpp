@@ -9,26 +9,16 @@
 Copyright 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-
-#include <UWUEngine/Component/TransformComponentManager.h>
-
 #include <UWUEngine/Instances.h>
+#include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Component/MeshComponentManager.h>
 #include <UWUEngine/Component/LightingComponentManager.h>
-#include <iostream>
-
-template<>
-int RegisterSystemHelper<Instances>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Instances>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
 
 std::vector<GLuint> Instances::vaos;
 std::unordered_map<VaoKey, std::array<GLuint, Instances::InstanceData::Total>> Instances::vbos;
 VaoKey Instances::entity_vao_key;
-
-Instances::Instances()
-{
-}
 
 Instances::~Instances()
 {
@@ -44,9 +34,6 @@ void Instances::SetNULLsToEntities(const std::vector<float>*& rotation,
   const std::vector<glm::vec2>*& atlas_uv_,
   const std::vector<glm::vec2>*& atlas_scale_,
   const std::vector<unsigned>*& atlas_layer_,
-    const std::vector<glm::vec3>*& material_ambient_,
-    const std::vector<glm::vec3>*& material_diffuse_,
-    const std::vector<glm::vec3>*& material_specular_,
     const std::vector<float>*& material_shininess_)
 {
   if (!rotation)
@@ -85,22 +72,6 @@ void Instances::SetNULLsToEntities(const std::vector<float>*& rotation,
   {
     atlas_layer_ = &TextureAtlaser::GetArrayAtlasLayer();
   }
-  //if (!light_state)
-  //{
-  //    light_state = &LightingComponentManager::GetArrayLightState();
-  //}
-    if(!material_ambient_)
-    {
-        material_ambient_ = &LightingComponentManager::GetArrayAmbient();
-    }
-    if (!material_diffuse_)
-    {
-        material_diffuse_ = &LightingComponentManager::GetArrayDiffuse();
-    }
-    if (!material_specular_)
-    {
-        material_specular_ = &LightingComponentManager::GetArraySpecular();
-    }
     if (!material_shininess_)
     {
         material_shininess_ = &LightingComponentManager::GetArrayShininess();
@@ -219,9 +190,6 @@ VaoKey Instances::CreateInstances(const std::tuple<GLenum, GLuint, GLuint>& mesh
   const std::vector<glm::vec2>* atlas_uv_,
   const std::vector<glm::vec2>* atlas_scale_,
   const std::vector<unsigned>* atlas_layer_,
-    const std::vector<glm::vec3>* material_ambient_,
-    const std::vector<glm::vec3>* material_diffuse_,
-    const std::vector<glm::vec3>* material_specular_,
     const std::vector<float>* material_shininess_)
 {
     auto vaoid = std::get<1>(mesh);
@@ -246,7 +214,7 @@ VaoKey Instances::CreateInstances(const std::tuple<GLenum, GLuint, GLuint>& mesh
     }
 
     SetNULLsToEntities(rotation, translation, scale, color, uvs, dimension, atlas_uv_, 
-        atlas_scale_, atlas_layer_, material_ambient_, material_diffuse_, material_specular_, material_shininess_);
+        atlas_scale_, atlas_layer_, material_shininess_);
 
     CreateInstancedVBO(vao_key, vaoid, Rotation, sizeof(float) * static_cast<unsigned>(rotation->capacity()),
         rotation->data(), 4, bufferType);
@@ -274,18 +242,6 @@ VaoKey Instances::CreateInstances(const std::tuple<GLenum, GLuint, GLuint>& mesh
 
     CreateInstancedVBO(vao_key, vaoid, AtlasLayer, sizeof(unsigned) * static_cast<unsigned>(atlas_layer_->capacity()),
         atlas_layer_->data(), 12, bufferType);
-
-    //CreateInstancedVBO(vao_key, vaoid, LightState, sizeof(int) * static_cast<unsigned>(light_state->capacity()),
-    //    light_state->data(), 13, bufferType);
-
-    CreateInstancedVBO(vao_key, vaoid, Ambient, sizeof(glm::vec3) * static_cast<unsigned>(material_ambient_->capacity()),
-        material_ambient_->data(), 3, bufferType);
-
-    CreateInstancedVBO(vao_key, vaoid, Diffuse, sizeof(glm::vec3) * static_cast<unsigned>(material_diffuse_->capacity()),
-        material_diffuse_->data(), 14, bufferType);
-
-    CreateInstancedVBO(vao_key, vaoid, Specular, sizeof(glm::vec3) * static_cast<unsigned>(material_specular_->capacity()),
-        material_specular_->data(), 15, bufferType);
 
     CreateInstancedVBO(vao_key, vaoid, Shininess, sizeof(float) * static_cast<unsigned>(material_shininess_->capacity()),
         material_shininess_->data(), 13, bufferType);
@@ -359,26 +315,6 @@ void Instances::CreateInstancedVBO(VaoKey vao_key, GLuint vao, InstanceData name
         glVertexArrayVertexBuffer(vao, location, vbo, 0, sizeof(unsigned));
         glVertexArrayAttribFormat(vao, location, 1, GL_FLOAT, GL_FALSE, 0);
     }
-    //else if (name == LightState)
-    //{
-    //    glVertexArrayVertexBuffer(vao, location, vbo, 0, sizeof(int));
-    //    glVertexArrayAttribFormat(vao, location, 1, GL_FLOAT, GL_FALSE, 0);
-    //}
-    else if (name == Ambient)
-    {
-        glVertexArrayVertexBuffer(vao, location, vbo, 0, sizeof(glm::vec3));
-        glVertexArrayAttribFormat(vao, location, 3, GL_FLOAT, GL_FALSE, 0);
-    }
-    else if (name == Diffuse)
-    {
-        glVertexArrayVertexBuffer(vao, location, vbo, 0, sizeof(glm::vec3));
-        glVertexArrayAttribFormat(vao, location, 3, GL_FLOAT, GL_FALSE, 0);
-    }
-    else if (name == Specular)
-    {
-        glVertexArrayVertexBuffer(vao, location, vbo, 0, sizeof(glm::vec3));
-        glVertexArrayAttribFormat(vao, location, 3, GL_FLOAT, GL_FALSE, 0);
-    }
     else if (name == Shininess)
     {
         glVertexArrayVertexBuffer(vao, location, vbo, 0, sizeof(float));
@@ -401,15 +337,10 @@ void Instances::UpdateInstances(VaoKey vao_key, const std::vector<float>* rotati
     const std::vector<glm::vec2>* atlas_uv_, 
     const std::vector<glm::vec2>* atlas_scale_,
     const std::vector<unsigned>* atlas_layer_,
-    const std::vector<int>* light_state,
-    const std::vector<glm::vec3>* material_ambient_,
-    const std::vector<glm::vec3>* material_diffuse_,
-    const std::vector<glm::vec3>* material_specular_,
     const std::vector<float>* material_shininess_)
 {
     SetNULLsToEntities(rotation, translation, scale, color, uvs, dimension, 
-        atlas_uv_, atlas_scale_, atlas_layer_,material_ambient_, material_diffuse_, material_specular_,
-        material_shininess_);
+        atlas_uv_, atlas_scale_, atlas_layer_, material_shininess_);
 
     UpdateInstancedVBO(vao_key, Rotation, sizeof(float) * static_cast<unsigned>(rotation->capacity()),
         rotation->data());
@@ -437,18 +368,6 @@ void Instances::UpdateInstances(VaoKey vao_key, const std::vector<float>* rotati
 
     UpdateInstancedVBO(vao_key, AtlasLayer, sizeof(unsigned) * static_cast<unsigned>(atlas_layer_->capacity()),
       atlas_layer_->data());
-
-    //UpdateInstancedVBO(vao_key, LightState, sizeof(int) * static_cast<unsigned>(light_state->capacity()),
-    //    light_state->data());
-
-    UpdateInstancedVBO(vao_key, Ambient, sizeof(glm::vec3) * static_cast<unsigned>(material_ambient_->capacity()),
-        material_ambient_->data());
-
-    UpdateInstancedVBO(vao_key, Diffuse, sizeof(glm::vec3) * static_cast<unsigned>(material_diffuse_->capacity()),
-        material_diffuse_->data());
-
-    UpdateInstancedVBO(vao_key, Specular, sizeof(glm::vec3) * static_cast<unsigned>(material_specular_->capacity()),
-        material_specular_->data());
 
     UpdateInstancedVBO(vao_key, Shininess, sizeof(float) * static_cast<unsigned>(material_shininess_->capacity()),
         material_shininess_->data());

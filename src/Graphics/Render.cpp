@@ -19,19 +19,17 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
-#include <UWUEngine/Component/MeshComponentManager.h>
 #include <UWUEngine/Debugs/DebugManager.h>
 #include <UWUEngine/Editor.h>
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/UI/UIManager.h>
 
-template<>
-int RegisterSystemHelper<Render>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Render>(SystemInitOrder::Render, SystemUpdateOrder::Render);
-
 namespace wc = WindowConstants;
 
 static GLuint size;
+template<>
+int RegisterSystemHelper<Render>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Render>(SystemInitOrder::Render, SystemUpdateOrder::Render);
 
 namespace
 {
@@ -48,8 +46,9 @@ Render::Render()
 #endif
 	glViewport(0, 0, wc::WINDOW_WIDTH, wc::WINDOW_HEIGHT);
 	glEnable(GL_BLEND);
-  //glBlendEquation(GL_)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.05);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_LINE_SMOOTH);
@@ -72,14 +71,6 @@ void Render::Update()
     size = static_cast<GLuint>(ids.size());
     //TODO: stop dreamming
     const GLSLShader& shader = ShaderModule::GetEntityShader();
-
-  /*
-//TODO:: put this back
-  //if (Editor::IsActive())
-  //{
-  //  ImGui::Render();
-  //  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  //}*/
 
     for (auto id : ids)
     {

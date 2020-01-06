@@ -8,19 +8,16 @@
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 
-template<>
-int RegisterSystemHelper<UniformBuffer>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<UniformBuffer>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
-
 namespace UBC = UniformBufferConstants;
 std::map<UniformBuffer::Type, std::pair<unsigned, unsigned>> UniformBuffer::data_;
+
+template<>
+int RegisterSystemHelper<UniformBuffer>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<UniformBuffer>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
 
 UniformBuffer::UniformBuffer()
 {
     CreateUniformBuffer(Light,
         5 * sizeof(glm::vec3) + 5 * UBC::MEMORY_LAYOUT_OFFSET, 0);
-
-    CreateUniformBuffer(Material,
-        3 * sizeof(glm::vec3) + 3 * UBC::MEMORY_LAYOUT_OFFSET, 4);
 
     CreateUniformBuffer(Camera,
         2 * sizeof(glm::mat4), 1);
@@ -128,32 +125,6 @@ void UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type name, EntityID 
             4 * sizeof(glm::vec3) + 4 * UBC::MEMORY_LAYOUT_OFFSET,
             sizeof(glm::vec3),
             glm::value_ptr(lightSpecular));
-        glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
-    }
-    else if (name == Material)
-    {
-        auto& materialAmbient = Lighting::GetMaterialAmbient();
-        auto& materialDiffuse = Lighting::GetMaterialDiffuse();
-        auto& materialSpecular = Lighting::GetMaterialSpecular();
-        float materialShininess = Lighting::GetMaterialShininess();
-
-        glBindBuffer(GL_UNIFORM_BUFFER, data_[name].first);
-        glBufferSubData(GL_UNIFORM_BUFFER,
-            0,
-            sizeof(glm::vec3),
-            glm::value_ptr(materialAmbient));
-        glBufferSubData(GL_UNIFORM_BUFFER,
-            sizeof(glm::vec3) + UBC::MEMORY_LAYOUT_OFFSET,
-            sizeof(glm::vec3),
-            glm::value_ptr(materialDiffuse));
-        glBufferSubData(GL_UNIFORM_BUFFER,
-            2 * sizeof(glm::vec3) + 2 * UBC::MEMORY_LAYOUT_OFFSET,
-            sizeof(glm::vec3),
-            glm::value_ptr(materialSpecular));
-        glBufferSubData(GL_UNIFORM_BUFFER,
-            3 * sizeof(glm::vec3) + 2 * UBC::MEMORY_LAYOUT_OFFSET,
-            sizeof(float),
-            &materialShininess);
         glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
     }
     

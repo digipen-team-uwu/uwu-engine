@@ -1,6 +1,6 @@
 #pragma once
 #include <UWUEngine/BaseSystem.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/constants.h>
 
 class UniformBuffer : public BaseSystem<UniformBuffer>
 {
@@ -13,7 +13,6 @@ public:
     {
         Camera,
         Light,
-        Material,
         HUDMatrices,
         Spine,
 
@@ -29,3 +28,4 @@ private:
     // uboId, location
     static std::map<UniformBuffer::Type, std::pair<unsigned, unsigned>> data_;
 };
+
