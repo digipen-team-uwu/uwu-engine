@@ -2,7 +2,7 @@
 # UWU Engine
 UWU Engine is a performance oriented, ECS architectured game engine, being developed for the work-in-progress title Project Umbra.
 
-To see all the libraries we used in the UWU Engine, goto [Libraries](docs/LibraryList.md).
+To see all the libraries we used in the UWU Engine, goto [Libraries](docs/LibraryList.md)
 
 - [UWU Engine](#uwu-engine)
   - [Systems](#systems)
