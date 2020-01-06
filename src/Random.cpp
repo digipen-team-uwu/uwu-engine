@@ -40,7 +40,7 @@ float Random::Range(float min, float max)
   return dist(rng);
 }
 
-//generates double between min and max INCLUSIVE
+//generates double between min and max INCLUSIVE.
 double Random::Range(double min, double max)
 {
   bool correct = min < max;
