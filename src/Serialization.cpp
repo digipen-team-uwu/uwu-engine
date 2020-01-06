@@ -70,7 +70,7 @@ void SerializeVec3(std::ofstream& stream, const char* name, glm::vec3 vector)
 /******************************************************************************/
 /*!
   \brief
-    Print the data stored in a vec4 to the stream using JSON array format
+    Print the data stored in a vec4 to the stream using JSON array format.
 
   \param stream
     The stream to be printed to
