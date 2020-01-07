@@ -10,7 +10,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #include <UWUEngine/GamePlay/PerceptionBehavior.h>
-#include <UWUEngine\Audio\SoundInterface.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 // The amount of time the enemy is stunned for after getting hurt
 #define STUN_TIME 0.25f

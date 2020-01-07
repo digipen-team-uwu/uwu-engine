@@ -12,7 +12,7 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/GamePlay/PlayerController.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
-#include <UWUEngine\Audio\SoundInterface.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 glm::vec2 HurtDir = {};
 glm::vec2 HurtVel;

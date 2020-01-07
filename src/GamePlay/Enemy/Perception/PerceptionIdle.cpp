@@ -14,7 +14,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include "glm/vec3.hpp"
-#include <UWUEngine\Audio\SoundInterface.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 // The range at which the enemy will begin atttacking (slightly past the actual attack range)
 #define AGGRO_X_RANGE 500.0f

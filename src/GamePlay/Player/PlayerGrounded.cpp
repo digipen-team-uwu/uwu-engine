@@ -16,7 +16,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Input/ActionManager.h>
 #include <UWUEngine/GameStatesManager.h>
-#include <UWUEngine\Audio\SoundInterface.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 void PlayerStateMachine::Load_Grounded()
 {

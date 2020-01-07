@@ -14,7 +14,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include "glm/vec3.hpp"
-#include <UWUEngine\Audio\SoundInterface.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 #define ANIMATION_FRAMES 40.0f
 #define ANIMATION_LENGTH ANIMATION_FRAMES / 30.0f
