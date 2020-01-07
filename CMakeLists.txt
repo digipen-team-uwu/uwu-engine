@@ -19,13 +19,26 @@ endif ()
 
 target_include_directories(uwuEngine PUBLIC ${FMOD_INCLUDE_DIR})
 target_include_directories(uwuEngine PUBLIC ${GLEW_INCLUDE_DIR})
+target_include_directories(uwuEngine PUBLIC lib/**/include)
+
+if (MSVC)
+    target_link_libraries(uwuEngine
+            opengl32
+            glu32
+            )
+else ()
+    target_link_libraries(uwuEngine
+            OpenGL
+            GLX
+            stdc++fs
+            )
+endif ()
+
+#${FSBANK_LIBRARY}
+#${FMOD_STUDIO_LIBRARY}
 
 target_link_libraries(uwuEngine
-        opengl32
-        glu32
         ${FMOD_LIBRARY}
-        ${FSBANK_LIBRARY}
-        ${FMOD_STUDIO_LIBRARY}
         libglew_static
         glfw
         GLM
@@ -38,10 +51,12 @@ target_link_libraries(uwuEngine
         )
 
 # Copy FMOD dll
+if (WIN32)
 add_custom_command(TARGET uwuEngine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${FMOD_DLL}
         $<TARGET_FILE_DIR:uwuEngine>)
+endif ()
 
 # Copy Data folder
 file(COPY
