@@ -18,8 +18,6 @@ if (MSVC)
 endif ()
 
 target_include_directories(uwuEngine PUBLIC ${FMOD_INCLUDE_DIR})
-target_include_directories(uwuEngine PUBLIC ${GLEW_INCLUDE_DIR})
-target_include_directories(uwuEngine PUBLIC lib/**/include)
 
 if (MSVC)
     target_link_libraries(uwuEngine
