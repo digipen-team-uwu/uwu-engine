@@ -11,7 +11,6 @@ class GLSLShader
     */
 {
 public:
-
     // default ctor required to initialize GLSLShader object to safe state
     GLSLShader() : pgm_handle(0), is_linked(GL_FALSE) {
 
@@ -141,7 +140,7 @@ private:
         TESS_EVALUATION_SHADER = GL_TESS_EVALUATION_SHADER,
         // ignore compute shader for now because it is not connected to
         // the graphics pipe
-        // COMPUTE_SHADER = GL_COMPUTE_SHADER
+        COMPUTE_SHADER = GL_COMPUTE_SHADER
     };
 
     GLuint pgm_handle = 0;  // handle to linked shader program object

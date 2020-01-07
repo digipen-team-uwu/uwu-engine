@@ -1,8 +1,9 @@
 #include <UWUEngine/Graphics/Shader/glslshader.h>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <UWUEngine/Debugs/TraceLogger.h>
+
+
 
 GLint
 GLSLShader::GetUniformLocation(GLchar const* name) {
@@ -83,7 +84,7 @@ GLSLShader::CompileShaderFromString(GLenum shader_type,
     case GEOMETRY_SHADER: shader_handle = glCreateShader(GL_GEOMETRY_SHADER); break;
     case TESS_CONTROL_SHADER: shader_handle = glCreateShader(GL_TESS_CONTROL_SHADER); break;
     case TESS_EVALUATION_SHADER: shader_handle = glCreateShader(GL_TESS_EVALUATION_SHADER); break;
-        //case COMPUTE_SHADER: shader_handle = glCreateShader(GL_COMPUTE_SHADER); break;
+    case COMPUTE_SHADER: shader_handle = glCreateShader(GL_COMPUTE_SHADER); break;
     default:
         log_string = "Incorrect shader type";
         return GL_FALSE;
