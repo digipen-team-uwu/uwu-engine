@@ -154,7 +154,7 @@ void SerializeLevel(const char* level)
 std::vector<EntityID> DeserializeLevel(const char* level)
 {
   // Create a c-style string that represents the file path
-#ifdef MSVC
+#ifdef _MSVC
   std::wstringstream filepath;
   wchar_t* path = 0;
   SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path);
@@ -172,8 +172,9 @@ std::vector<EntityID> DeserializeLevel(const char* level)
 
   // Attempt to open the file for reading
   //printf("Attempting to open file %s for reading", filePath); // Debug print
-#ifdef WIN64
-  FILE* file = _wfopen_s(&file, filepath.str().c_str(), L"rb");
+#ifdef _WIN64
+  FILE* file;
+  _wfopen_s(&file, filepath.str().c_str(), L"rb");
 #else
     FILE* file = std::fopen(filepath.str().c_str(), "rb");
 #endif
