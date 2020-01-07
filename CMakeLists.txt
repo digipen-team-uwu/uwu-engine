@@ -47,6 +47,4 @@ add_custom_command(TARGET uwuEngine POST_BUILD
 file(COPY
         ${PROJECT_SOURCE_DIR}/data
         ${PROJECT_SOURCE_DIR}/assets
-        ${PROJECT_SOURCE_DIR}/logs
-        ${PROJECT_SOURCE_DIR}/shaders
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
