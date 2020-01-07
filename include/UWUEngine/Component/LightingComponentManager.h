@@ -27,5 +27,3 @@ private:
     // Material
     static EntityVector<float> shininess_;
 };
-
-size_t RegisterComponentHelper<LightingComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<LightingComponentManager>(ComponentUpdateOrder::LAST);

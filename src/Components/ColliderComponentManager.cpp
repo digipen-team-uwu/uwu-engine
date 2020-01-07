@@ -152,7 +152,7 @@ void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
   const float proj1 = ProjectPoint(obj1trans.xy(), info.direction);
   const float proj2 = ProjectPoint(obj2trans.xy(), info.direction);
 
-  glm::vec2 direction = info.direction * abs(info.depth);
+  glm::vec2 direction = info.direction * std::abs(info.depth);
   direction = proj1 > proj2 ? direction : -direction;
 
   const float mass1 = PhysicsComponentManager::GetInverseMass(info.obj1);

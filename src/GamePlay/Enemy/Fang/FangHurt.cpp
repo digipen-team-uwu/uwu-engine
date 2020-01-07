@@ -1,7 +1,7 @@
 #include <UWUEngine/GamePlay/FangBehavior.h>
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include "glm/vec3.hpp"
-#include <UWUEngine\Audio\SoundInterface.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 // TO DO: CHANGE THESE TO MATCH LENGTH OF SPINE ANIMATION FOR EACH
 #define STUN_TIME 0.5f

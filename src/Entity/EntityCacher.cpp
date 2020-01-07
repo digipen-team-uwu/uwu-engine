@@ -5,6 +5,7 @@
 #include <UWUEngine/Component/AnimationComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <document.h>
+#include <cstdio>
 #include <filesystem>
 #include <filereadstream.h>
 #include <UWUEngine/Serialization.h>
@@ -50,8 +51,7 @@ void EntityCacher::InstantiateCachedBehavior(EntityID id, std::string fileName)
 
 void EntityCacher::MakeJsonObject(const char* filepath, rapidjson::Document& obj)
 {
-  FILE* file;
-  fopen_s(&file, filepath, "rb");
+  FILE* file = std::fopen(filepath, "rb");
   assert(file);
   rapidjson::FileReadStream stream(file, EntityFactory::readBuffer, sizeof(EntityFactory::readBuffer));
   obj.ParseStream(stream);

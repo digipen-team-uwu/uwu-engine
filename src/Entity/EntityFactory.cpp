@@ -61,8 +61,7 @@ EntityID EntityFactory::CreateObject(EntityManager::Type type)
 
 
     // Open the file
-    FILE* file;
-    fopen_s(&file, filePath.str().c_str(), "rb");
+    FILE* file = fopen(filePath.str().c_str(), "rb");
 
     // Check to make sure the file opened properly
     //printf("Attempting to open file %s\n", filePath.str().c_str()); // Debug print

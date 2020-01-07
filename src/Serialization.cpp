@@ -105,8 +105,8 @@ void SerializeVec2(std::ofstream& stream, const char* name, glm::vec2 vector)
 void SerializeLevel(const char* level)
 {
   // Create a c-style string that represents the file path
-  std::wstringstream filepath;
 #ifdef _WIN64
+  std::wstringstream filepath;
   wchar_t* path = 0;
 #ifdef _MSVC
   SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path);
@@ -120,6 +120,7 @@ void SerializeLevel(const char* level)
   CoTaskMemFree(static_cast<void*>(path));
 #endif
 #else
+  std::stringstream filepath;
   filepath << "./data/levels/" << level << ".json";
 #endif
   // Attempt to open the file for writing
@@ -153,8 +154,8 @@ void SerializeLevel(const char* level)
 std::vector<EntityID> DeserializeLevel(const char* level)
 {
   // Create a c-style string that represents the file path
+#ifdef _MSVC
   std::wstringstream filepath;
-#ifdef MSVC
   wchar_t* path = 0;
   SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path);
   filepath << path << L"\\DigiPen\\Umbra\\levels\\" << level << ".json" ;
@@ -165,13 +166,18 @@ std::vector<EntityID> DeserializeLevel(const char* level)
     filepath << "./data/levels/" << level << ".json";
   }
 #else
+  std::stringstream filepath;
   filepath << "./data/levels/" << level << ".json";
 #endif
 
   // Attempt to open the file for reading
   //printf("Attempting to open file %s for reading", filePath); // Debug print
+#ifdef _WIN64
   FILE* file;
   _wfopen_s(&file, filepath.str().c_str(), L"rb");
+#else
+    FILE* file = std::fopen(filepath.str().c_str(), "rb");
+#endif
 
   TraceLogger::Assert(file, "file %S was opened for reading", filepath.str().c_str());
 

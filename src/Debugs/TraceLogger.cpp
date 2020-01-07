@@ -27,6 +27,7 @@ using namespace WindowsSpecific;
 #endif
 
 #include <UWUEngine/Debugs/TraceLogger.specialization.cpp>
+#include <memory>
 
 template<>
 int RegisterSystemHelper<TraceLogger>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TraceLogger>(SystemInitOrder::Trace, SystemUpdateOrder::LAST);
@@ -69,11 +70,17 @@ namespace
 {
   std::string string_format(char const* format, std::va_list args)
   {
-    std::string formatted;
+    std::va_list args_copy;
+    va_copy(args_copy, args);
     size_t const length = std::vsnprintf(nullptr, 0, format, args) + 1ll;
-    formatted.resize(length);
-    std::vsnprintf(&(*formatted.begin()), length, format, args);
-    return formatted;
+    if(length <= 0)
+    {
+      // TODO: remove temp exception
+      throw std::runtime_error("Error during formatting.");
+    }
+    std::unique_ptr<char[]> buf(new char[length]);
+    std::vsnprintf(buf.get(), length, format, args_copy);
+    return std::string(buf.get(), buf.get() + length - 1);
   }
 
   std::string string_format(char const* format, ...)
