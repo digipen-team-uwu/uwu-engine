@@ -53,15 +53,15 @@ void SpineSkeleton::Draw() const
 	//TODO::free the shader
 	if (!shader_.GetHandle())
 	{
-		if (!shader_.CompileShaderFromFile(GL_VERTEX_SHADER, "./shaders/spineShader.vert"))
+		if (!shader_.CompileShaderFromFile(GL_VERTEX_SHADER, "./data/shaders/spineShader.vert"))
 		{
-		  TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./shaders/spineShader.vert\""<<std::endl;
+		  TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/spineShader.vert\""<<std::endl;
       exit(-1);
 		}
 
-    if (!shader_.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./shaders/spineShader.frag"))
+    if (!shader_.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./data/shaders/spineShader.frag"))
     {
-      TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./shaders/spineShader.frag\"" << std::endl;
+      TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/spineShader.frag\"" << std::endl;
       exit(-1);
     }
 		shader_.Link();

@@ -50,7 +50,7 @@ GLSLShader ShaderModule::GetEntityShader()
   static bool shaderMade = false;
   if (!shaderMade)
   {
-    entityShader = CreateShader("./shaders/pass-thru-pos2d-clr.vert", "./shaders/basic-color.frag");
+    entityShader = CreateShader("./data/shaders/pass-thru-pos2d-clr.vert", "./data/shaders/basic-color.frag");
     shaderMade = true;
   }
   return entityShader;
@@ -61,7 +61,7 @@ GLSLShader ShaderModule::GetHudShader()
     static bool made = false;
     if (!made)
     {
-        hudShader = CreateShader("./shaders/HUD.vert", "./shaders/HUD.frag");
+        hudShader = CreateShader("./data/shaders/HUD.vert", "./data/shaders/HUD.frag");
         made = true;
     }
     return hudShader;
