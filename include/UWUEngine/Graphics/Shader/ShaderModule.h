@@ -10,12 +10,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-
 #include <UWUEngine/Graphics/Shader/glslshader.h>
-#include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Component/BaseComponent.h>
-#include <map>
-#include <tuple>
 
 class ShaderModule
 {
@@ -25,7 +20,7 @@ public:
 
     static GLSLShader CreateShader(const char* vertex_shader_filePath,
         const char* fragment_shader_filePath);
-
+    static GLSLShader CreateComputeShader(char const* compute_shader_filePath);
     static GLSLShader GetEntityShader();
     static GLSLShader GetHudShader();
 

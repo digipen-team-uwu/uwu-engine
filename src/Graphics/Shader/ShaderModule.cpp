@@ -12,7 +12,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
-#include <UWUEngine/Graphics/Lighting/Lighting.h>
 #include <fstream>
 #include <UWUEngine/Debugs/TraceLogger.h>
 
@@ -43,6 +42,25 @@ GLSLShader ShaderModule::CreateShader(const char* vertex_shader_filePath,
     }
 
     return shdr_pgm;
+}
+
+GLSLShader ShaderModule::CreateComputeShader(char const* compute_shader_filePath)
+{
+    std::vector<std::pair<GLenum, std::string>> files;
+    GLSLShader compute_shader_program{};
+    files.emplace_back(std::make_pair(GL_COMPUTE_SHADER, compute_shader_filePath));
+
+    compute_shader_program.CompileLinkValidate(files);
+
+    if (compute_shader_program.IsLinked() == GL_FALSE)
+    {
+        TraceLogger::Log(TraceLogger::FAILURE) << "Unable to compile/link/validate shader programs" <<
+            std::endl;
+        TraceLogger::Log(TraceLogger::FAILURE) << compute_shader_program.GetLog() << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    return compute_shader_program;
 }
 
 GLSLShader ShaderModule::GetEntityShader()
