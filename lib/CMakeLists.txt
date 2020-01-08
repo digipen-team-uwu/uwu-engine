@@ -1,5 +1,10 @@
 # Let Sub modules build themselves
 add_subdirectory(glfw)
+
+option (glew-cmake_BUILD_SHARED "Build shared libraries" ON)
+set(glew-cmake_BUILD_SHARED OFF)
+option(glew-cmake_BUILD_MULTI_CONTEXT "Build the multi context glew library" ON)
+set(glew-cmake_BUILD_MULTI_CONTEXT OFF)
 add_subdirectory(glew)
 #############################################################################
 # Find libraries that are in binary

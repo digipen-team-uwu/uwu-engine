@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
+#Use modern OpenGL libraries instead of legacy ones
+set(CMAKE_POLICY_DEFAULT_CMP0072 NEW)
+
 project(uwuEngine)
 
 #Global include directory for all builds
