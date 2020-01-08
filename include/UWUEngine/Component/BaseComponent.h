@@ -65,12 +65,12 @@ public:
   }
   static size_t updateOrder_;
 private:
-  static EntityVector<bool> isActive_;
+  static EntityVector<std::uint8_t> isActive_;
   
 };
 
 template<typename T>
-EntityVector<bool> BaseComponent<T>::isActive_(GameObjectConstants::INITIAL_OBJECT_COUNT);
+EntityVector<std::uint8_t> BaseComponent<T>::isActive_(GameObjectConstants::INITIAL_OBJECT_COUNT);
 
 template<typename T>
 size_t BaseComponent<T>::updateOrder_ = static_cast<size_t>(ComponentUpdateOrder::INVALID);
