@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/BaseComponent.h>
 
@@ -20,11 +20,7 @@ public:
   static void EraseChild(EntityID parent, EntityID child);
   static void EraseChild(EntityID parent, std::vector<EntityID>::iterator child);
   
-  struct ParentAndChildren
-  {
-    EntityID parent{0};
-    std::vector<EntityID> children;
-  };
 private:
-  static std::map<EntityID, ParentAndChildren> parentAndChildren;
+  static EntityVector<EntityID> parents;
+  static std::unordered_map<EntityID, std::vector<EntityID>> children;
 };

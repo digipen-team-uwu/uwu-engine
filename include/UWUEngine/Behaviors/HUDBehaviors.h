@@ -22,5 +22,6 @@ public:
   void SetEnergy(size_t newEnergy) { energy = newEnergy; }
 private:
   size_t energy;
+  EntityID particles;
 };
 

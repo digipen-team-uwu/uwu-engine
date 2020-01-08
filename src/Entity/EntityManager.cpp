@@ -29,9 +29,9 @@ int RegisterSystemHelper<EntityManager>::RegisterSystemHelper_ID = SystemUpdater
 std::vector<EntityID> EntityManager::ids;
 std::vector<EntityID> EntityManager::freeIDs;
 EntityVector<EntityManager::Type> EntityManager::types(goc::INITIAL_OBJECT_COUNT);
-EntityVector<bool> EntityManager::destroyeds(goc::INITIAL_OBJECT_COUNT);
-EntityVector<bool> EntityManager::clearImmune(goc::INITIAL_OBJECT_COUNT);
-EntityVector<bool> EntityManager::dontSerialize(goc::INITIAL_OBJECT_COUNT);
+EntityVector<std::uint8_t> EntityManager::destroyeds(goc::INITIAL_OBJECT_COUNT);
+EntityVector<std::uint8_t> EntityManager::clearImmune(goc::INITIAL_OBJECT_COUNT);
+EntityVector<std::uint8_t> EntityManager::dontSerialize(goc::INITIAL_OBJECT_COUNT);
 bool EntityManager::destroyed = false;
 EntityID EntityManager::idCount = 0;
 
@@ -142,10 +142,10 @@ void EntityManager::InitComponents()
 void EntityManager::Destroy(EntityID id, int idsIndex)
 {
   //Mark all the children as destroyed
-  for (auto child : ParentChildComponentManager::GetChildren(id))
-  {
-    Destroy(child, idsIndex);
-  }
+  //for (auto child : ParentChildComponentManager::GetChildren(id))
+  //{
+    //Destroy(child, idsIndex);
+  //}
   //Remove Name
   Editors::EntityViewer::RemoveName(id);
   if (idsIndex == -1)

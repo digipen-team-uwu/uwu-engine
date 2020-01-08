@@ -38,7 +38,6 @@ void Behavior<EntityManager::Type::HUDHealth>::Render()
 
 void Behavior<EntityManager::Type::HUDEnergy>::Update()
 {
-  EntityID particles = ParentChildComponentManager::GetChildren(GetID())[0];
   /* static Timer timer(2);
   if (timer.Finished())
   {
@@ -61,7 +60,7 @@ void Behavior<EntityManager::Type::HUDEnergy>::Update()
 Behavior<EntityManager::Type::HUDEnergy>::Behavior(EntityID id) : BaseBehavior(id), energy(0)
 {
   ParentChildComponentManager::Activate(id);
-  EntityID particles = EntityFactory::CreateObject(EntityManager::Type::ParticleEmitter);
+  particles = EntityFactory::CreateObject(EntityManager::Type::ParticleEmitter);
   ParentChildComponentManager::AddChild(id, particles);
   EntityCacher::InstantiateCachedBehavior(particles, "Energy");
   EntityManager::SetClearImmunity(particles, true);

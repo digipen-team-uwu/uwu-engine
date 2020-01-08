@@ -203,9 +203,9 @@ private:
 	static std::vector<EntityID> ids;
 	static std::vector<EntityID> freeIDs;
 	static EntityVector<Type> types;
-	static EntityVector<bool> destroyeds;
-	static EntityVector<bool> clearImmune;
-	static EntityVector<bool> dontSerialize;
+	static EntityVector<std::uint8_t> destroyeds;
+	static EntityVector<std::uint8_t> clearImmune;
+	static EntityVector<std::uint8_t> dontSerialize;
 	static bool destroyed; //was any destroyed flag set to true this frame
 	static void Destroy_();//destroys entities when safe to do so
 	static void Deactivate(EntityID& id);//deactivates components attached to entity

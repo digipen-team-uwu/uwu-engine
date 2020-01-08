@@ -14,42 +14,44 @@
 template<>
 size_t RegisterComponentHelper<ParentChildComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<ParentChildComponentManager>(ComponentUpdateOrder::LAST);
 
-std::map<EntityID, ParentChildComponentManager::ParentAndChildren> ParentChildComponentManager::parentAndChildren;
+std::unordered_map<EntityID, std::vector<EntityID>> ParentChildComponentManager::children;
+
+EntityVector<EntityID> ParentChildComponentManager::parents(goc::INITIAL_OBJECT_COUNT);
 
 const std::vector<EntityID>& ParentChildComponentManager::GetChildren(EntityID id)
 {
-  return parentAndChildren[id].children;
+  return children[id];
 }
 
 EntityID ParentChildComponentManager::GetParent(EntityID id)
 {
-  return parentAndChildren[id].parent;
+  return parents[id];
 }
 
 void ParentChildComponentManager::AddChild(EntityID parent, EntityID child)
 {
-  parentAndChildren[parent].children.push_back(child);
+ children[parent].push_back(child);
   ParentChildComponentManager::Activate(child);
-  parentAndChildren[child].parent = parent;
+  parents[child] = parent;
 }
 
 void ParentChildComponentManager::EraseChild(EntityID parent, EntityID child)
 {
-  auto& data = parentAndChildren[parent];
-  for (auto it = data.children.begin(); it != data.children.end(); ++it)
+  for (auto it = children[parent].begin(); it != children[parent].end(); ++it)
   {
     if (*it == child)
-      data.children.erase(it);
+      children[parent].erase(it);
   }
 }
 
 void ParentChildComponentManager::EraseChild(EntityID parent, std::vector<EntityID>::iterator child)
 {
-  parentAndChildren[parent].children.erase(child);
+  children[parent].erase(child);
 }
 
 
 void ParentChildComponentManager::ShutdownObject(EntityID id)
 {
-  parentAndChildren.erase(id);
+  children.erase(id);
+  EraseChild(parents[id], id);
 }
