@@ -32,11 +32,10 @@ else ()
             )
 endif ()
 
-#${FSBANK_LIBRARY}
-#${FMOD_STUDIO_LIBRARY}
-
 target_link_libraries(uwuEngine
         ${FMOD_LIBRARY}
+        ${FSBANK_LIBRARY}
+        ${FMOD_STUDIO_LIBRARY}
         libglew_static
         glfw
         GLM
