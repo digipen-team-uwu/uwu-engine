@@ -40,7 +40,10 @@ void ParentChildComponentManager::EraseChild(EntityID parent, EntityID child)
   for (auto it = children[parent].begin(); it != children[parent].end(); ++it)
   {
     if (*it == child)
+    {
       children[parent].erase(it);
+      return;
+    }
   }
 }
 
