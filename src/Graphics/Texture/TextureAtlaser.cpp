@@ -13,28 +13,27 @@ Copyright 2019 DigiPen, All rights reserved.
 #include "stb_image.h"
 #include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
 #include <cstdarg>
-#include <iostream>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Engine.h>
-#include <tuple>
 #include <UWUEngine/Debugs/TraceLogger.h>
 
 template<>
 int RegisterSystemHelper<TextureAtlaser>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TextureAtlaser>(SystemInitOrder::Atlas, SystemUpdateOrder::Atlas);
 
-unsigned TextureAtlaser::layer_counter = 0;
-unsigned TextureAtlaser::total_width = 0;
-unsigned TextureAtlaser::total_height = 0;
+int TextureAtlaser::layer_counter;
+int TextureAtlaser::tracker_ = 0;
+int TextureAtlaser::start_index_ = 0;
+bool TextureAtlaser::is_first_pass_;
 int TextureAtlaser::max_side;
 int TextureAtlaser::discard_step;
 flipping_option TextureAtlaser::runtime_flipping_mode;
 GLuint TextureAtlaser::texID;
-//std::unordered_map<AtlasLayer, std::pair<rect_wh, std::vector<TextureAtlaser::RawData>>> TextureAtlaser::data_;
 std::vector<rect_type> TextureAtlaser::rectangles;
 EntityVector<AtlasLayer> TextureAtlaser::atlas_layers{ goc::INITIAL_OBJECT_COUNT };
 EntityVector<glm::vec2> TextureAtlaser::atlas_uv{ goc::INITIAL_OBJECT_COUNT };
 EntityVector<glm::vec2> TextureAtlaser::atlas_scale{ goc::INITIAL_OBJECT_COUNT };
 std::unordered_map<std::string, TextureAtlaser::RawData>TextureAtlaser::filePath_to_RawData;
+std::vector<TextureAtlaser::RawData>TextureAtlaser::atlas_data_;
 
 TextureAtlaser::TextureAtlaser()
 {
@@ -43,6 +42,8 @@ TextureAtlaser::TextureAtlaser()
     // disable flipping image for best fit
     runtime_flipping_mode = flipping_option::DISABLED;
     stbi_set_unpremultiply_on_load(1);
+    is_first_pass_ = true;
+    layer_counter = 0;
 }
 
 void TextureAtlaser::ClearData()
@@ -53,9 +54,18 @@ void TextureAtlaser::ClearData()
         stbi_image_free(it1->second.image);
     }
     filePath_to_RawData.clear();
-    ResetLayerCounter();
+    atlas_data_.clear();
+    Reset();
     glDeleteTextures(1, &texID);
     //TextureLoader::FlushCacheFiles();
+}
+
+void TextureAtlaser::Reset()
+{
+    is_first_pass_ = true;
+    layer_counter = 0;
+    start_index_ = 0;
+    tracker_ = 0;
 }
 
 void TextureAtlaser::report_result(const rect_wh& result_size, const std::vector<rect_type>& rectangles)
@@ -78,7 +88,64 @@ const TextureAtlaser::RawData& TextureAtlaser::GetRawData(const std::string& fil
 }
 
 
-void TextureAtlaser::Atlasing(std::vector<RawData> &data_)
+void TextureAtlaser::CheckingLayer()
+{
+    if (is_first_pass_)
+    {
+        for (auto it = atlas_data_.begin(); it != atlas_data_.end(); ++it)
+        {
+            rectangles.emplace_back(rect_xywh(0, 0, it->width + TA::SIZE_OFFSET, it->height + TA::SIZE_OFFSET));
+        }
+        // update first pass check
+        is_first_pass_ = false;
+    }
+
+    // create a root page
+    auto packing_root = spaces_type({ max_side, max_side });
+    packing_root.flipping_mode = runtime_flipping_mode;
+
+    // init iterator
+    auto r = rectangles.begin();
+
+    while (!rectangles.empty())
+    {
+        for (; r != rectangles.end(); ++r)
+        {
+            if (const auto inserted_rectangle = packing_root.insert(std::as_const(*r).get_wh()))
+            {
+                *r = *inserted_rectangle;
+            }
+            else
+            {
+                // update start index
+                start_index_ = tracker_;
+
+                // increase layer counter
+                ++layer_counter;
+
+                // update container of rectangles
+                rectangles.assign(r, rectangles.end());
+
+                // update layer_counter
+                for (int j = 0; j < rectangles.size(); ++j)
+                {
+                    filePath_to_RawData.find(atlas_data_[j + start_index_].filePath)->second.layer = layer_counter;
+                }
+                // update iterator
+                r = rectangles.begin();
+                // create new root page
+                packing_root = spaces_type({ max_side, max_side });
+                packing_root.flipping_mode = runtime_flipping_mode;
+            }
+            // update tracker
+            ++tracker_;
+        }
+        // clear after done using
+        rectangles.clear();
+    }
+}
+
+void TextureAtlaser::Atlasing(std::vector<RawData>& data_)
 {
     auto report_successful = [](rect_type&) {
         return callback_result::CONTINUE_PACKING;
@@ -88,15 +155,10 @@ void TextureAtlaser::Atlasing(std::vector<RawData> &data_)
         return callback_result::ABORT_PACKING;
     };
 
-    //Create some arbitrary rectangles.
-    //Every subsequent call to the packer library will only read the widths and heights that we now specify,
-    //and always overwrite the x and y coordinates with calculated results.
-
     for (auto it = data_.begin(); it != data_.end(); ++it)
     {
         rectangles.emplace_back(rect_xywh(0, 0, it->width + TA::SIZE_OFFSET, it->height + TA::SIZE_OFFSET));
     }
-
     //Find best packing using all provided custom rectangle orders.
     using rect_ptr = rect_type*;
 
@@ -107,7 +169,6 @@ void TextureAtlaser::Atlasing(std::vector<RawData> &data_)
     auto my_custom_order_2 = [](const rect_ptr a, const rect_ptr b) {
         return a->get_wh().pathological_mult() < b->get_wh().pathological_mult();
     };
-
 
     auto atlas_page = find_best_packing<spaces_type>(
         rectangles,
@@ -123,7 +184,7 @@ void TextureAtlaser::Atlasing(std::vector<RawData> &data_)
         );
 #ifdef _DEBUG
     report_result(atlas_page, rectangles);
-#endif    
+#endif
     // update uv offset
     for (int i = 0; i < rectangles.size(); ++i)
     {
@@ -131,15 +192,6 @@ void TextureAtlaser::Atlasing(std::vector<RawData> &data_)
         filePath_to_RawData.find(data_[i].filePath)->second.y_offset = rectangles[i].y;
     }
     rectangles.clear();
-
-    //data_[atlas_layer].first = atlas_page;
-}
-
-void TextureAtlaser::ResetLayerCounter()
-{
-    total_width = 0;
-    total_height = 0;
-    layer_counter = 0;
 }
 
 bool TextureAtlaser::RawData::operator()(const RawData& r1, const RawData& r2)
@@ -156,8 +208,17 @@ void TextureAtlaser::LoadAtlasPage(GLboolean isTwice_)
     TextureLoader::LoadCacheFiles();
     LoadRawData(TextureLoader::GetLoadCache());
 
-    std::map<AtlasLayer, std::vector<RawData>> atlasdata;
     for(auto& i : filePath_to_RawData)
+    {
+        atlas_data_.push_back(i.second);
+    }
+
+    std::sort(atlas_data_.begin(), atlas_data_.end(), RawData());
+
+    CheckingLayer();
+
+    std::map<AtlasLayer, std::vector<RawData>> atlasdata;
+    for (auto& i : filePath_to_RawData)
     {
         atlasdata[i.second.layer].push_back(i.second);
     }
@@ -168,7 +229,7 @@ void TextureAtlaser::LoadAtlasPage(GLboolean isTwice_)
         std::sort(raw_data.begin(), raw_data.end(), RawData());
     }
 
-    for(auto &j : atlasdata)
+    for (auto& j : atlasdata)
     {
         Atlasing(j.second);
     }
@@ -183,7 +244,7 @@ void TextureAtlaser::LoadAtlasPage(GLboolean isTwice_)
     
     // allocate GPU texture buffer storage for atlas page
     //glTextureStorage2D(textureID, 1, GL_RGBA8, atlas_page.w, atlas_page.h);
-    glTextureStorage3D(texID, 13, GL_RGBA8, 
+    glTextureStorage3D(texID, TA::MIPMAP_LEVEL, GL_RGBA8, 
         TA::MAX_SIZE_PAGE, 
         TA::MAX_SIZE_PAGE,
         TA::MAX_LAYERS);
@@ -213,20 +274,6 @@ void TextureAtlaser::LoadAtlasPage(GLboolean isTwice_)
     }
 }
 
-void TextureAtlaser::CheckLayerCounter(int& width, int& height)
-{
-    // TODO: find more efficient way to detect atlas layer
-    total_width += static_cast<unsigned>(width / 4.0f);
-    //total_height += height;
-
-    if (total_width > TA::MAX_SIZE_PAGE)// || total_height > TA::MAX_SIZE_PAGE)
-    {
-        ++layer_counter;
-        total_width = 0;
-        //total_height = 0;
-    }
-}
-
 void TextureAtlaser::LoadRawData(const std::vector<std::string>& files)
 {
     for (auto it = files.begin(); it != files.end(); ++it)
@@ -240,7 +287,6 @@ void TextureAtlaser::LoadRawData(const std::vector<std::string>& files)
 
         if (image)
         {
-            CheckLayerCounter(image_width, image_height);
             Area area = image_width * image_height;
             RawData raw = RawData(0, 0, image_width, image_height, area, number_channels, image,
                 *it, TextureAtlasing::INVALID_VAO_KEY, layer_counter);
@@ -272,7 +318,6 @@ void TextureAtlaser::LoadRawData(int total...)
 
         if (image)
         {
-            CheckLayerCounter(image_width, image_height);
             Area area = image_width * image_height;
             RawData raw = RawData(0, 0, image_width, image_height, area, number_channels, image,
                 filePath, TextureAtlasing::INVALID_VAO_KEY, layer_counter);

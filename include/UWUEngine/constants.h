@@ -146,6 +146,7 @@ namespace TextureAtlasing
     constexpr unsigned INVALID_LAYER = static_cast<unsigned int>(-1);
     constexpr int SIZE_OFFSET = 2;
     constexpr int OFFSET_OFFSET = 1;
+    constexpr GLsizei MIPMAP_LEVEL = 13;
 }
 
 namespace LightingConstant
