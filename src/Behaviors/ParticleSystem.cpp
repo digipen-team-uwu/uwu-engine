@@ -17,7 +17,7 @@
 #include <UWUEngine/FrameRateController.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
-#include <UWUEngine/Component/ParentChildComponentManager.h>
+#include <UWUEngine/Component/HierarchyComponentManager.h>
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/UI/UIManager.h>
@@ -26,7 +26,7 @@ typedef EntityManager::Type type;
 
 void Behavior<type::ParticleEmitter>::PushEvent(ParticleEvent partEvent)
 {
-  ParentChildComponentManager::Activate(GetID());
+  HierarchyComponentManager::Activate(GetID());
   particleEvents.push_back(partEvent);
   if (!emissionTimer.Running())
   {
@@ -37,7 +37,7 @@ void Behavior<type::ParticleEmitter>::PushEvent(ParticleEvent partEvent)
 
 void Behavior<type::ParticleEmitter>::PushEvents(const std::vector<ParticleEvent> &partEvent)
 {
-  ParentChildComponentManager::Activate(GetID());
+  HierarchyComponentManager::Activate(GetID());
   particleEvents = partEvent;
   if (!emissionTimer.Running())
   {
@@ -58,7 +58,7 @@ void Behavior<type::ParticleEmitter>::Update()
     {
       EntityID id = EntityManager::New(type::Particle);
       BehaviorComponentManager::Activate(id);
-      ParentChildComponentManager::AddChild(GetID(), id);
+      HierarchyComponentManager::AddChild(GetID(), id);
       BehaviorComponentManager::GetBehavior<type::Particle>(id)->InitData(partEvent);
     }
     emissionTimer.SetDuration(partEvent.emissionRate.Get());
@@ -77,7 +77,7 @@ ParticleEvent &Behavior<type::ParticleEmitter>::GetParticleEvent(int eventNumber
 
 void Behavior<type::Particle>::InitData(ParticleEvent& partEvent)
 {
-  EntityID emitter = ParentChildComponentManager::GetParent(GetID());
+  EntityID emitter = HierarchyComponentManager::GetParent(GetID());
   TransformComponentManager::Activate(GetID());
   PhysicsComponentManager::Activate(GetID());
   //ShaderModule::Activate(GetID());
@@ -169,7 +169,7 @@ void Behavior<type::Particle>::Update()
   {
     glm::vec4 vel = PhysicsComponentManager::GetVelocity(GetID());
     glm::vec4 pos = TransformComponentManager::GetTranslation(GetID());
-    glm::vec4 parpos = TransformComponentManager::GetTranslation(ParentChildComponentManager::GetParent(GetID()));
+    glm::vec4 parpos = TransformComponentManager::GetTranslation(HierarchyComponentManager::GetParent(GetID()));
     if (vectorfieldx)
     {
       vel.x = vectorfieldx->Evaluate(pos - parpos);

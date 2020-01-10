@@ -5,11 +5,11 @@
 #include <UWUEngine/Component/BaseComponent.h>
 
 
-class ParentChildComponentManager : public BaseComponent<ParentChildComponentManager>
+class HierarchyComponentManager : public BaseComponent<HierarchyComponentManager>
 {
 public:
-  ParentChildComponentManager() = default;
-  ~ParentChildComponentManager() = default;
+  HierarchyComponentManager() = default;
+  ~HierarchyComponentManager() = default;
   void InitObject(EntityID ID) override {};
   void Update() override {};
   void ShutdownObject(EntityID ID) override;

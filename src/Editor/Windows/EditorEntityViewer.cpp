@@ -13,7 +13,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Editor/EditorHelper.h>
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Component/ParentChildComponentManager.h>
+#include <UWUEngine/Component/HierarchyComponentManager.h>
 
 #include <magic_enum.hpp>
 #include <imgui.h>
@@ -44,7 +44,7 @@ void EntityViewer::Update()
   for (auto id : EntityManager::GetIDs())
   {
     //If the current entity is a child, skip
-    if (ParentChildComponentManager::GetParent(id))
+    if (HierarchyComponentManager::GetParent(id))
     {
       continue;
     }
@@ -87,7 +87,7 @@ bool EntityViewer::HasName(EntityID ID)
 void EntityViewer::UpdateEntity(EntityID id)
 {
   ImGuiTreeNodeFlags nodeFlags = baseFlags;
-  const std::vector<EntityID>& children = ParentChildComponentManager::GetChildren(id);
+  const std::vector<EntityID>& children = HierarchyComponentManager::GetChildren(id);
 
   //Get the name of the child, if there's no name get the type
   const std::string& name = HasName(id) ? 

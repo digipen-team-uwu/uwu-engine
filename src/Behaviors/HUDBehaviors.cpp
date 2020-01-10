@@ -11,7 +11,7 @@
 /******************************************************************************/
 #include <UWUEngine/Behaviors/HUDBehaviors.h>
 #include <UWUEngine/Entity/EntityFactory.h>
-#include <UWUEngine/Component/ParentChildComponentManager.h>
+#include <UWUEngine/Component/HierarchyComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/UI/UIManager.h>
@@ -59,9 +59,9 @@ void Behavior<EntityManager::Type::HUDEnergy>::Update()
 }
 Behavior<EntityManager::Type::HUDEnergy>::Behavior(EntityID id) : BaseBehavior(id), energy(0)
 {
-  ParentChildComponentManager::Activate(id);
+  HierarchyComponentManager::Activate(id);
   particles = EntityFactory::CreateObject(EntityManager::Type::ParticleEmitter);
-  ParentChildComponentManager::AddChild(id, particles);
+  HierarchyComponentManager::AddChild(id, particles);
   EntityCacher::InstantiateCachedBehavior(particles, "Energy");
   EntityManager::SetClearImmunity(particles, true);
   EntityManager::SetDontSerialize(particles, true);

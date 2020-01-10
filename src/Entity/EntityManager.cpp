@@ -18,7 +18,7 @@
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
-#include <UWUEngine/Component/ParentChildComponentManager.h>
+#include <UWUEngine/Component/HierarchyComponentManager.h>
 #include <UWUEngine/Engine.h>
 #include <fstream>
 #include <UWUEngine/Serialization.h>
