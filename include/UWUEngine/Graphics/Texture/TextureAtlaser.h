@@ -10,7 +10,6 @@ Copyright 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-#include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Entity/EntityVector.h>
 #include <UWUEngine/Component/MeshComponentManager.h>
 #include <vector>
@@ -39,11 +38,12 @@ public:
     static void LoadRawData(int total...);
     static void LoadRawData(const std::vector<std::string>&);
 
+    static void CheckingLayer();
     static void Atlasing(std::vector<RawData>& data_);
     static void report_result(const rect_wh& result_size, const std::vector<rect_type>& rectangles);
 
     static const std::vector<rect_type>& GetRectangles();
-    static const TextureAtlaser::RawData& GetRawData(const std::string&);
+    static const RawData& GetRawData(const std::string&);
 
     static void LoadAtlasPage(GLboolean isTwice_ = false);
 
@@ -68,12 +68,8 @@ public:
     static void SetAtlasData(EntityID id, unsigned int accessID = 0);
 
 private:
-    static void CheckLayerCounter(int&, int&);
-    static void ResetLayerCounter();
-    //static void SetAtlasLayerToEntityID();
-    //static void SetAtlasUV(EntityID, unsigned int accessID = 0);
-    //static void SetAtlasScale(EntityID, unsigned int accessID = 0);
-    //static void SetLayerFromFilePath(EntityID, unsigned int accessID = 0);
+    static void Reset();
+
     class RawData
     {
     public:
@@ -102,8 +98,6 @@ private:
     static flipping_option runtime_flipping_mode;
     static GLuint texID;
 
-    //static std::unordered_map<AtlasLayer, std::pair<rect_wh, std::vector<RawData>>> data_;
-
     static std::unordered_map<std::string, RawData> filePath_to_RawData;
 
     static std::vector<rect_type> rectangles;
@@ -112,7 +106,10 @@ private:
     static EntityVector<glm::vec2> atlas_uv;
     static EntityVector<glm::vec2> atlas_scale;
 
-    static unsigned layer_counter;
-    static unsigned total_width;
-    static unsigned total_height;
+    static int layer_counter;
+    static int tracker_;
+    static int start_index_;
+    static bool is_first_pass_;
+
+    static std::vector<RawData> atlas_data_;
 };
