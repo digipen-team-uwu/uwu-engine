@@ -170,3 +170,8 @@ namespace UniformBufferConstants
 {
     constexpr size_t MEMORY_LAYOUT_OFFSET = sizeof(float);
 }
+
+namespace RenderConstants
+{
+    constexpr unsigned ENTITY_TEXTURE_UNIT = 0;
+}
