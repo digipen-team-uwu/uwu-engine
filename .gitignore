@@ -344,11 +344,9 @@ GAM200Prototype1/
 
 
 
-cmake-build-debug/
+cmake-build-*/
 
 assets/
-
-cmake-build-release-mingw/
 
 data/
 

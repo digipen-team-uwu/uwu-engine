@@ -20,11 +20,10 @@ auto TraceLogger::Tee<bool>(bool&& value, char const* name, char const* pretty_f
 template <typename T>
 auto operator<<(TraceLogger::LogStream& ls, T const& out) -> TraceLogger::LogStream&
 {
-  if (ls.log_->is_open() && !ls.log_->fail())
-  {
-    std::cerr << out;
-    *(ls.log_) << out;
-  }
+   std::cerr << out;
+#ifdef _DEBUG
+   *(ls.log_) << out;
+#endif
   return ls;
 }
 

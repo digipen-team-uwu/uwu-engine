@@ -28,6 +28,7 @@ using namespace WindowsSpecific;
 
 #include <UWUEngine/Debugs/TraceLogger.specialization.cpp>
 #include <memory>
+#include <filesystem>
 
 template<>
 int RegisterSystemHelper<TraceLogger>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TraceLogger>(SystemInitOrder::Trace, SystemUpdateOrder::LAST);
@@ -63,7 +64,7 @@ TraceLogger::LogStream TraceLogger::log_null;
 #ifdef _DEBUG
 TraceLogger::Severity TraceLogger::min_severity = SERIALIZATION;
 #else
-TraceLogger::Severity TraceLogger::min_severity = FAILURE;
+TraceLogger::Severity TraceLogger::min_severity = SERIALIZATION;
 #endif
 
 namespace
@@ -72,7 +73,8 @@ namespace
   {
     std::va_list args_copy;
     va_copy(args_copy, args);
-    size_t const length = std::vsnprintf(nullptr, 0, format, args) + 1ll;
+    int const length = std::vsnprintf(nullptr, 0, format, args) + 1;
+    va_end(args);
     if(length <= 0)
     {
       // TODO: remove temp exception
@@ -107,8 +109,8 @@ namespace
 TraceLogger::TraceLogger()
 {
 #ifdef _DEBUG
-  std::wstringstream log_filepath; 
 #ifdef _WIN64
+  std::wstringstream log_filepath;
   wchar_t* path = 0;
   SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path);
   log_filepath << path << L"\\DigiPen";
@@ -118,22 +120,24 @@ TraceLogger::TraceLogger()
   log_filepath << L"\\logs";
   _wmkdir(log_filepath.str().c_str());
   CoTaskMemFree(static_cast<void*>(path));
-#else
-  log_filepath << L"./logs";
-#endif
   log_filepath << L"/log-" << std::to_wstring(trace_UID) + L".trace";
+#else
+  std::stringstream log_filepath;
+  log_filepath << "./logs";
+  log_filepath << "/log-" << std::to_string(trace_UID) + ".trace";
+#endif
   /* Make log file output unbuffered. Slower, but allows capture of errors that might otherwise be hidden due to buffering. */
   log_file.rdbuf()->pubsetbuf(nullptr, 0);
 
-  log_file.open(log_filepath.str());
-#else
-  log_file.setstate(std::ios::failbit);
+  // log_filepath.str()
+  log_file.open("./logfile");
 #endif
 
   log_stream.attach(&log_file);
   log_null.attach(&non_std::cnull);
+
 #ifdef _DEBUG
-  Assert(log_file.is_open(), "Log file %S opened successfully.", log_filepath.str().c_str());
+  Assert(log_file.is_open(), "Log file %s opened successfully.", log_filepath.str().c_str());
 #endif
 
   // Set the program's output to use UTF-8
@@ -247,8 +251,12 @@ TraceLogger::LogStream& TraceLogger::Log(Severity level)
     // console
     std::cerr << "[" << Set(severity_colors[level]) << magic_enum::enum_name(level) << Set() << "]: ";
 
+
     // file
-    log_file << "[" << magic_enum::enum_name(level) << "]: ";
+    if (log_file.is_open() && !log_file.fail())
+    {
+       log_file << "[" << magic_enum::enum_name(level) << "]: ";
+    }
 
     return log_stream;
   }

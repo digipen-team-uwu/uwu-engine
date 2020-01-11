@@ -179,7 +179,7 @@ std::vector<EntityID> DeserializeLevel(const char* level)
     FILE* file = std::fopen(filepath.str().c_str(), "rb");
 #endif
 
-  TraceLogger::Assert(file, "file %S was opened for reading", filepath.str().c_str());
+  TraceLogger::Assert(file, "file %s was opened for reading", filepath.str().c_str());
 
   // Buffer to read file into
   // (I'm basing this off the example from the RapidJSON website)
@@ -198,7 +198,7 @@ std::vector<EntityID> DeserializeLevel(const char* level)
 
   // Check for the "objects" member array
   //printf("Checking file %s for objects member\n", filePath); // Debug print
-  TraceLogger::Assert(doc.HasMember("objects"), "file %S has objects member", filepath.str().c_str());
+  TraceLogger::Assert(doc.HasMember("objects"), "file %s has objects member", filepath.str().c_str());
   //printf("Checking that objects member is array\n"); // Debug print
   TraceLogger::Assert(doc["objects"].IsArray(), "objects member is array");
 

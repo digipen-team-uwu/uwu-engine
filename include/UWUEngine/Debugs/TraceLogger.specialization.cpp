@@ -6,23 +6,21 @@ using namespace ColoredOutput;
 template <>
 TraceLogger::LogStream& operator<< <char const*>(TraceLogger::LogStream& ls, char const* const& out)
 {
-  if (ls.log_->is_open() && !ls.log_->fail())
-  {
-    std::cerr << out;
-    *(ls.log_) << Strip(out);
-  }
-  return ls;
+   std::cerr << out;
+#ifdef _DEBUG
+   *(ls.log_) << Strip(out);
+#endif
+   return ls;
 }
 
 template<>
-TraceLogger::LogStream& operator<<<std::string>(TraceLogger::LogStream& ls, std::string const& out)
+TraceLogger::LogStream& operator<< <std::string>(TraceLogger::LogStream& ls, std::string const& out)
 {
-  if (ls.log_->is_open() && !ls.log_->fail())
-  {
-    std::cerr << out;
-    *(ls.log_) << Strip(out);
-  }
-  return ls;
+   std::cerr << out;
+#ifdef _DEBUG
+   *(ls.log_) << Strip(out);
+#endif
+   return ls;
 }
 
 template <>
