@@ -125,6 +125,10 @@ TraceLogger::TraceLogger()
   std::stringstream log_filepath;
   log_filepath << "./logs";
   log_filepath << "/log-" << std::to_string(trace_UID) + ".trace";
+  if (!std::filesystem::exists(std::filesystem::path("./logs/")))
+  {
+    std::filesystem::create_directory(std::filesystem::path("./logs/"));
+  }
 #endif
   /* Make log file output unbuffered. Slower, but allows capture of errors that might otherwise be hidden due to buffering. */
   log_file.rdbuf()->pubsetbuf(nullptr, 0);
