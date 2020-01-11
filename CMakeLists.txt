@@ -18,9 +18,17 @@ add_executable(uwuEngine ${HEADERS} ${SOURCE})
 set_property(TARGET uwuEngine PROPERTY CXX_STANDARD 17)
 if (MSVC)
     target_compile_definitions(uwuEngine PUBLIC _MSVC)
-endif ()
+else ()
+    add_compile_options(uwuEngine -g)
+    target_compile_definitions(uwuEngine PUBLIC _GLIBCXX_DEBUG)
+endif()
 
 target_include_directories(uwuEngine PUBLIC ${FMOD_INCLUDE_DIR})
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("we in debug mode")
+    target_compile_definitions(uwuEngine PUBLIC _DEBUG)
+endif()
 
 if (MSVC)
     target_link_libraries(uwuEngine

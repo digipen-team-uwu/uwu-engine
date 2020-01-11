@@ -179,7 +179,7 @@ std::vector<EntityID> DeserializeLevel(const char* level)
     FILE* file = std::fopen(filepath.str().c_str(), "rb");
 #endif
 
-  TraceLogger::Assert(file, "file %S was opened for reading", filepath.str().c_str());
+  TraceLogger::Assert(file, "file %s was opened for reading", filepath.str().c_str());
 
   // Buffer to read file into
   // (I'm basing this off the example from the RapidJSON website)
@@ -198,7 +198,7 @@ std::vector<EntityID> DeserializeLevel(const char* level)
 
   // Check for the "objects" member array
   //printf("Checking file %s for objects member\n", filePath); // Debug print
-  TraceLogger::Assert(doc.HasMember("objects"), "file %S has objects member", filepath.str().c_str());
+  TraceLogger::Assert(doc.HasMember("objects"), "file %s has objects member", filepath.str().c_str());
   //printf("Checking that objects member is array\n"); // Debug print
   TraceLogger::Assert(doc["objects"].IsArray(), "objects member is array");
 
@@ -220,6 +220,10 @@ std::vector<EntityID> DeserializeLevel(const char* level)
     std::string newPath(size, 0);
     WideCharToMultiByte(CP_UTF8, 0, &(filepath.str()[0]), (int)filepath.str().size(), &(newPath[0]), size, NULL, NULL);
     EntityID id = EntityFactory::CreateObject(object, newPath.c_str());
+    resVec.push_back(id);
+#else
+    rapidjson::Value& object = objects[i];
+    EntityID id = EntityFactory::CreateObject(object, filepath.str().c_str());
     resVec.push_back(id);
 #endif
   }
