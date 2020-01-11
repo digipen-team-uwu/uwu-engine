@@ -221,6 +221,10 @@ std::vector<EntityID> DeserializeLevel(const char* level)
     WideCharToMultiByte(CP_UTF8, 0, &(filepath.str()[0]), (int)filepath.str().size(), &(newPath[0]), size, NULL, NULL);
     EntityID id = EntityFactory::CreateObject(object, newPath.c_str());
     resVec.push_back(id);
+#else
+    rapidjson::Value& object = objects[i];
+    EntityID id = EntityFactory::CreateObject(object, filepath.str().c_str());
+    resVec.push_back(id);
 #endif
   }
 
