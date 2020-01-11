@@ -133,7 +133,7 @@ TraceLogger::TraceLogger()
   /* Make log file output unbuffered. Slower, but allows capture of errors that might otherwise be hidden due to buffering. */
   log_file.rdbuf()->pubsetbuf(nullptr, 0);
 
-  std::cout << log_filepath.str() << std::endl;
+  std::wcout << log_filepath.str() << std::endl;
   log_file.open(log_filepath.str());
 #endif
 
