@@ -49,11 +49,15 @@ void GameStateMachine::Enter_BrayanSBOX()
     }
   }
 
+  #ifdef _Editor
+  DynamicCamera::Deactivate();
+  Lighting::Deactivate();
+  #else
   DynamicCamera::Activate();
   Lighting::Activate();
-  TextureAtlaser::LoadAtlasPage();
-
   SoundInterface::playSound("music_calm1", true);
+  #endif
+  TextureAtlaser::LoadAtlasPage();
 }
 
 
@@ -71,15 +75,11 @@ void GameStateMachine::Update_BrayanSBOX(float dt)
       LightingComponentManager::SetShininess(i, 16.0f);
     }
   }
-#ifndef _DEBUG
-  DynamicCamera::SetTrackingPos(glm::vec4(glm::vec2(TransformComponentManager::GetTranslation(PlayerData::GetPlayerID())) + glm::vec2{ 0, 100 }, Camera::GetCameraPosition().z, 1));
-  DynamicCamera::SetTrackingSpeed(2);
-  DynamicCamera::SetInnerBounds(100, 100, { 0, 100 });
-#else
+#ifdef _Editor
   static bool dynamic = false;
   if (
-  (InputManager::KeyHeld(GLFW_KEY_LEFT_CONTROL) || InputManager::KeyHeld(GLFW_KEY_RIGHT_CONTROL)) && 
-  InputManager::KeyPressed('C'))
+    (InputManager::KeyHeld(GLFW_KEY_LEFT_CONTROL) || InputManager::KeyHeld(GLFW_KEY_RIGHT_CONTROL)) &&
+    InputManager::KeyPressed('C'))
   {
     dynamic = !dynamic;
   }
@@ -95,6 +95,11 @@ void GameStateMachine::Update_BrayanSBOX(float dt)
   {
     DynamicCamera::Deactivate();
   }
+
+#else
+  DynamicCamera::SetTrackingPos(glm::vec4(glm::vec2(TransformComponentManager::GetTranslation(PlayerData::GetPlayerID())) + glm::vec2{ 0, 100 }, Camera::GetCameraPosition().z, 1));
+  DynamicCamera::SetTrackingSpeed(2);
+  DynamicCamera::SetInnerBounds(100, 100, { 0, 100 });
 #endif
 
   //if (InputManager::KeyPressed('v'))
@@ -137,8 +142,4 @@ void GameStateMachine::Exit_BrayanSBOX()
   SoundInterface::stopAllSounds();
   EntityManager::DestroyAll();
   TextureAtlaser::ClearData();
-
-  #ifdef _DEBUG_
-  Editor::Stop();
-#endif
 }

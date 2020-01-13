@@ -14,56 +14,75 @@ add_subdirectory(include)
 add_subdirectory(src)
 
 #Add and Configure Engine executable
-add_executable(uwuEngine ${HEADERS} ${SOURCE})
-set_property(TARGET uwuEngine PROPERTY CXX_STANDARD 17)
+add_executable(Umbra ${HEADERS} ${SOURCE})
+add_executable(uwuEditor ${HEADERS} ${SOURCE})
+
+target_compile_definitions(uwuEditor PUBLIC _Editor)
+set_property(TARGET Umbra uwuEditor PROPERTY CXX_STANDARD 17)
+
 if (MSVC)
-    target_compile_definitions(uwuEngine PUBLIC _MSVC)
+    target_compile_definitions(Umbra PUBLIC _MSVC)
+    target_compile_definitions(uwuEditor PUBLIC _MSVC)
 else ()
-    add_compile_options(uwuEngine -g)
-    target_compile_definitions(uwuEngine PUBLIC _GLIBCXX_DEBUG)
+    add_compile_options(Umbra -g)
+    add_compile_options(uwuEditor -g)
+    target_compile_definitions(Umbra PUBLIC _GLIBCXX_DEBUG)
+    target_compile_definitions(uwuEditor PUBLIC _GLIBCXX_DEBUG)
 endif()
 
-target_include_directories(uwuEngine PUBLIC ${FMOD_INCLUDE_DIR})
+target_include_directories(Umbra PUBLIC ${FMOD_INCLUDE_DIR})
+target_include_directories(uwuEditor PUBLIC ${FMOD_INCLUDE_DIR})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("we in debug mode")
-    target_compile_definitions(uwuEngine PUBLIC _DEBUG)
+    target_compile_definitions(Umbra PUBLIC _DEBUG)
+    target_compile_definitions(uwuEditor PUBLIC _DEBUG)
 endif()
 
+#Populate library list
+set(UWU_LIBS
+    ${FMOD_LIBRARY}
+    ${FSBANK_LIBRARY}
+    ${FMOD_STUDIO_LIBRARY}
+    libglew_static
+    glfw
+    GLM
+    L_IMGUI
+    MAGIC_ENUM
+    RAPID_JSON
+    RECTPACK2D
+    STB
+    L_SPINE_C
+)
+#Extend compiler/OS specific libs
 if (MSVC)
-    target_link_libraries(uwuEngine
-            opengl32
-            glu32
-            )
+    set(UWU_LIBS
+        ${UWU_LIBS}
+        opengl32
+        glu32
+    )
 else ()
-    target_link_libraries(uwuEngine
-            OpenGL
-            GLX
-            stdc++fs
-            )
+    set(UWU_LIBS
+        ${UWU_LIBS}
+        OpenGL
+        GLX
+        stdc++fs
+    )
 endif ()
-
-target_link_libraries(uwuEngine
-        ${FMOD_LIBRARY}
-        ${FSBANK_LIBRARY}
-        ${FMOD_STUDIO_LIBRARY}
-        libglew_static
-        glfw
-        GLM
-        L_IMGUI
-        MAGIC_ENUM
-        RAPID_JSON
-        RECTPACK2D
-        STB
-        L_SPINE_C
-        )
+#Link targets with libraries
+target_link_libraries(Umbra ${UWU_LIBS})
+target_link_libraries(uwuEditor ${UWU_LIBS})
 
 # Copy FMOD dll
 if (WIN32)
-add_custom_command(TARGET uwuEngine POST_BUILD
+add_custom_command(TARGET Umbra POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${FMOD_DLL}
-        $<TARGET_FILE_DIR:uwuEngine>)
+        $<TARGET_FILE_DIR:Umbra>)
+add_custom_command(TARGET uwuEditor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${FMOD_DLL}
+        $<TARGET_FILE_DIR:uwuEditor>)
 endif ()
 
 # Copy Data folder
