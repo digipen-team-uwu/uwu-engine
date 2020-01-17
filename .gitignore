@@ -355,3 +355,5 @@ logs/
 out/
 
 shaders/
+
+.vscode/
