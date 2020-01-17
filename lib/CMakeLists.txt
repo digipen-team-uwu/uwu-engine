@@ -153,6 +153,11 @@ endif ()
 
 #############################################################################
 # Find Header only libraries
+# Find Catch2
+set(CATCH2_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch2/single_include)
+add_library(CATCH2 INTERFACE)
+target_include_directories(CATCH2 INTERFACE ${CATCH2_INCLUDE_DIR})
+
 # Find GLM
 set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/glm)
 add_library(GLM INTERFACE)

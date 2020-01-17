@@ -46,6 +46,7 @@ set(UWU_LIBS
     ${FMOD_STUDIO_LIBRARY}
     libglew_static
     glfw
+    CATCH2
     GLM
     L_IMGUI
     MAGIC_ENUM
