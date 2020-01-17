@@ -23,16 +23,22 @@ int RegisterSystemHelper<WindowManager>::RegisterSystemHelper_ID = SystemUpdater
 
 WindowManager::WindowManager()
 {
+    TraceLogger::Log(TraceLogger::Severity::INFO) << "init window manager\n";
+
   if (glfwInit() == GLFW_FALSE)
   {
     //TODO: add error handling for glfw initialization
-    TraceLogger::Log(TraceLogger::FAILURE) << "COULD NOT INITIALIZE GLFW!" << glfwGetError(nullptr) << std::endl;
+    const char** buffer;
+    glfwGetError(buffer);
+    TraceLogger::Log(TraceLogger::FAILURE) << "COULD NOT INITIALIZE GLFW!" << std::string(*buffer) << std::endl;
+    return;
   }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
   // disable deprecated code
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
   glfwWindowHint(GLFW_RED_BITS, 8);
   glfwWindowHint(GLFW_GREEN_BITS, 8);
@@ -46,13 +52,17 @@ WindowManager::WindowManager()
   glfwWindowHint(GLFW_DEPTH_BITS, 32);
 
   window_ = glfwCreateWindow(wc::WINDOW_WIDTH, wc::WINDOW_HEIGHT, "uwuENGINE", NULL, NULL);
-  glfwMakeContextCurrent(window_);
-  if (window_ == NULL)
+
+  if (window_ == nullptr)
   {
     //TODO: add error handling for window opening
-    TraceLogger::Log(TraceLogger::FAILURE) << "Window Not Opened Properly!" << glfwGetError(NULL) << std::endl;
+    const char** buffer;
+    glfwGetError(buffer);
+    TraceLogger::Log(TraceLogger::FAILURE) << "Window Not Opened Properly!" << std::string(*buffer) << std::endl;
     return;
   }
+
+  glfwMakeContextCurrent(window_);
 
   // makes buffer swap synchronized with the monitor's vertical refresh
   glfwSwapInterval(1);
