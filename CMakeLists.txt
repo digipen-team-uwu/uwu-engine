@@ -14,27 +14,31 @@ add_subdirectory(include)
 add_subdirectory(src)
 
 #Add and Configure Engine executable
-add_executable(Umbra ${HEADERS} ${SOURCE})
-add_executable(uwuEditor ${HEADERS} ${SOURCE})
+add_library(UWU_ENGINE_CORE ${HEADERS} ${ENGINE_CORE_SRC})
+add_executable(Umbra ${EXECUTABLE_SRC})
+add_executable(uwuEditor ${EXECUTABLE_SRC})
 
 target_compile_definitions(uwuEditor PUBLIC _Editor)
-set_property(TARGET Umbra uwuEditor PROPERTY CXX_STANDARD 17)
+set_property(TARGET UWU_ENGINE_CORE Umbra uwuEditor PROPERTY CXX_STANDARD 17)
 
 if (MSVC)
+    target_compile_definitions(UWU_ENGINE_CORE PUBLIC _MSVC)
     target_compile_definitions(Umbra PUBLIC _MSVC)
     target_compile_definitions(uwuEditor PUBLIC _MSVC)
 else ()
+    add_compile_options(UWU_ENGINE_CORE -g)
     add_compile_options(Umbra -g)
     add_compile_options(uwuEditor -g)
+    target_compile_definitions(UWU_ENGINE_CORE PUBLIC _GLIBCXX_DEBUG)
     target_compile_definitions(Umbra PUBLIC _GLIBCXX_DEBUG)
     target_compile_definitions(uwuEditor PUBLIC _GLIBCXX_DEBUG)
 endif()
 
-target_include_directories(Umbra PUBLIC ${FMOD_INCLUDE_DIR})
-target_include_directories(uwuEditor PUBLIC ${FMOD_INCLUDE_DIR})
+target_include_directories(UWU_ENGINE_CORE PUBLIC ${FMOD_INCLUDE_DIR})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("we in debug mode")
+    target_compile_definitions(UWU_ENGINE_CORE PUBLIC _DEBUG)
     target_compile_definitions(Umbra PUBLIC _DEBUG)
     target_compile_definitions(uwuEditor PUBLIC _DEBUG)
 endif()
@@ -55,6 +59,7 @@ set(UWU_LIBS
     STB
     L_SPINE_C
 )
+
 #Extend compiler/OS specific libs
 if (MSVC)
     set(UWU_LIBS
@@ -70,9 +75,11 @@ else ()
         stdc++fs
     )
 endif ()
+
 #Link targets with libraries
-target_link_libraries(Umbra ${UWU_LIBS})
-target_link_libraries(uwuEditor ${UWU_LIBS})
+target_link_libraries(UWU_ENGINE_CORE ${UWU_LIBS})
+target_link_libraries(Umbra UWU_ENGINE_CORE)
+target_link_libraries(uwuEditor UWU_ENGINE_CORE)
 
 # Copy FMOD dll
 if (WIN32)

@@ -1,0 +1,4 @@
+#Populate source file cache
+file(GLOB_RECURSE ENGINE_CORE_SRC *.cpp)
+
+set(ENGINE_CORE_SRC ${ENGINE_CORE_SRC} PARENT_SCOPE)

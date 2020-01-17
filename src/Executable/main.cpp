@@ -2,7 +2,6 @@
 #define GLM_FORCE_SWIZZLE
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/WindowManager.h>
-#include <iostream>
 
 int main(int argc, char* argv[]) 
 {   
