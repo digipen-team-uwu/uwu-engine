@@ -1,4 +1,5 @@
 [submodule "lib/magic_enum"]
+	path = lib/magic_enum
 	url = https://github.com/Neargye/magic_enum.git
 [submodule "lib/glfw"]
 	path = lib/glfw
