@@ -210,6 +210,7 @@ target_link_libraries(L_IMGUI
 set(SPINE_C_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/spine-c/include)
 file(GLOB SPINE_SRC "spine-c/src/*.c")
 add_library(L_SPINE_C ${SPINE_SRC})
+target_link_libraries(L_SPINE_C UWU_ENGINE_CORE)
 target_include_directories(L_SPINE_C
         PUBLIC
         ${SPINE_C_INCLUDE_DIR}
