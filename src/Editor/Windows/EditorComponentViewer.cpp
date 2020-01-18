@@ -17,6 +17,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 //All the components
 #include <UWUEngine/Editor/Components/EditorTransform.h>
 #include <UWUEngine/Editor/Components/EditorPhysics.h>
+#include <UWUEngine/Editor/Components/EditorParticleSystem.h>
 
 #include <imgui.h>
 #include <UWUEngine/Entity/EntityManager.h>
@@ -33,7 +34,8 @@ Window("Component Viewer", true)
 {
   //Register all the components here
   REGISTER_COMPONENT(Transform)
-  REGISTER_COMPONENT(Physics)
+    REGISTER_COMPONENT(Physics)
+    REGISTER_COMPONENT(ParticleEmitter)
 }
 
 ComponentViewer::~ComponentViewer()

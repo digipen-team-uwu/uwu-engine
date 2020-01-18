@@ -11,13 +11,15 @@ Copyright © 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 
 #include <UWUEngine/Editor/EditorComponent.h>
-
+#include "UWUEngine/Helper.h"
 #include <glm/glm.hpp>
 #include <imgui.h>
 
 using namespace Editors;
 
 #pragma region ELEMENT_SPECIALIZATION
+
+
 
 template <>
 void Element<float>::UpdateUI()
@@ -54,6 +56,7 @@ void Element<std::string>::UpdateUI()
 {
   ImGui::InputText(label.c_str(), element->data(), 50);
 }
+
 #pragma endregion
 
 const std::string& Component::GetName() const

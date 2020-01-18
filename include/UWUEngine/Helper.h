@@ -121,8 +121,8 @@ template<typename T>
 class FlatOrRange
 {
 public:
-  FlatOrRange(T min, T max) : min(min), max(max), ranged(true) {}
-  FlatOrRange(T flat) : flat(flat), ranged(false) {}
+  FlatOrRange(T min, T max) : min(min), max(max), flat(0),ranged(true) {}
+  FlatOrRange(T flat) : min(0), max(0), flat(flat), ranged(false) {}
   FlatOrRange() = default;
 
   void SetFlat(T flat_) { flat = flat_; ranged = false; }
@@ -141,6 +141,11 @@ public:
     }
   }
 
+  void SetToRanged(bool range)
+  {
+    ranged = range;
+  }
+
   T Get()
   {
     if (ranged)
@@ -148,7 +153,22 @@ public:
     return flat;
   }
 
-private:
+  T& Flat()
+  {
+    return flat;
+  }
+
+  T& Min()
+  {
+    return min;
+  }
+
+  T& Max()
+  {
+    return max;
+  }
+
+
   T flat;
   T min;
   T max;

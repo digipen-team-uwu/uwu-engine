@@ -10,7 +10,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-
+#include<UWUEngine/Helper.h>
 #include <string>
 #include <utility>
 
@@ -30,8 +30,44 @@ namespace Editors
     void UpdateElement(T* newElement);
 
   private:
+    bool range;
     std::string label;
     T* element;
+  };
+
+
+  template<typename T>
+  class Element<FlatOrRange<T>>
+  {
+  public:
+    Element(std::string label, FlatOrRange<T>* element = nullptr) :
+      label(std::move(label)), element(element)
+    {}
+
+    void UpdateElement(FlatOrRange<T>* newElement)
+    {
+      element = newElement;
+    }
+
+    void UpdateUI()
+    {
+      ImGui::Checkbox(label.c_str(), &range);
+      element->SetToRanged(range);
+      if (range)
+      {
+        Element<T>{"Min", & (element->Min())}.UpdateUI();
+        Element<T>{"Max", & (element->Max())}.UpdateUI();
+      }
+      else
+      {
+        Element<T>{label, & (element->Flat())}.UpdateUI();
+      }
+    }
+
+  private:
+    std::string label;
+    FlatOrRange<T>* element;
+    bool range;
   };
 
   class Component
