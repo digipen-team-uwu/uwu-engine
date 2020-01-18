@@ -17,6 +17,7 @@ add_subdirectory(src)
 add_library(UWU_ENGINE_CORE ${HEADERS} ${ENGINE_CORE_SRC})
 add_executable(Umbra ${EXECUTABLE_SRC})
 add_executable(uwuEditor ${EXECUTABLE_SRC})
+add_executable(uwuTest ${TESTS_SRC})
 
 target_compile_definitions(uwuEditor PUBLIC _Editor)
 set_property(TARGET UWU_ENGINE_CORE Umbra uwuEditor PROPERTY CXX_STANDARD 17)
@@ -36,6 +37,7 @@ endif()
 
 target_include_directories(UWU_ENGINE_CORE PUBLIC ${FMOD_INCLUDE_DIR})
 
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("we in debug mode")
     target_compile_definitions(UWU_ENGINE_CORE PUBLIC _DEBUG)
@@ -50,7 +52,6 @@ set(UWU_LIBS
     ${FMOD_STUDIO_LIBRARY}
     libglew_static
     glfw
-    CATCH2
     GLM
     L_IMGUI
     MAGIC_ENUM
@@ -80,6 +81,7 @@ endif ()
 target_link_libraries(UWU_ENGINE_CORE ${UWU_LIBS})
 target_link_libraries(Umbra UWU_ENGINE_CORE)
 target_link_libraries(uwuEditor UWU_ENGINE_CORE)
+target_link_libraries(uwuTest UWU_ENGINE_CORE CATCH2)
 
 # Copy FMOD dll
 if (WIN32)
