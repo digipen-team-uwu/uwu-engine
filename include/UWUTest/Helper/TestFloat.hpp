@@ -2,15 +2,20 @@
 
 #include <limits>
 #include <algorithm> /* min, max */
-#include <cstdlib>
-#include <cmath>
+#include <array>
 
 #include "TypeWithSize.hpp"
 
-#define uwu_const const
+#define uwu_const constexpr
 
 namespace UWUTest
 {
+
+template<typename T>
+uwu_const T absolute_value(T const& v)
+{
+  return v >= T{} ? v : -v;
+}
 
 template<typename FloatType>
 class IEEE_754
@@ -41,30 +46,32 @@ public:
   // Mask for the exponent bits, which are between sign and significand bits in IEEE-754.
   static inline uwu_const BitData exponentBitMask = ~(signBitMask | significandBitMask);
 
+  // Standard float epsilon, for numbers close to 0.
   static inline uwu_const FloatType maxDiff = std::numeric_limits<FloatType>::epsilon();
 
+  // Industry standard(?) number of ULPs to consider close enough
   static inline uwu_const size_t maxUlpsDiff = 4;
 
   // Constructor
 
   // Construct from a raw floating point value.
-  uwu_const IEEE_754(FloatType const & f) : data_(f) {}
+  uwu_const IEEE_754(FloatType const& f) : data_({ f }) {}
 
-  uwu_const IEEE_754(FloatType const && f) : data_(f) {}
+  uwu_const IEEE_754(FloatType const&& f) : data_({ f }) {}
 
   // Construct from another IEEE-754 representation class.
-  uwu_const IEEE_754(IEEE_754 const && rhs) : data_(rhs.data_.float_) {}
+  uwu_const IEEE_754(IEEE_754 const&& rhs) : data_({ rhs.float_data() }) {}
 
   // Conversion operator to a raw floating point value, to enable using test floats in expressions.
   explicit operator FloatType const&() const
   {
-    return data_.float_;
+    return data_[0].float_;
   }
 
   // Conversion operator to a raw floating point value, to enable using test floats in expressions.
   explicit operator FloatType& ()
   {
-      return data_.float_;
+      return data_[0].float_;
   }
 
   // Non-static methods
@@ -72,19 +79,29 @@ public:
   // Returns the exponent bits of this float.
   uwu_const BitData exponent_bits() const
   {
-    return exponentBitMask & data_.bit_;
+    return exponentBitMask & data_[0].bit_;
   }
 
   // Returns the fraction bits of this float.
   uwu_const BitData significand_bits() const
   {
-    return significandBitMask & data_.bit_;
+    return significandBitMask & data_[0].bit_;
   }
 
   // Returns the sign bit of this float.
   uwu_const BitData sign_bit() const
   {
-    return signBitMask & data_.bit_;
+    return signBitMask & data_[0].bit_;
+  }
+
+  uwu_const FloatType float_data() const
+  {
+    return data_[0].float_;
+  }
+
+  uwu_const BitData bit_data() const
+  {
+    return data_[0].bit_;
   }
 
   // Returns whether a float represents NaN.
@@ -92,6 +109,16 @@ public:
   {
     // The IEEE-754 standard defines a NaN as a number with all ones in the exponent, and a non-zero significand.
     return (exponent_bits() == exponentBitMask) && (significand_bits() != 0);
+  }
+
+  uwu_const bool float_close(FloatType const& lhs, FloatType const& rhs) const
+  {
+    return absolute_value(lhs - rhs) <= maxDiff;
+  }
+
+  uwu_const bool ulp_close(BitData const& lhs, BitData const& rhs) const
+  {
+    return lhs - rhs <= maxUlpsDiff;
   }
 
   // Tests whether two floats are equal or close enough to be considered equal.
@@ -105,8 +132,7 @@ public:
 
     // Check if the numbers are really close -- needed
     // when comparing numbers near zero.
-    uwu_const FloatType absDiff = std::abs(data_.float_ - rhs.data_.float_);
-    if (absDiff <= maxDiff)
+    if (float_close(data_[0].float_, rhs.data_[0].float_))
     {
       return true;
     }
@@ -118,16 +144,8 @@ public:
     }
     
     // Find the difference in ULPs.
-    uwu_const BitData ulpsDiff = data_.bit_ - rhs.data_.bit_;
-    if (ulpsDiff <= maxUlpsDiff)
-    {
-      return true;
-    }
-
-    return false;
+    return ulp_close(data_[0].bit_, rhs.data_[0].bit_);
   }
-
-  // 
 
 private:
 
@@ -138,7 +156,7 @@ private:
     BitData   bit_;
   };
 
-  Data data_;
+  const std::array<Data, 1> data_;
 
 };
 

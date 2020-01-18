@@ -15,7 +15,7 @@ TEST_CASE("Vector derived from angle", "[Angle θ :=> <x, y>]")
 		uwu_const t_float theta = glm::pi<float>() / 2.f;
 		glm::vec4 v = VectorFromAngle((float)theta);
 
-		REQUIRE(t_float(-0.f).almost_equal(v.x));
+		REQUIRE(t_float(0.f).almost_equal(v.x));
 		REQUIRE(t_float(1.f).almost_equal(v.y));
 
 		REQUIRE(v.z == 0);
