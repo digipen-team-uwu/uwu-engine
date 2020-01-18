@@ -24,6 +24,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/UI/UIManager.h>
+#include "UWUEngine/Debugs/TraceLogger.h"
 
 namespace wc = WindowConstants;
 
@@ -59,6 +60,7 @@ Render::Render()
 	//OPENGL_ERR;
 	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	//OPENGL_ERR;
+  TraceLogger::Log(TraceLogger::WARNING) << "APU IS HERE:\n" << apu << std::endl;
 }
 
 void Render::Update()
