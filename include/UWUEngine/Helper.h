@@ -56,7 +56,7 @@ inline glm::mat4 perspective_invZ(float fovY_radians, float aspectWbyH, float zN
 
 float intpow(float number, int exponent);
 
-
+bool near(float x, float y);
 
 class Polynomial
 {

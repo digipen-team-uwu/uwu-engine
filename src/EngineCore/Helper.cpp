@@ -23,3 +23,9 @@ float intpow(float number, int exponent)
   }
   return sum;
 }
+
+//from Physics Assignment 1, check if a float is close enough to another float to basically be equal
+bool near(float x, float y) 
+{
+    return std::abs(x - y) < 1e-4f;
+}
