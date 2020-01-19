@@ -1,4 +1,8 @@
 #Populate source file cache
-file(GLOB_RECURSE SOURCE *.cpp)
+add_subdirectory(EngineCore)
+add_subdirectory(Executable)
+add_subdirectory(Tests)
 
-set(SOURCE ${SOURCE} PARENT_SCOPE)
+set(EXECUTABLE_SRC ${EXECUTABLE_SRC} PARENT_SCOPE)
+set(ENGINE_CORE_SRC ${ENGINE_CORE_SRC} PARENT_SCOPE)
+set(TESTS_SRC ${TESTS_SRC} PARENT_SCOPE)

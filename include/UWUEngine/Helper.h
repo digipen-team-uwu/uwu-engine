@@ -162,7 +162,7 @@ inline float RotationFromVec(const glm::vec4& vec)
 
 inline glm::vec4 VectorFromAngle(float angle)
 {
-  return glm::vec4(cos(angle), sin(angle), 0, 0);
+  return glm::vec4(glm::cos(angle), glm::sin(angle), 0, 0);
 }
 
 inline glm::vec4 VectorFromTwoAngles(float angle1, float angle2)

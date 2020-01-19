@@ -153,6 +153,11 @@ endif ()
 
 #############################################################################
 # Find Header only libraries
+# Find Catch2
+set(CATCH2_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch2/single_include)
+add_library(CATCH2 INTERFACE)
+target_include_directories(CATCH2 INTERFACE ${CATCH2_INCLUDE_DIR})
+
 # Find GLM
 set(GLM_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/glm)
 add_library(GLM INTERFACE)
@@ -205,6 +210,7 @@ target_link_libraries(L_IMGUI
 set(SPINE_C_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/spine-c/include)
 file(GLOB SPINE_SRC "spine-c/src/*.c")
 add_library(L_SPINE_C ${SPINE_SRC})
+target_link_libraries(L_SPINE_C UWU_ENGINE_CORE)
 target_include_directories(L_SPINE_C
         PUBLIC
         ${SPINE_C_INCLUDE_DIR}

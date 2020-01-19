@@ -31,3 +31,6 @@
 [submodule "data"]
 	path = data
 	url = https://github.com/digipen-team-uwu/umbra-data.git
+[submodule "lib/catch2"]
+	path = lib/catch2
+	url = https://github.com/catchorg/Catch2

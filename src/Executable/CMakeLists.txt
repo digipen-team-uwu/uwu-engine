@@ -1,0 +1,4 @@
+#Populate source file cache
+file(GLOB_RECURSE EXECUTABLE_SRC *.cpp)
+
+set(EXECUTABLE_SRC ${EXECUTABLE_SRC} PARENT_SCOPE)
