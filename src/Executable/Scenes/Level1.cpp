@@ -12,6 +12,7 @@
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Graphics/Camera.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 namespace wc = WindowConstants;
 

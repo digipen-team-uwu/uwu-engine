@@ -21,6 +21,7 @@
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/UI/UIManager.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 typedef EntityManager::Type type;
 

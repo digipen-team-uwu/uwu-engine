@@ -19,6 +19,7 @@
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <vector>
 #include <UWUEngine/Engine.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 template<>
 int RegisterSystemHelper<DebugManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<DebugManager>(SystemInitOrder::LAST, SystemUpdateOrder::Debug);

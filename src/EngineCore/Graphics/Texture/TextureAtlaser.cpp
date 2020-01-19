@@ -16,6 +16,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
+#include "UWUEngine/Graphics/Texture/TextureLoader.h"
 
 template<>
 int RegisterSystemHelper<TextureAtlaser>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TextureAtlaser>(SystemInitOrder::Atlas, SystemUpdateOrder::Atlas);

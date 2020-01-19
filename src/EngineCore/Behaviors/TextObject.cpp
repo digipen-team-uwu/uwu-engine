@@ -17,6 +17,7 @@
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/UI/UIManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 typedef EntityManager::Type type;
 
 

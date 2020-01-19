@@ -18,6 +18,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/DragAndDrop.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 template<>
 int RegisterSystemHelper<DragAndDrop>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<DragAndDrop>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);

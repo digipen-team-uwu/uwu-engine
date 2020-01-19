@@ -16,6 +16,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <fstream>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Serialization.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 template<>
 size_t RegisterComponentHelper<TextureComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<TextureComponentManager>(ComponentUpdateOrder::LAST);
