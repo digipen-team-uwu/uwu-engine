@@ -3,6 +3,7 @@
 #include <limits>
 #include <algorithm> /* min, max */
 #include <array>
+#include <utility>   /* forward */
 
 #include "TypeWithSize.hpp"
 
@@ -11,6 +12,7 @@
 namespace UWUTest
 {
 
+// std::abs is non constexpr garbage
 template<typename T>
 uwu_const T absolute_value(T const& v)
 {
@@ -147,20 +149,41 @@ public:
     return ulp_close(data_[0].bit_, rhs.data_[0].bit_);
   }
 
+  // Operator overloads
+
+  uwu_const bool operator==(IEEE_754<FloatType> const&& rhs) const
+  {
+    return almost_equal(std::forward<decltype(rhs)>(rhs));
+  }
+
+  uwu_const bool operator==(FloatType const&& rhs) const
+  {
+    return almost_equal(IEEE_754<FloatType>(rhs));
+  }
+
+  template<typename FloatType>
+  friend uwu_const bool operator==(FloatType const&& lhs, IEEE_754<FloatType> const&& rhs);
+
 private:
 
   union Data
   {
     uwu_const Data(FloatType f) : float_(f) {}
-    mutable FloatType float_;
-    BitData   bit_;
+    mutable FloatType float_; // mutable so that runtime version can be used
+            BitData   bit_;
   };
 
-  const std::array<Data, 1> data_;
+  const std::array<const Data, 1> data_;
 
 };
 
 typedef IEEE_754<float>  t_float;
 typedef IEEE_754<double> t_double;
+
+template<typename FloatType>
+uwu_const bool operator==(FloatType const&& lhs, IEEE_754<FloatType> const&& rhs)
+{
+  return rhs == lhs;
+}
 
 }
