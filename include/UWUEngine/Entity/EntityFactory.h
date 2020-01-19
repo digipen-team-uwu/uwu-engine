@@ -37,7 +37,22 @@ public:
   */
   /******************************************************************************/
   ~EntityFactory() = default;
+	
+	
+	/******************************************************************************/
+	/*!
+		\brief
+			Creates an entity from a json file
 
+		\param filepath
+			The filepath of object to deserialize
+
+		\return
+			The ID of the created game object
+	*/
+	/******************************************************************************/
+	static EntityID CreateObject(std::string filepath, EntityManager::Type type = EntityManager::Empty);
+  
   /******************************************************************************/
   /*!
     \brief

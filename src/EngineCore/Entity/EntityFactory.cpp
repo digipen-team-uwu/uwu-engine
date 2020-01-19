@@ -34,6 +34,106 @@ using namespace ColoredOutput;
 char EntityFactory::readBuffer[65536];
 
 
+EntityID EntityFactory::CreateObject(std::string filepath, EntityManager::Type type)
+{
+	// Returns the ID of the object
+	EntityID resultID = -1;
+	FILE* file;
+	if(filepath.length())
+	{
+		// Open the file
+		file = fopen(filepath.c_str(), "rb");
+	}
+	else
+		{
+			// A destination buffer for filePath
+			std::stringstream path;
+
+			// construct the path
+			path << "./data/entities/" << magic_enum::enum_name(type) << ".json";
+            file = fopen(path.str().c_str(), "rb");
+		}
+	// Check to make sure the file opened properly
+	//printf("Attempting to open file %s\n", filePath.str().c_str()); // Debug print
+	assert(file);
+	
+	// Read the file into a RapidJSON filestream
+	rapidjson::FileReadStream stream(file, readBuffer, sizeof(readBuffer));
+	
+	// The RapidJSON document object
+	rapidjson::Document doc;
+	
+	// Parse the file stream using RapidJSON
+	doc.ParseStream(stream);
+	
+	// Close the file to avoid memory errors from asserts
+	fclose(file);
+	
+	// Make sure the document was properly formatted
+	// (More important once this is generalized)
+	//printf("Checking %s for type member", filePath); // Debug print
+	//assert(doc.HasMember("type"));
+	//printf("Checking that %s type member is string"); // Debug print
+	//assert(doc["type"].IsString());
+	
+	
+	if(type != EntityManager::Empty) //if type was given
+		resultID = EntityManager::New(type);// Get the EntityID from the manager
+	else
+	{
+	  //figure it out from file name
+		for (auto i : EntityManagerTypeIterator())
+		{
+            if (filepath.find(magic_enum::enum_name(i).data()) != std::string::npos)
+            {
+		  	    type = i;
+                resultID = EntityManager::New(type);// Get the EntityID from the manager
+                break;
+            }
+		}
+	}
+	
+	// Construct all relevant components
+	if (doc.HasMember("name"))
+		Editors::EntityViewer::SetName(resultID, doc["name"].GetString()); //entity has a name
+    else
+        Editors::EntityViewer::SetName(resultID, doc["type"].GetString()); //use type as name
+	
+	// Check for a texture component
+	CheckTexture(doc, resultID, filepath.c_str());
+	
+	// Check for a transform component
+	CheckTransform(doc, resultID, filepath.c_str());
+	
+	// Check for a physics component
+	CheckPhysics(doc, resultID, filepath.c_str());
+	
+	// Check for an animation component
+	CheckAnimation(doc, resultID, filepath.c_str());
+	
+	CheckCollider(doc, resultID, filepath.c_str());
+	
+	
+	
+	CheckShader(doc, resultID, filepath.c_str());
+	
+	CheckSpineSkeleton(doc, resultID, filepath.c_str());
+	
+	// TODO: activate behavior if listed in json (CheckBehavior)
+	if (doc.HasMember("behavior"))
+	{
+		BehaviorComponentManager::Activate(resultID);
+		BehaviorComponentManager::GetBaseBehavior(resultID)->Deserialize(doc, resultID, filepath.c_str());
+	}
+	
+	// Give the object a mesh (for now only square)
+	//MeshComponentManager::Activate(resultID);
+	//MeshComponentManager::SetMesh(resultID, MeshComponentManager::getSquareMesh());
+	
+	return resultID;
+}
+
+
 /******************************************************************************/
 /*!
   \brief
@@ -48,6 +148,7 @@ char EntityFactory::readBuffer[65536];
 /******************************************************************************/
 EntityID EntityFactory::CreateObject(EntityManager::Type type)
 {
+#if 0
     // Returns the ID of the object
     EntityID resultID = -1;
 
@@ -125,6 +226,8 @@ EntityID EntityFactory::CreateObject(EntityManager::Type type)
     //MeshComponentManager::SetMesh(resultID, MeshComponentManager::getSquareMesh());
 
     return resultID;
+#endif
+    return CreateObject(std::string(""), type);
 }
 
 /******************************************************************************/
