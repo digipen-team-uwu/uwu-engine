@@ -58,6 +58,11 @@ EntityID EntityViewer::GetSelectedEntity()
   return selected;
 }
 
+void Editors::EntityViewer::SetSelectedEntity(EntityID ID)
+{
+  selected = ID;
+}
+
 void EntityViewer::SetName(EntityID ID, std::string name_)
 {
   name[ID] = name_;
