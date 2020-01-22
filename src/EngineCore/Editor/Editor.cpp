@@ -14,7 +14,6 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/WindowManager.h>
 #include <UWUEngine/Input/InputManager.h>
 //This include can be removed in the future
-#include <UWUEngine/Editor/EditorWindow.h>
 #include <UWUEngine/Editor/EditorWindowManager.h>
 
 #include "imgui.h"
