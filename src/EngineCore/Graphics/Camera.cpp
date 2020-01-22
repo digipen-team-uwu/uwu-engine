@@ -37,13 +37,6 @@ float Camera::FOV;
 float Camera::nearDistance;
 float Camera::farDistance;
 float Camera::aspectRatio;
-bool Camera::isFirst;
-float Camera::Yaw;
-float Camera::Pitch;
-Camera::state Camera::state_;
-bool Camera::switch_;
-Camera::lock Camera::lock_;
-bool Camera::switch_lock_;
 
 template<>
 int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
@@ -83,22 +76,15 @@ void Camera::calculate_camera_data()
 
 Camera::Camera()
 {
-  lock_ = lock::UNLOCKED;
-  switch_lock_ = false;
-  switch_ = false;
-  state_ = state::DISABLE_FPS;
-  isFirst = true;
-  Yaw = -90.0f;
-  Pitch = 0.0f;
-  // initialize
-  FOV = 45.0f;
-  nearDistance = 5.f;
-  farDistance = 100000.f;
-  aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
-  relative_up = { 0.0f,1.0f,0.0f };
-  cameraPos = { 0.0f, 0.0f, cc::CAMERA_POSITION };
-  cameraTarget = { 0.0f, 0.0f, 0.0f };
-  calculate_camera_data();
+    FOV = 45.0f;
+    nearDistance = 5.f;
+    farDistance = 100000.f;
+    aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
+    // initialize
+    cameraPos = glm::vec3(0.0f, 0.0f, cc::CAMERA_POSITION);
+    cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    calculate_camera_vector();
+    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
 void Camera::Update()
@@ -245,37 +231,22 @@ void Camera::moveCamera(float speed)
   calculate_camera_data();
 }
 
-void Camera::mouseMovement(float xOffSet, float yOffSet)
+float Camera::getFOV()
 {
-  if (state_ == state::ENABLE_FPS)
-  {
-    if (lock_ == lock::UNLOCKED)
-    {
-      float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
-      float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
-
-      Yaw += x_offset;
-      Pitch += y_offset;
-
-      Pitch = Pitch > 89.0f ? 89.0f : Pitch;
-      Pitch = Pitch < -89.0f ? -89.0f : Pitch;
-
-      calculate_camera_data();
-    }
-  }
+  return FOV;
 }
 
-void Camera::setFirstFlag(bool flag)
+float Camera::getNearDistance()
 {
-  isFirst = flag;
+  return nearDistance;
 }
 
-bool Camera::getFirstFlag()
+float Camera::getFarDistance()
 {
-  return isFirst;
+  return farDistance;
 }
 
-Camera::state Camera::getCameraState()
+float Camera::getAspectRatio()
 {
-  return state_;
+  return aspectRatio;
 }
