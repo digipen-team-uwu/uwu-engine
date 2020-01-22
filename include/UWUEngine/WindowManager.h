@@ -22,6 +22,8 @@ public:
   ~WindowManager();
   [[nodiscard]]
   static GLFWwindow* getWindowHandle();
+  static float getWindowHeight();
+  static float getWindowWidth();
 	//! Swap the window's frame buffer, displaying anything rendered to the back buffer
 	void Update();
 private:

@@ -96,6 +96,16 @@ GLFWwindow* WindowManager::getWindowHandle()
 	return window_;
 }
 
+float WindowManager::getWindowHeight()
+{
+  return static_cast<float>(WindowConstants::WINDOW_HEIGHT);
+}
+
+float WindowManager::getWindowWidth()
+{
+  return static_cast<float>(WindowConstants::WINDOW_WIDTH);
+}
+
 void WindowManager::Update()
 {
   glfwSwapBuffers(window_);

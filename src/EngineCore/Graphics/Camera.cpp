@@ -32,6 +32,10 @@ glm::vec3 Camera::cameraRight;
 glm::vec3 Camera::cameraTarget;
 glm::mat4 Camera::projection;
 glm::mat4 Camera::view;
+float Camera::FOV;
+float Camera::nearDistance;
+float Camera::farDistance;
+float Camera::aspectRatio;
 
 
 
@@ -45,13 +49,15 @@ void Camera::calculate_camera_vector()
 
 Camera::Camera()
 {
+    FOV = 45.0f;
+    nearDistance = 5.f;
+    farDistance = 100000.f;
+    aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
     // initialize
     cameraPos = glm::vec3(0.0f, 0.0f, cc::CAMERA_POSITION);
     cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
     calculate_camera_vector();
-    projection = glm::perspective(glm::radians(45.0f),
-        static_cast<float>(wc::WINDOW_WIDTH) / static_cast<float>(wc::WINDOW_HEIGHT),
-		.1f, 100000.f);
+    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
 void Camera::Update()
@@ -154,4 +160,24 @@ void Camera::moveCamera(float speed)
     float dt = FrameRateController::GetConstantDeltaTime<float>();
     cameraPos += cameraUp * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
     cameraPos += cameraRight * speed * dt * (float)(!!InputManager::KeyHeld('A') - !!InputManager::KeyHeld('D'));;
+}
+
+float Camera::getFOV()
+{
+  return FOV;
+}
+
+float Camera::getNearDistance()
+{
+  return nearDistance;
+}
+
+float Camera::getFarDistance()
+{
+  return farDistance;
+}
+
+float Camera::getAspectRatio()
+{
+  return aspectRatio;
 }

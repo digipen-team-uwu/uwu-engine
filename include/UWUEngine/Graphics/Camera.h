@@ -39,6 +39,10 @@ public:
     static void zoomIn(float amount);
     static void zoomOut(float amount);
     static void moveCamera(float speed);
+    static float getFOV();
+    static float getNearDistance();
+    static float getFarDistance();
+    static float getAspectRatio();
 private:
     static void calculate_camera_vector();
     static glm::vec3 cameraPos;
@@ -48,4 +52,8 @@ private:
     static glm::vec3 cameraTarget;
     static glm::mat4 projection;
     static glm::mat4 view;
+    static float FOV;
+    static float nearDistance;
+    static float farDistance;
+    static float aspectRatio;
 };
