@@ -77,3 +77,7 @@ size_t BaseComponent<T>::updateOrder_ = static_cast<size_t>(ComponentUpdateOrder
 
 template<typename T>
 size_t RegisterComponentHelper<T>::RegisterComponentHelper_ID = EntityManager::template AddComponent<T>(ComponentUpdateOrder::INVALID);
+
+#define RegisterComponent(type, updateOrder) \
+template<> \
+size_t RegisterComponentHelper<type>::RegisterComponentHelper_ID = EntityManager::AddComponent<type>(ComponentUpdateOrder::updateOrder); \

@@ -28,7 +28,7 @@ private:
 class TimerManager : public BaseSystem<TimerManager>
 {
 public:
-  static void Update();
+  void Update() override;
   friend class Timer;
 private:
   static std::list<Timer*> timers;

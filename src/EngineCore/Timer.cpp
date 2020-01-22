@@ -55,7 +55,7 @@ Timer::Timer() : duration(0), time(0), running(false)
   TimerManager::timers.push_front(this);
 }
 
-Timer::~Timer() 
+Timer::~Timer()
 { 
   TimerManager::timers.remove(this); 
 }
