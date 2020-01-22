@@ -12,8 +12,7 @@
 #include <UWUEngine/Timer.h>
 #include <UWUEngine/FrameRateController.h>
 
-template<>
-int RegisterSystemHelper<TimerManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TimerManager>(SystemInitOrder::FIRST, SystemUpdateOrder::FIRST);
+
 
 std::list<Timer*> TimerManager::timers;
 

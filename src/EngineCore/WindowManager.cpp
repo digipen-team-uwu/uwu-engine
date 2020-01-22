@@ -18,8 +18,7 @@
 
 namespace wc = WindowConstants;
 
-template<>
-int RegisterSystemHelper<WindowManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<WindowManager>(SystemInitOrder::Window, SystemUpdateOrder::Window);
+
 
 WindowManager::WindowManager()
 {

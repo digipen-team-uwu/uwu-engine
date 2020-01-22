@@ -14,8 +14,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 
-template<>
-int RegisterSystemHelper<TextureLoader>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TextureLoader>(SystemInitOrder::TexLoad, SystemUpdateOrder::TexLoad);
+
 
 std::vector<std::string> TextureLoader::cache_file;
 bool TextureLoader::cache_;

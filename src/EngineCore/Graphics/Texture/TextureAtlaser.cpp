@@ -18,8 +18,6 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include "UWUEngine/Graphics/Texture/TextureLoader.h"
 
-template<>
-int RegisterSystemHelper<TextureAtlaser>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TextureAtlaser>(SystemInitOrder::Atlas, SystemUpdateOrder::Atlas);
 
 int TextureAtlaser::layer_counter;
 int TextureAtlaser::tracker_ = 0;

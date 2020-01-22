@@ -30,8 +30,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 namespace wc = WindowConstants;
 
 static GLuint size;
-template<>
-int RegisterSystemHelper<Render>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Render>(SystemInitOrder::Render, SystemUpdateOrder::Render);
+
 
 namespace
 {

@@ -21,8 +21,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/Editor/EditorMainMenu.h>
 
-template<>
-int RegisterSystemHelper<Editor>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Editor>(SystemInitOrder::Editor, SystemUpdateOrder::Editor);
+
 
 bool Editor::isActive = false;
 

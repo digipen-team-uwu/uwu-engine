@@ -24,8 +24,7 @@
 #include <UWUEngine/Serialization.h>
 #include "UWUEngine/Instances.h"
 
-template<>
-int RegisterSystemHelper<EntityManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<EntityManager>(SystemInitOrder::Entity, SystemUpdateOrder::Entity);
+
 
 std::vector<EntityID> EntityManager::ids;
 std::vector<EntityID> EntityManager::freeIDs;

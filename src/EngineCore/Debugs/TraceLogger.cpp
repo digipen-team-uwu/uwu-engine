@@ -30,8 +30,6 @@ using namespace WindowsSpecific;
 #include <memory>
 #include <filesystem>
 
-template<>
-int RegisterSystemHelper<TraceLogger>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<TraceLogger>(SystemInitOrder::Trace, SystemUpdateOrder::LAST);
 
 constexpr size_t stdout_bufsize = 4096;
 

@@ -11,9 +11,6 @@
 namespace UBC = UniformBufferConstants;
 std::map<UniformBuffer::Type, std::pair<unsigned, unsigned>> UniformBuffer::data_;
 
-template<>
-int RegisterSystemHelper<UniformBuffer>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<UniformBuffer>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
-
 UniformBuffer::UniformBuffer()
 {
     CreateUniformBuffer(Light,

@@ -16,8 +16,7 @@
 #include <UWUEngine/UI/HUDManager.h>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
 
-template<>
-int RegisterSystemHelper<UIManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<UIManager>(SystemInitOrder::UI, SystemUpdateOrder::UI);
+
 
 VaoKey UIManager::UIKey;
 std::tuple<GLenum, GLuint, GLuint> UIManager::uiMesh;

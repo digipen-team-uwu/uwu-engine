@@ -27,7 +27,7 @@ public:
 };
 
 template <typename T>
-constexpr int SystemUpdater::AddSystem(SystemInitOrder init_order, SystemUpdateOrder update_order) noexcept
+int SystemUpdater::AddSystem(SystemInitOrder init_order, SystemUpdateOrder update_order) noexcept
 {
   SystemInitOrder init_order_ = init_order;
   SystemUpdateOrder update_order_ = update_order;

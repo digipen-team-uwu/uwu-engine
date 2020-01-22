@@ -22,8 +22,6 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 
-template<>
-size_t RegisterComponentHelper<SpineSkeletonComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<SpineSkeletonComponentManager>(ComponentUpdateOrder::SpineSkeleton);
 
 //Static Variable
 GLSLShader SpineSkeleton::shader_;

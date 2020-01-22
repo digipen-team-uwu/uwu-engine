@@ -33,8 +33,7 @@ glm::vec3 Camera::cameraTarget;
 glm::mat4 Camera::projection;
 glm::mat4 Camera::view;
 
-template<>
-int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
+
 
 void Camera::calculate_camera_vector()
 {

@@ -11,8 +11,6 @@
     /******************************************************************************/
 #include <UWUEngine/Random.h>
 
-template<>
-int RegisterSystemHelper<Random>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Random>(SystemInitOrder::FIRST, SystemUpdateOrder::FIRST);
 
 std::mt19937_64 Random::rng = std::mt19937_64(std::random_device{}());
 
