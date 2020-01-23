@@ -55,6 +55,7 @@ void ParentChildComponentManager::EraseChild(EntityID parent, std::vector<Entity
 
 void ParentChildComponentManager::ShutdownObject(EntityID id)
 {
+  parents[id] = 0;
   children.erase(id);
   EraseChild(parents[id], id);
 }
