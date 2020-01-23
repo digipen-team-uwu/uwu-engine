@@ -21,6 +21,7 @@
 #include <UWUEngine/Input/ActionManager.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
+#include <UWUEngine/DragAndDrop.h>
 
 #pragma region Systems
 //Register
@@ -45,6 +46,7 @@ RegisterSystem(ActionManager, Action, Action)
 RegisterSystem(InputManager, Input, Input)
 RegisterSystem(WindowManager, Window, Window)
 RegisterSystem(UniformBuffer, LAST, LAST)
+RegisterSystem(DragAndDrop, LAST, LAST)
 
 #pragma endregion 
 

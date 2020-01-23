@@ -20,9 +20,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/DragAndDrop.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
-template<>
-int RegisterSystemHelper<DragAndDrop>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<DragAndDrop>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
-
 DragAndDrop::DragAndDrop()
 {
   glfwSetDropCallback(WindowManager::getWindowHandle(), DropCallback);
