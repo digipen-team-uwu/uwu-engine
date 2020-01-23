@@ -16,8 +16,6 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 
-template<>
-size_t RegisterComponentHelper<SpineAnimationComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<SpineAnimationComponentManager>(ComponentUpdateOrder::LAST);
 
 std::unordered_map<EntityID, SpineAnimation> SpineAnimationComponentManager::animations;
 

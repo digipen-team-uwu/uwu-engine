@@ -20,6 +20,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Graphics/Camera.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 static EntityID sight;
 static std::vector<EntityID> objects;

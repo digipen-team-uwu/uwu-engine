@@ -18,8 +18,6 @@
 #include <UWUEngine/GamePlay/PlayerController.h>
 #include <iomanip>
 
-template<>
-int RegisterSystemHelper<HUDManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<HUDManager>(SystemInitOrder::HUD, SystemUpdateOrder::HUD);
 
 EntityID HUDManager::fps = goc::INVALID_ID;
 EntityID HUDManager::energyBar = goc::INVALID_ID;

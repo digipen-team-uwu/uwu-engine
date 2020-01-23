@@ -14,8 +14,6 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Component/ColliderComponentManager.h>
 
-template<>
-size_t RegisterComponentHelper<ColliderComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<ColliderComponentManager>(ComponentUpdateOrder::Collider);
 
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>

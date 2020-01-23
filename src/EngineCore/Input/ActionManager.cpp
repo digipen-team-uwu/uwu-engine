@@ -16,8 +16,6 @@ int ActionManager::actions[ActionManager::ActionAmount];
 int ActionManager::prevActions[ActionManager::ActionAmount];
 namespace ic = InputConstants;
 
-template<>
-int RegisterSystemHelper<ActionManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<ActionManager>(SystemInitOrder::Action, SystemUpdateOrder::Action);
 
 ActionManager::ActionManager()
 {  

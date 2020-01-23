@@ -25,12 +25,12 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/UI/UIManager.h>
 #include "UWUEngine/Debugs/TraceLogger.h"
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 namespace wc = WindowConstants;
 
 static GLuint size;
-template<>
-int RegisterSystemHelper<Render>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Render>(SystemInitOrder::Render, SystemUpdateOrder::Render);
+
 
 namespace
 {

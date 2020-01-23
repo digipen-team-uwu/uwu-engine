@@ -12,8 +12,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Component/AnimationComponentManager.h>
 
-template<>
-size_t RegisterComponentHelper<AnimationComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<AnimationComponentManager>(ComponentUpdateOrder::Animation);
+
 
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/constants.h>

@@ -20,8 +20,6 @@ Copyright ☺ 2019 DigiPen, All rights reserved.
 #include <UWUEngine/FrameRateController.h>
 #include <magic_enum.hpp>
 
-template<>
-size_t RegisterComponentHelper<PhysicsComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<PhysicsComponentManager>(ComponentUpdateOrder::Physics);
 
 namespace goc = GameObjectConstants;
 

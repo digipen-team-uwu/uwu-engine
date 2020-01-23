@@ -14,7 +14,6 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/WindowManager.h>
 #include <UWUEngine/Input/InputManager.h>
 //This include can be removed in the future
-#include <UWUEngine/Editor/EditorWindow.h>
 #include <UWUEngine/Editor/EditorWindowManager.h>
 
 #include "imgui.h"
@@ -22,8 +21,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/Editor/EditorMainMenu.h>
 
-template<>
-int RegisterSystemHelper<Editor>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Editor>(SystemInitOrder::Editor, SystemUpdateOrder::Editor);
+
 
 bool Editor::isActive = false;
 

@@ -22,8 +22,7 @@
 
 namespace ic = InputConstants;
 
-template<>
-int RegisterSystemHelper<InputManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<InputManager>(SystemInitOrder::Input, SystemUpdateOrder::Input);
+
 
 //TODO: make drag and drop callback for dragging pictures and jsons
 //TODO::Remove all existence of GLFWgamepadstate.buttons2

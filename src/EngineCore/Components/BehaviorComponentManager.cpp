@@ -14,8 +14,6 @@
 #include <UWUEngine/Graphics/Render.h>
 #include <UWUEngine/Entity/EntityManager.h>
 
-template<>
-size_t RegisterComponentHelper<BehaviorComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<BehaviorComponentManager>(ComponentUpdateOrder::Behavior);
 
 namespace goc = GameObjectConstants;
 

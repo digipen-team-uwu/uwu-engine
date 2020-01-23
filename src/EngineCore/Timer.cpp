@@ -9,9 +9,12 @@
   Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Engine.h>
+#include <UWUEngine/Timer.h>
 #include <UWUEngine/FrameRateController.h>
 
+
+
+std::list<Timer*> TimerManager::timers;
 
 void TimerManager::Update()
 {
@@ -44,17 +47,17 @@ void Timer::SetDuration(float newDuration)
 }
 Timer::Timer(float duration) : duration(duration), time(duration), running(true) 
 { 
-  Engine::timerManager.timers.push_front(this); 
+  TimerManager::timers.push_front(this); 
 }
 
 Timer::Timer() : duration(0), time(0), running(false) 
 { 
-  Engine::timerManager.timers.push_front(this);
+  TimerManager::timers.push_front(this);
 }
 
-Timer::~Timer() 
+Timer::~Timer()
 { 
-  Engine::timerManager.timers.remove(this); 
+  TimerManager::timers.remove(this); 
 }
 
 bool Timer::Finished()

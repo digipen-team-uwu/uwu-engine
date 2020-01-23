@@ -31,8 +31,7 @@ GLuint Lighting::ssbo_plight_;
 GLuint Lighting::ssbo_dlight_;
 GLuint Lighting::ssbo_splight_;
 
-template<>
-int RegisterSystemHelper<Lighting>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Lighting>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
+
 
 Lighting::Lighting()
 {

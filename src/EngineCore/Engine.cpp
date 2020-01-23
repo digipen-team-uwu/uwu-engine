@@ -10,7 +10,6 @@
 
 // Systems
 SystemUpdater Engine::systemUpdater;
-TimerManager Engine::timerManager;
 
 //TextureAtlaser Engine::textureAtlaser;
 //TextureLoader Engine::textureLoader;
@@ -28,9 +27,7 @@ void Engine::Update()
 {
 	StateMachineUpdater::Update();
 	//editor.Update();
-	timerManager.Update();
 	
-	// TODO: move this to the top. it is only here because windowmanager/inputmanager needs to update here
 	SystemUpdater::Update();
     // title
     std::stringstream title;

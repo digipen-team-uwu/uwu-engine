@@ -10,6 +10,7 @@
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Graphics/Lighting/Lighting.h>
 #include <UWUEngine/Behaviors/DynamicCamera.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 namespace cc = CameraConstants;
 // Level2

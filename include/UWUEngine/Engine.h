@@ -1,16 +1,11 @@
 #pragma once
 #define GLM_FORCE_SWIZZLE
 #include <UWUEngine/BaseSystem.h>
-#include <UWUEngine/Timer.h>
-#include <UWUEngine/Graphics/Texture/TextureLoader.h>
-#include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
-#include <UWUEngine/Instances.h>
 
 class Engine
 {
 public:
 	//Systems
-	static TimerManager timerManager;
 	static SystemUpdater systemUpdater;
 
 	//static CompSystem compManager; //deprecated

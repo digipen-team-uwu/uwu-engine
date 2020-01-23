@@ -19,9 +19,9 @@
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <vector>
 #include <UWUEngine/Engine.h>
+#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
-template<>
-int RegisterSystemHelper<DebugManager>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<DebugManager>(SystemInitOrder::LAST, SystemUpdateOrder::Debug);
+
 
 VaoKey DebugManager::vectorVAO = -1;
 VaoKey DebugManager::hitboxVAO = -1;

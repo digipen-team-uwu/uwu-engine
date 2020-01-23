@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include "BaseSystem.h"
 
 class Timer
 {
@@ -24,11 +25,11 @@ private:
   bool running;
 };
 
-class TimerManager
+class TimerManager : public BaseSystem<TimerManager>
 {
 public:
-  void Update();
+  void Update() override;
   friend class Timer;
 private:
-  std::list<Timer*> timers;
+  static std::list<Timer*> timers;
 };

@@ -18,8 +18,6 @@
 #include <fstream>
 #include <UWUEngine/Debugs/ColoredOutput.h>
 
-template<>
-int RegisterSystemHelper<SoundInterface>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<SoundInterface>(SystemInitOrder::FIRST, SystemUpdateOrder::FIRST);
 
 using namespace ColoredOutput;
 
