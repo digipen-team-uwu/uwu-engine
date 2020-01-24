@@ -17,6 +17,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Timer.h>
 
 #include <UWUEngine/Physics/Colliders/Collider.h>
+#include <UWUEngine/Event/Type/Collision.h>
 
 StateMachine(Player, false, StartUp, Grounded, Airborne, Dash, Hurt, Death)
 
@@ -78,6 +79,10 @@ public:
   void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath) override;
 
   void OnCollide(CollisionInfo const& info);
+
+  //Event Listener
+  void OnCollideEvent(const CollisionEvent* event);
+  CollisionEventListener eventListener;
 
 private:
   // State machine
