@@ -83,14 +83,19 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
   float fov = Camera::getFOV();
   float nearDist = Camera::getNearDistance();
   float height_vf = 2.f * nearDist * tanf(glm::radians(fov) / 2.0f);
-  float width_vf = Camera::getAspectRatio() * height_vf;
+  float aspectRatio = Camera::getAspectRatio();
+  float width_vf = aspectRatio * height_vf;
 
   glm::mat3 ndc_to_vf(1.0f);
-  ndc_to_vf[0].x = width_vf / 2.0f;
-  ndc_to_vf[1].y = height_vf / 2.0f;
-  ndc_to_vf[2].x = 0.0f;
-  ndc_to_vf[2].y = 0.0f;
-  ndc_to_vf[2].z = 1.0f;
+  // asymmetric perspective
+  //ndc_to_vf[0].x = width_vf / 2.0f;
+  //ndc_to_vf[1].y = height_vf / 2.0f;
+  //ndc_to_vf[2].x = 0.0f;
+  //ndc_to_vf[2].y = 0.0f;
+  //ndc_to_vf[2].z = 1.0f;
+  // symmetric perspective
+  ndc_to_vf[0].x = 1.0f / tan(fov / 2.0f) / aspectRatio;
+  ndc_to_vf[1].y = 1.0f / tan(fov / 2.0f);
 #pragma endregion 
 
 #pragma region convert view finder to view frame
