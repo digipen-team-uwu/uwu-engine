@@ -1,17 +1,21 @@
 #pragma once
-#include <queue>
+#include <unordered_map>
 #include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/BaseSystem.h>
 
-class Picker
+class Picker : public BaseSystem<Picker>
 {
 public:
     Picker();
     ~Picker() = default;
-
-    EntityID Pick();
-
+    void Update() override;
+    static void Pick();
+    static void PickID();
+    static glm::vec3 GetMouseWorld();
+    static void CalculateMouseWorld(glm::vec2 Pos);
 private:
-  EntityID saved_ID;
-  float saved_t;
-  std::priority_queue<float> time_;
+  static glm::vec3 mouse_world;
+  static EntityID saved_ID;
+  static float saved_t;
+  static std::unordered_map<EntityID, float> ID_to_time_;
 };

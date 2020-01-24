@@ -20,6 +20,7 @@ enum class SystemUpdateOrder
   Event        = 9825,
   Render       = 9850,
   Action       = 9860,
+  Picker       = 9865,
   Input        = 9870,
   Window       = 9900,
   LAST         = 10000,

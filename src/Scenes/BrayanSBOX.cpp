@@ -20,8 +20,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Graphics/Camera.h>
-#include <UWUEngine/Graphics/Debugs/Picker.h>
-#include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 
 static EntityID sight;
 static std::vector<EntityID> objects;
@@ -98,13 +96,7 @@ void GameStateMachine::Update_BrayanSBOX(float dt)
     DynamicCamera::Deactivate();
   }
 #endif
-
-  if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
-  {
-    Picker p = Picker();
-    EntityID ID = p.Pick();
-    Editors::EntityViewer::SetSelectedEntity(ID);
-  }
+  
 }
 
 void GameStateMachine::Exit_BrayanSBOX()
