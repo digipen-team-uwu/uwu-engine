@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       EventSystem.h
+\file       Event.h
 \author     Yi Qian
 \date       2019/12/25
 \brief      Event Handling
@@ -10,64 +10,67 @@ Copyright ? 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-
-#include <list>
 #include <queue>
-#include <GLFW/glfw3.h>
-
+#include <vector>
 #include <UWUEngine/BaseSystem.h>
-#include <UWUEngine/Event/EventListener.h>
+
+//Forward declaration
+class IEventListener;
 
 enum class EventType
 {
-  COLLISION,
-
-  COUNT
+  Collision,
+  Spine,
+  Sound
 };
 
-struct Event
+class IEvent
 {
-  //Constructor
-  Event():
-  timeStamp(glfwGetTime())
-  {}
+public:
+  IEvent(EventType type);
+  virtual ~IEvent() = default;
+  [[nodiscard]] EventType GetType() const;
+  [[nodiscard]] bool IsType(EventType type) const;
 
-  //Data
-  EventType type{};
-  double timeStamp;
-  void* data{};
+private:
+  EventType type_;
 };
 
-namespace std
+template <EventType type>
+class Event final : IEvent
 {
-  template<>
-  struct less<Event>
-  {
-    bool operator()(const Event& lhs, const Event& rhs) const
-    {
-      return lhs.timeStamp < rhs.timeStamp;
-    }
-  };
-}
+public:
+  ~Event() override;
+};
+
+class IEventDispatcher
+{
+public:
+  IEventDispatcher(EventType type);
+  virtual ~IEventDispatcher() = default;
+  [[nodiscard]] EventType GetType() const;
+  [[nodiscard]] bool IsType(EventType type) const;
+
+  void AddListener(IEventListener* listener);
+  void Push(IEvent* event);
+  virtual void DispatchEvents();
+
+private:
+  EventType type_;
+  std::queue<IEvent*> events_;
+  std::vector<IEventListener*> listeners_;
+};
 
 class EventSystem final : public BaseSystem<EventSystem>
 {
 public:
-  EventSystem() = default;
-  ~EventSystem() override = default;
+  EventSystem();
+  ~EventSystem() override;
   void Update() override;
 
-  static void Push(const Event& event);
+  static void Push(IEvent* event);
+  static void Register(IEventListener*listener);
 
 private:
-  //Functions
-  void DispatchEvents();
-
-  //Data
-  static std::array<
-  std::list<EventListener>,
-  static_cast<size_t>(EventType::COUNT)>
-  listeners;
-
-  static std::priority_queue<Event> eventQueue;
+  static std::map<EventType, IEventDispatcher*> dispatchers;
 };

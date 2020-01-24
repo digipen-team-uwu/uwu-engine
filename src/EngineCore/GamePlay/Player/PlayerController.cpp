@@ -140,7 +140,6 @@ void Behavior<EntityManager::Type::Player>::Serialize(std::ofstream & stream)
 
 void Behavior<EntityManager::Type::Player>::Deserialize(rapidjson::Value & object, EntityID ID, const char* filePath)
 {
-
 }
 
 void Behavior<EntityManager::Type::Player>::OnCollide(CollisionInfo const& info)

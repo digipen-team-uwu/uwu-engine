@@ -15,10 +15,12 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Component/BaseComponent.h>
 #include <UWUEngine/Physics/Colliders/Collider.h>
+#include <UWUEngine/Event/Type/Collision.h>
 
 class ColliderComponentManager : public BaseComponent<ColliderComponentManager>
 {
 public:
+	ColliderComponentManager();
 	~ColliderComponentManager() override;
 	
 	void Update() override;
@@ -39,8 +41,12 @@ public:
 
   static std::unordered_map<EntityID, Collider*>::const_iterator begin();
   static std::unordered_map<EntityID, Collider*>::const_iterator end();
-	
+
 private:
 	static void ResolveCollision(CollisionInfo const& info);
 	static std::unordered_map<EntityID, Collider*> _collider;
+
+	//Event listener
+	static CollisionEventListener resolutionListener;
+	static void ResolveCallback(const CollisionEvent* event);
 };

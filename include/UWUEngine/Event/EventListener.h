@@ -10,12 +10,19 @@ Copyright ? 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
+#include <functional>
+#include <UWUEngine/Event/Event.h>
 
-class EventListener
+class IEventListener
 {
 public:
-  virtual void OnNotify();
+  virtual ~IEventListener() = default;
+  IEventListener(EventType type, bool autoRegister = false);
+  [[nodiscard]] bool IsType(EventType type) const;
+  [[nodiscard]] EventType GetType() const;
+
+  virtual void OnNotify(const IEvent* event) const = 0;
 
 private:
-  
+  EventType type_;
 };

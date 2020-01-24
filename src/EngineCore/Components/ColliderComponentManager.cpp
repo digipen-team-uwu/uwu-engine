@@ -11,6 +11,7 @@ Copyright 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 
 #define GLM_FORCE_SWIZZLE
+#define EventSystemEnabled
 
 #include <UWUEngine/Component/ColliderComponentManager.h>
 
@@ -23,11 +24,20 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Physics/Colliders/ColliderPoint.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 
+#include <UWUEngine/Event/Type/Collision.h>
+
 #include <UWUEngine/Debugs/TraceLogger.h>
 
+CollisionEventListener ColliderComponentManager::resolutionListener;
 std::unordered_map<EntityID, Collider*> ColliderComponentManager::_collider;
 
 void DispatchCollisionEvent(CollisionInfo const&);
+
+ColliderComponentManager::ColliderComponentManager()
+{
+  resolutionListener.SetFunc(ResolveCallback);
+  EventSystem::Register(&resolutionListener);
+}
 
 ColliderComponentManager::~ColliderComponentManager()
 {
@@ -60,8 +70,12 @@ void ColliderComponentManager::Update()
 
       if (info.depth != 0)
       {
+        #ifdef EventSystemEnabled
+        EventSystem::Push(new CollisionEvent(info));
+        #else
         DispatchCollisionEvent(info);
         ResolveCollision(info);
+        #endif
       }
     }
   }
@@ -179,37 +193,48 @@ void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
   PhysicsComponentManager::SetVelocity(glm::vec4(vel2, 0, 0), info.obj2);
 }
 
-void DispatchCollisionEvent(CollisionInfo const& info)
+void ColliderComponentManager::ResolveCallback(const CollisionEvent* event)
 {
-  //Behavioral resolution
-  //TODO: event system
+  CollisionInfo info;
+  info.obj1 = event->obj1;
+  info.obj2 = event->obj2;
+  info.depth = event->depth;
+  info.direction = event->direction;
 
-  switch (EntityManager::GetType(info.obj1))
-  {
-  case Type::Player:
-    BehaviorComponentManager::GetBehavior<EntityManager::Player>(info.obj1)->OnCollide(info);
-    break;
-  case Type::Fang_:
-    BehaviorComponentManager::GetBehavior<EntityManager::Fang_>(info.obj1)->OnCollide(info);
-    break;
-  case Type::Perception:
-    BehaviorComponentManager::GetBehavior<EntityManager::Perception>(info.obj1)->OnCollide(info);
-    break;
-  default:;
-  }
-
-  switch (EntityManager::GetType(info.obj2))
-  {
-  case Type::Player:
-    BehaviorComponentManager::GetBehavior<EntityManager::Player>(info.obj2)->OnCollide(info);
-    break;
-  case Type::Fang_:
-    BehaviorComponentManager::GetBehavior<EntityManager::Fang_>(info.obj2)->OnCollide(info);
-    break;
-  case Type::Perception:
-    BehaviorComponentManager::GetBehavior<EntityManager::Perception>(info.obj2)->OnCollide(info);
-    break;
-  case Type::Solid:
-  default:;
-  }
+  ResolveCollision(info);
 }
+
+//void DispatchCollisionEvent(CollisionInfo const& info)
+//{
+//  //Behavioral resolution
+//  //TODO: event system
+//
+//  switch (EntityManager::GetType(info.obj1))
+//  {
+//  case Type::Player:
+//    BehaviorComponentManager::GetBehavior<EntityManager::Player>(info.obj1)->OnCollide(info);
+//    break;
+//  case Type::Fang_:
+//    BehaviorComponentManager::GetBehavior<EntityManager::Fang_>(info.obj1)->OnCollide(info);
+//    break;
+//  case Type::Perception:
+//    BehaviorComponentManager::GetBehavior<EntityManager::Perception>(info.obj1)->OnCollide(info);
+//    break;
+//  default:;
+//  }
+//
+//  switch (EntityManager::GetType(info.obj2))
+//  {
+//  case Type::Player:
+//    BehaviorComponentManager::GetBehavior<EntityManager::Player>(info.obj2)->OnCollide(info);
+//    break;
+//  case Type::Fang_:
+//    BehaviorComponentManager::GetBehavior<EntityManager::Fang_>(info.obj2)->OnCollide(info);
+//    break;
+//  case Type::Perception:
+//    BehaviorComponentManager::GetBehavior<EntityManager::Perception>(info.obj2)->OnCollide(info);
+//    break;
+//  case Type::Solid:
+//  default:;
+//  }
+//}
