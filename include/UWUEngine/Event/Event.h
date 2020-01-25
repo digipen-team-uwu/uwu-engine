@@ -10,12 +10,7 @@ Copyright ? 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-#include <queue>
-#include <vector>
 #include <UWUEngine/BaseSystem.h>
-
-//Forward declaration
-class IEventListener;
 
 enum class EventType
 {
@@ -23,6 +18,11 @@ enum class EventType
   Spine,
   Sound
 };
+
+//Forward declaration
+class IEventDispatcher;
+template <EventType type>
+class EventListener;
 
 class IEvent
 {
@@ -37,28 +37,10 @@ private:
 };
 
 template <EventType type>
-class Event final : IEvent
+class Event final : public IEvent
 {
 public:
-  ~Event() override;
-};
-
-class IEventDispatcher
-{
-public:
-  IEventDispatcher(EventType type);
-  virtual ~IEventDispatcher() = default;
-  [[nodiscard]] EventType GetType() const;
-  [[nodiscard]] bool IsType(EventType type) const;
-
-  void AddListener(IEventListener* listener);
-  void Push(IEvent* event);
-  virtual void DispatchEvents();
-
-private:
-  EventType type_;
-  std::queue<IEvent*> events_;
-  std::vector<IEventListener*> listeners_;
+  ~Event() override = default;
 };
 
 class EventSystem final : public BaseSystem<EventSystem>
@@ -68,9 +50,30 @@ public:
   ~EventSystem() override;
   void Update() override;
 
-  static void Push(IEvent* event);
-  static void Register(IEventListener*listener);
+  template <EventType type>
+  static void Push(const Event<type> & event);
+
+  template <EventType type>
+  static void Register(const EventListener<type>& listener);
 
 private:
   static std::map<EventType, IEventDispatcher*> dispatchers;
 };
+
+template <EventType type>
+void EventSystem::Push(const Event<type>& event)
+{
+  IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
+  EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+
+  dispatcher->Push(event);
+}
+
+template <EventType type>
+void EventSystem::Register(const EventListener<type>& listener)
+{
+  IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
+  EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+
+  dispatcher->AddListeners(listener);
+}

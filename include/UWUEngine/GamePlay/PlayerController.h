@@ -80,10 +80,6 @@ public:
 
   void OnCollide(CollisionInfo const& info);
 
-  //Event Listener
-  void OnCollideEvent(const CollisionEvent* event);
-  CollisionEventListener eventListener;
-
 private:
   // State machine
   PlayerStateMachine player_state_;

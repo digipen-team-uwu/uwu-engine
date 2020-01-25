@@ -98,8 +98,6 @@ PlayerStateMachine::_PlayerStateMachinestate PlayerData::GetCurrentState()
 
 Behavior<EntityManager::Type::Player>::Behavior(EntityID id) :BaseBehavior(id)
 {
-  eventListener.SetFunc(std::bind(&Behavior<EntityManager::Type::Player>::OnCollideEvent, this, std::placeholders::_1));
-  EventSystem::Register(&eventListener);
   PlayerData::playerID = GetID();
   PlayerData::InitPlayer();
 }
@@ -163,17 +161,6 @@ void Behavior<EntityManager::Type::Player>::OnCollide(CollisionInfo const& info)
     break;
   default:;
   }
-}
-
-void Behavior<EntityManager::Type::Player>::OnCollideEvent(const CollisionEvent* event)
-{
-  CollisionInfo info;
-  info.obj1 = event->obj1;
-  info.obj2 = event->obj2;
-  info.depth = event->depth;
-  info.direction = event->direction;
-
-  OnCollide(info);
 }
 
 glm::vec2 Behavior<EntityManager::Type::Player>::CalculateResolveAngle(CollisionInfo const& info) const

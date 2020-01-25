@@ -3,10 +3,6 @@
 IEventListener::IEventListener(EventType type, bool autoRegister):
 type_(type)
 {
-  if (autoRegister)
-  {
-    EventSystem::Register(this);
-  }
 }
 
 bool IEventListener::IsType(EventType type) const

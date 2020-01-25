@@ -45,8 +45,4 @@ public:
 private:
 	static void ResolveCollision(CollisionInfo const& info);
 	static std::unordered_map<EntityID, Collider*> _collider;
-
-	//Event listener
-	static CollisionEventListener resolutionListener;
-	static void ResolveCallback(const CollisionEvent* event);
 };

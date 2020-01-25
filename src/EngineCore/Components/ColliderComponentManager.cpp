@@ -28,15 +28,12 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Debugs/TraceLogger.h>
 
-CollisionEventListener ColliderComponentManager::resolutionListener;
 std::unordered_map<EntityID, Collider*> ColliderComponentManager::_collider;
 
 void DispatchCollisionEvent(CollisionInfo const&);
 
 ColliderComponentManager::ColliderComponentManager()
 {
-  resolutionListener.SetFunc(ResolveCallback);
-  EventSystem::Register(&resolutionListener);
 }
 
 ColliderComponentManager::~ColliderComponentManager()
@@ -71,7 +68,7 @@ void ColliderComponentManager::Update()
       if (info.depth != 0)
       {
         #ifdef EventSystemEnabled
-        EventSystem::Push(new CollisionEvent(info));
+        //EventSystem::Push(new CollisionEvent(info));
         #else
         DispatchCollisionEvent(info);
         ResolveCollision(info);
@@ -191,17 +188,6 @@ void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
 
   PhysicsComponentManager::SetVelocity(glm::vec4(vel1, 0, 0), info.obj1);
   PhysicsComponentManager::SetVelocity(glm::vec4(vel2, 0, 0), info.obj2);
-}
-
-void ColliderComponentManager::ResolveCallback(const CollisionEvent* event)
-{
-  CollisionInfo info;
-  info.obj1 = event->obj1;
-  info.obj2 = event->obj2;
-  info.depth = event->depth;
-  info.direction = event->direction;
-
-  ResolveCollision(info);
 }
 
 //void DispatchCollisionEvent(CollisionInfo const& info)
