@@ -2,8 +2,6 @@
 #include <UWUEngine/BaseSystem.h>
 #include <UWUEngine/Helper.h>
 #include <fstream>
-#include <iostream>
-#include <UWUEngine/PlatformSpecificDefinitions.h>
 
 #define TEE(x) EXPAND(TraceLogger::Tee((x), #x, FUNCTION_SIGNATURE))
 

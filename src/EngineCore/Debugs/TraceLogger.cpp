@@ -11,20 +11,8 @@
 #include <fstream>
 #include <UWUEngine/Helper.h>
 
-#ifdef _MSVC
-#include <Shlobj_core.h>
-#endif
-
+#include <UWUEngine/PlatformSpecificDefinitions.h>
 #include <UWUEngine/PlatformSpecific.h>
-
-#ifdef _MSVC
-#define VC_EXTRALEAN
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-using namespace WindowsSpecific;
-#elif defined(__unix__)
-#include <unistd.h>
-#endif
 
 #include <UWUEngine/Debugs/TraceLogger.specialization.cpp>
 #include <memory>

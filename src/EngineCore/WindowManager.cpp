@@ -12,25 +12,24 @@
 
 #include <UWUEngine/WindowManager.h>
 #include <UWUEngine/constants.h>
-#include <iostream>
 #include <UWUEngine/Debugs/TraceLogger.h>
-// for access to OpenGL API declarations
+#include <UWUEngine/Debugs/SystemException.h>
 
 namespace wc = WindowConstants;
 
-
+//#define WM_FAIL_
 
 WindowManager::WindowManager()
 {
-    TraceLogger::Log(TraceLogger::Severity::INFO) << "init window manager\n";
-
   if (glfwInit() == GLFW_FALSE)
   {
-    //TODO: add error handling for glfw initialization
     const char** buffer;
-    glfwGetError(buffer);
-    TraceLogger::Log(TraceLogger::FAILURE) << "COULD NOT INITIALIZE GLFW!" << std::string(*buffer) << std::endl;
-    return;
+    const auto error = glfwGetError(buffer);
+    if (error)
+    {
+      TraceLogger::Log(TraceLogger::FAILURE) << "COULD NOT INITIALIZE GLFW! " << std::string(*buffer) << std::endl;
+      throw SystemStartupException<WindowManager>();
+    }
   }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -50,15 +49,14 @@ WindowManager::WindowManager()
 #endif
   glfwWindowHint(GLFW_DEPTH_BITS, 32);
 
-  window_ = glfwCreateWindow(wc::WINDOW_WIDTH, wc::WINDOW_HEIGHT, "uwuENGINE", NULL, NULL);
+  window_ = glfwCreateWindow(wc::WINDOW_WIDTH, wc::WINDOW_HEIGHT, "uwuENGINE", nullptr, nullptr);
 
   if (window_ == nullptr)
   {
-    //TODO: add error handling for window opening
     const char** buffer;
     glfwGetError(buffer);
     TraceLogger::Log(TraceLogger::FAILURE) << "Window Not Opened Properly!" << std::string(*buffer) << std::endl;
-    return;
+    throw SystemStartupException<WindowManager>();
   }
 
   glfwMakeContextCurrent(window_);
@@ -66,22 +64,22 @@ WindowManager::WindowManager()
   // makes buffer swap synchronized with the monitor's vertical refresh
   glfwSwapInterval(1);
 
-  GLenum err = glewInit();
+  const auto err = glewInit();
   if (GLEW_OK != err)
   {
     TraceLogger::Log(TraceLogger::FAILURE) << "Unable to initialize GLEW - error: "
-      << glewGetErrorString(err) << " abort program" << std::endl;
+      << glewGetErrorString(err) << std::endl;
+    throw SystemStartupException<WindowManager>();
   }
   if (GLEW_VERSION_4_5)
   {
-    TraceLogger::Log(TraceLogger::INFO) << "Using glew version: " << glewGetString(GLEW_VERSION) << std::endl;
+    TraceLogger::Log(TraceLogger::INFO) << "Using GLEW version: " << glewGetString(GLEW_VERSION) << std::endl;
     TraceLogger::Log(TraceLogger::INFO) << "Driver supports OpenGL 4.5" << std::endl;
   }
   else
   {
-    // TODO: add error handling for GLEW error
-    TraceLogger::Log(TraceLogger::FAILURE) << "Driver doesn't support OpenGL 4.5 - abort program" << std::endl;
-    return;
+    TraceLogger::Log(TraceLogger::FAILURE) << "Driver doesn't support OpenGL 4.5" << std::endl;
+    throw SystemStartupException<WindowManager>();
   }
 }
 
