@@ -104,7 +104,6 @@ namespace WindowConstants
 
 namespace CameraConstants
 {
-    constexpr float MOUSE_SENSITIVITY = 0.25f;
     constexpr float ZOOM_FACTOR = 25.f;
     constexpr float CAMERA_POSITION = 2074.f;//static_cast<float>(WindowConstants::WINDOW_HEIGHT) * 2.5f;
     constexpr float FOV_MAX = 90.f;
