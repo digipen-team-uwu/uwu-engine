@@ -27,7 +27,7 @@ public:
     static void SetCameraPosition(const glm::vec2& new_position);
     static const glm::vec3& GetCameraPosition();
     //void SetCameraFront(const glm::vec3& front);
-    static const glm::vec3& GetCameraFront();
+    static const glm::vec3& GetLookAtVector();
     //void SetCameraUp(const glm::vec3& Up);
     static const glm::vec3& GetCameraUp();
     //void SetCameraRight(const glm::vec3& right);
@@ -44,11 +44,14 @@ public:
     static float getFarDistance();
     static float getAspectRatio();
 private:
-    static void calculate_camera_vector();
+    static void Print_Debug_Value();
+    static void calculate_camera_data();
+    static glm::vec3 relative_up;
+    static glm::vec3 lookAtVector;
     static glm::vec3 cameraPos;
-    static glm::vec3 cameraFront;
-    static glm::vec3 cameraUp;
-    static glm::vec3 cameraRight;
+    static glm::vec3 BackVector;
+    static glm::vec3 UpVector;
+    static glm::vec3 RightVector;
     static glm::vec3 cameraTarget;
     static glm::mat4 projection;
     static glm::mat4 view;

@@ -1,0 +1,211 @@
+/******************************************************************************/
+/*!
+\par        Project Umbra
+\file       Camera.cpp
+\author     Chau Nguyen
+\date       2019/09/27
+\brief      Managing camera
+
+Copyright 2019 DigiPen, All rights reserved.
+
+*/
+/******************************************************************************/
+#include <UWUEngine/Graphics/Camera.h>
+#include <UWUEngine/Engine.h>
+#include <UWUEngine/Input/InputManager.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <UWUEngine/constants.h>
+#include <UWUEngine/Helper.h>
+#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
+#include <UWUEngine/Debugs/TraceLogger.h>
+
+namespace ic = InputConstants;
+namespace wc = WindowConstants;
+namespace cc = CameraConstants;
+
+glm::vec3 Camera::relative_up;
+glm::vec3 Camera::lookAtVector;
+glm::vec3 Camera::cameraPos;
+glm::vec3 Camera::BackVector;
+glm::vec3 Camera::UpVector;
+glm::vec3 Camera::RightVector;
+glm::vec3 Camera::cameraTarget;
+glm::mat4 Camera::projection;
+glm::mat4 Camera::view;
+float Camera::FOV;
+float Camera::nearDistance;
+float Camera::farDistance;
+float Camera::aspectRatio;
+
+template<>
+int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
+
+void Camera::Print_Debug_Value()
+{
+  TraceLogger::Log(TraceLogger::DEBUG) <<
+    "Field of view: " << FOV << std::endl <<
+    "Camera Pos: " << std::endl <<
+    "x: " << cameraPos.x << std::endl <<
+    "y: " << cameraPos.y << std::endl <<
+    "z: " << cameraPos.z << std::endl <<
+    "Camera Target: " << std::endl <<
+    "x: " << cameraTarget.x << std::endl <<
+    "y: " << cameraTarget.y << std::endl <<
+    "z: " << cameraTarget.z << std::endl <<
+    "Look at Vector: " << std::endl <<
+    "x: " << lookAtVector.x << std::endl <<
+    "y: " << lookAtVector.y << std::endl <<
+    "z: " << lookAtVector.z << std::endl <<
+    "Back Vector: " << std::endl <<
+    "x: " << BackVector.x << std::endl <<
+    "y: " << BackVector.y << std::endl <<
+    "z: " << BackVector.z << std::endl;
+}
+
+void Camera::calculate_camera_data()
+{
+    lookAtVector = cameraTarget - cameraPos;
+    BackVector = glm::normalize(glm::vec3(-1) * lookAtVector);
+    RightVector = glm::normalize(glm::cross(lookAtVector, relative_up));
+    UpVector = glm::cross(BackVector, RightVector);
+    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+    view = glm::lookAt(cameraPos, cameraTarget, UpVector);
+}
+
+Camera::Camera()
+{
+    // initialize
+    FOV = 45.0f;
+    nearDistance = 5.f;
+    farDistance = 100000.f;
+    aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
+    relative_up = { 0.0f,1.0f,0.0f };
+    cameraPos = { 0.0f, 0.0f, cc::CAMERA_POSITION };
+    cameraTarget = { 0.0f, 0.0f, 0.0f };
+    calculate_camera_data();
+}
+
+void Camera::Update()
+{
+    //Print_Debug_Value();
+    // sending data to Camera uniform buffer
+    UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
+    moveCamera(cameraPos.z >= 5.f ? cameraPos.z : 5);
+    zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
+}
+
+void Camera::ResetCameraPosition()
+{
+  cameraPos.x = 0.f;
+  cameraPos.y = 0.f;
+  cameraPos.z = cc::CAMERA_POSITION;
+}
+
+void Camera::ResetCameraZoom()
+{
+  cameraPos.z = cc::CAMERA_POSITION;
+}
+
+void Camera::SetCameraPosition(const glm::vec3& new_position)
+{
+    cameraPos = new_position;
+    cameraTarget = glm::vec3(new_position.x, new_position.y, 0.f);
+    calculate_camera_data();
+}
+
+void Camera::SetCameraPosition(const glm::vec2& new_position)
+{
+  cameraPos.x = new_position.x;
+  cameraPos.y = new_position.y;
+  cameraTarget = glm::vec3(new_position.x, new_position.y, 0.f);
+  calculate_camera_data();
+}
+
+#pragma region Camera Getter
+const glm::vec3& Camera::GetCameraPosition()
+{
+    return cameraPos;
+}
+
+const glm::vec3& Camera::GetLookAtVector()
+{
+    return lookAtVector;
+}
+
+const glm::vec3& Camera::GetCameraUp()
+{
+    return UpVector;
+}
+
+const glm::vec3& Camera::GetCameraRight()
+{
+    return RightVector;
+}
+
+const glm::vec3& Camera::GetCameraTarget()
+{
+  return cameraTarget;
+}
+
+const glm::mat4& Camera::GetProjectionMatrix()
+{
+  return projection;
+}
+
+const glm::mat4& Camera::GetViewMatrix()
+{
+  return view;
+}
+
+float Camera::getFOV()
+{
+  return FOV;
+}
+
+float Camera::getNearDistance()
+{
+  return nearDistance;
+}
+
+float Camera::getFarDistance()
+{
+  return farDistance;
+}
+
+float Camera::getAspectRatio()
+{
+  return aspectRatio;
+}
+#pragma endregion 
+//TODO: set target to player in small box around player
+
+void Camera::SetCameraTarget(const glm::vec3& target)
+{
+    cameraTarget = target;
+    calculate_camera_data();
+}
+
+void Camera::zoomIn(float amount)
+{
+    float dt = FrameRateController::GetDeltaTime<float>();
+    FOV -= amount * dt;
+    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+}
+
+void Camera::zoomOut(float amount)
+{
+    float dt = FrameRateController::GetDeltaTime<float>();
+    FOV += amount * dt;
+    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+}
+
+void Camera::moveCamera(float speed)
+{
+    float dt = FrameRateController::GetDeltaTime<float>();
+    cameraPos += UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
+    cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
+    cameraTarget = { cameraPos.x, cameraPos.y, 0.0f };
+    calculate_camera_data();
+}
