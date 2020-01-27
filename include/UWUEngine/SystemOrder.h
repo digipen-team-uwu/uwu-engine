@@ -16,7 +16,7 @@ enum class SystemUpdateOrder
   Debug        = 9700,
   Timer        = 9750,
   Camera       = 9800,
-  Event        = 9801,
+  Event        = 9825,
   Render       = 9850,
   Action       = 9860,
   Input        = 9870,
