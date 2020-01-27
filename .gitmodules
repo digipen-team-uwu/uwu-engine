@@ -34,3 +34,6 @@
 [submodule "lib/catch2"]
 	path = lib/catch2
 	url = https://github.com/catchorg/Catch2
+[submodule "lib/ponder"]
+	path = lib/ponder
+	url = https://github.com/billyquith/ponder.git
