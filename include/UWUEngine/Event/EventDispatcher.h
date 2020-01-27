@@ -11,6 +11,11 @@ Copyright ? 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 #include <queue>
+#include <unordered_map>
+
+//Forward Declaration
+class IEventListener;
+class IEvent;
 
 class IEventDispatcher
 {
@@ -38,10 +43,11 @@ public:
   void DispatchEvents() override;
   void Push(const IEvent& event) override;
   void AddListeners(const IEventListener& listener);
+  void RemoveListener(const IEventListener& listener);
 
 private:
   std::queue<Event<type> > events_;
-  std::vector<EventListener<type> > listeners_;
+  std::unordered_map<size_t, EventListener<type> > listeners_;
 };
 
 template <EventType type>
@@ -52,9 +58,8 @@ void EventDispatcher<type>::DispatchEvents()
     IEvent* event = &events_.front();
     for (auto listener : listeners_)
     {
-      listener.OnNotify(*dynamic_cast<Event<type> *>(event));
+      listener.second.OnNotify(*dynamic_cast<Event<type> *>(event));
     }
-    delete event;
     events_.pop();
   }
 }
@@ -62,11 +67,22 @@ void EventDispatcher<type>::DispatchEvents()
 template <EventType type>
 void EventDispatcher<type>::Push(const IEvent& event)
 {
-  events_.push(dynamic_cast<const Event<type>&>(event));
+  const Event<type>& eventReference = dynamic_cast<const Event<type>&>(event);
+  events_.push(std::move(eventReference));
 }
 
 template <EventType type>
 void EventDispatcher<type>::AddListeners(const IEventListener& listener)
 {
-  listeners_.push_back(dynamic_cast<Event<type>&>(listener));
+  const EventListener<type>& listenerType = dynamic_cast<const EventListener<type>&>(listener);
+
+  listeners_.insert({listenerType.GetID(), listenerType});
+}
+
+template <EventType type>
+void EventDispatcher<type>::RemoveListener(const IEventListener& listener)
+{
+  const EventListener<type>& listenerType = dynamic_cast<const EventListener<type>&>(listener);
+
+  listeners_.erase(listenerType.GetID());
 }

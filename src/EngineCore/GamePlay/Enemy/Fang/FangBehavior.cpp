@@ -6,10 +6,13 @@
 Behavior<EntityManager::Type::Fang_>::Behavior(EntityID ID) :
   BaseBehavior(ID)
 {
-  // Nothing else necessary for now
+  EventSystem::Register(listener);
 }
 
-Behavior<EntityManager::Type::Fang_>::~Behavior() = default;
+Behavior<EntityManager::Type::Fang_>::~Behavior()
+{
+  EventSystem::UnRegister(listener);
+}
 
 void Behavior<EntityManager::Type::Fang_>::Serialize(std::ofstream & stream)
 {
@@ -32,7 +35,7 @@ void Behavior<EntityManager::Type::Fang_>::Deserialize(rapidjson::Value & object
 
 }
 
-void Behavior<EntityManager::Type::Fang_>::OnCollide(CollisionInfo const& info)
+void Behavior<EntityManager::Type::Fang_>::OnCollide(const Event<EventType::Collision>& info)
 {
   // Figure out which object is the other object
   EntityID otherObject;

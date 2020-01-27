@@ -42,8 +42,7 @@ float Projection::getOverlap(Projection const& rhs) const
 #endif
 	return glm::min(max, rhs.max) - glm::max(min, rhs.min);
 }
-
-CollisionInfo Collider::IsColliding(Collider& rhs)
+Event<EventType::Collision> Collider::IsColliding(Collider& rhs)
 {
 	float minDepth = std::numeric_limits<float>::max();
 	glm::vec2 direction = {0, 0};

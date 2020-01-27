@@ -100,9 +100,14 @@ Behavior<EntityManager::Type::Player>::Behavior(EntityID id) :BaseBehavior(id)
 {
   PlayerData::playerID = GetID();
   PlayerData::InitPlayer();
+
+  EventSystem::Register(listener);
 }
 
-Behavior<EntityManager::Type::Player>::~Behavior() = default;
+Behavior<EntityManager::Type::Player>::~Behavior()
+{
+  EventSystem::UnRegister(listener);
+}
 
 void Behavior<EntityManager::Type::Player>::Update()
 {
@@ -142,7 +147,7 @@ void Behavior<EntityManager::Type::Player>::Deserialize(rapidjson::Value & objec
 {
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollide(CollisionInfo const& info)
+void Behavior<EntityManager::Type::Player>::OnCollide(const Event<EventType::Collision>& info)
 {
   // First check and see if the thing was a hazard
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
@@ -163,7 +168,7 @@ void Behavior<EntityManager::Type::Player>::OnCollide(CollisionInfo const& info)
   }
 }
 
-glm::vec2 Behavior<EntityManager::Type::Player>::CalculateResolveAngle(CollisionInfo const& info) const
+glm::vec2 Behavior<EntityManager::Type::Player>::CalculateResolveAngle(const Event<EventType::Collision>& info) const
 {
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
 

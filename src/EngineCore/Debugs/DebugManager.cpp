@@ -18,7 +18,7 @@
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <vector>
-#include <UWUEngine/Engine.h>
+#include <UWUEngine/Component/ColliderComponentManager.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 

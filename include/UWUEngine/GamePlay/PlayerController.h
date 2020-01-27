@@ -78,7 +78,8 @@ public:
   void Serialize(std::ofstream& stream) override;
   void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath) override;
 
-  void OnCollide(CollisionInfo const& info);
+  void OnCollide(const Event<EventType::Collision>& info);
+  RegisterMemberListener(Collision, Behavior<EntityManager::Type::Player>::OnCollide, listener)
 
 private:
   // State machine
@@ -86,9 +87,9 @@ private:
 
   // State OnCollide event
   //TODO: event system
-  void OnCollideGrounded(CollisionInfo const& info);
-  void OnCollideAirborne(CollisionInfo const& info);
-  void OnCollideDash(CollisionInfo const& info);
+  void OnCollideGrounded(const Event<EventType::Collision>& info);
+  void OnCollideAirborne(const Event<EventType::Collision>& info);
+  void OnCollideDash(const Event<EventType::Collision>& info);
 
   enum class ABSTRACT_DIR
   {
@@ -99,7 +100,7 @@ private:
     INVALID
   };
 
-  glm::vec2 CalculateResolveAngle(CollisionInfo const& info) const;
+  glm::vec2 CalculateResolveAngle(const Event<EventType::Collision>& info) const;
   ABSTRACT_DIR GetAbstractDirection(float angle) const;
   bool IsDirectionRight(float angle) const;
 

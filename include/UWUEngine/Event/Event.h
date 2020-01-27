@@ -11,6 +11,8 @@ Copyright ? 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 #include <UWUEngine/BaseSystem.h>
+#include "EventListener.h"
+#include "EventDispatcher.h"
 
 enum class EventType
 {
@@ -18,11 +20,6 @@ enum class EventType
   Spine,
   Sound
 };
-
-//Forward declaration
-class IEventDispatcher;
-template <EventType type>
-class EventListener;
 
 class IEvent
 {
@@ -51,10 +48,13 @@ public:
   void Update() override;
 
   template <EventType type>
-  static void Push(const Event<type> & event);
+  static void Push(const Event<type>& event);
 
   template <EventType type>
   static void Register(const EventListener<type>& listener);
+
+  template <EventType type>
+  static void UnRegister(const EventListener<type>& listener);
 
 private:
   static std::map<EventType, IEventDispatcher*> dispatchers;
@@ -77,3 +77,16 @@ void EventSystem::Register(const EventListener<type>& listener)
 
   dispatcher->AddListeners(listener);
 }
+
+template <EventType type>
+void EventSystem::UnRegister(const EventListener<type>& listener)
+{
+  IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
+  EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+
+  dispatcher->RemoveListener(listener);
+}
+
+#pragma region EventSpecialization
+#include <UWUEngine/Event/Type/Collision.h>
+#pragma endregion 

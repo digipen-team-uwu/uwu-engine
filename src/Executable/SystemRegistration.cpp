@@ -1,9 +1,11 @@
 #include <UWUEngine/BaseSystem.h>
 #include <UWUEngine/Component/BaseComponent.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
+#include <UWUEngine/Component/ColliderComponentManager.h>
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/PhysicsComponentManager.h>
 
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Audio/SoundInterface.h>

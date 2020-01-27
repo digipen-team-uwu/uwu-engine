@@ -34,19 +34,37 @@ template <EventType type>
 class EventListener : public IEventListener
 {
 public:
-  EventListener(std::function<void(Event<type>)> func_ = nullptr) :
-  IEventListener(type), func(func_){}
+  EventListener(std::function<void(const Event<type> &)> func_ = nullptr) :
+  IEventListener(type), func(func_)
+  {
+    static size_t listenerIDs = 0;
+    id = listenerIDs;
+    ++listenerIDs;
+  }
   ~EventListener() override = default;
 
-  void SetFunc(std::function<void(Event<type>)> func_)
+  void SetFunc(std::function<void(const Event<type>&)> func_)
   {
     func = func_;
   }
+
   void OnNotify(const Event<type>& event) const
   {
     func(event);
   }
 
+  size_t GetID() const
+  {
+    return id;
+  }
+
 private:
-  std::function<void(Event<type>)> func;
+  std::function<void(const Event<type>&)> func;
+  size_t id{0};
 };
+
+#define RegisterMemberListener(type, memberFunc, name) \
+  EventListener<EventType::type> name{std::bind(&memberFunc, this, std::placeholders::_1)};
+
+#define RegisterListener(type, func, name) \
+  EventListener<EventType::type> name{func};

@@ -1,13 +1,14 @@
 #pragma once
 #include <memory>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
-#include <UWUEngine/Timer.h>
+#include <functional>
 #include <glm/glm.hpp>
+#include <UWUEngine/Timer.h>
 #include <UWUEngine/Helper.h>
+#include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
-#include <UWUEngine/Component/ColliderComponentManager.h>
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Entity/EntityCacher.h>
+#include <UWUEngine/Event/Event.h>
+#include <UWUEngine/Event/EventListener.h>
 
 namespace psc = ParticleSystemConstants;
 
@@ -83,7 +84,8 @@ public:
   Behavior(EntityID id) : BaseBehavior(id) {}
   void Update();
   void InitData(ParticleEvent &partEvent);
-  void OnCollide(CollisionInfo const& info);
+
+  //void OnCollide(const Event<EventType::Collision>& info);
 private:
   float baseRotation{};
   float lifetime{};
@@ -97,6 +99,8 @@ private:
   bool endWithAnimation = false;
   bool rotateByVelocity = false;
   bool UIParticle = false;
+
+  //EventListener<EventType::Collision> listener_{std::bind(&Behavior<EntityManager::Type::Particle>::OnCollide, this, std::placeholders::_1)};
 };
 
 template<>
