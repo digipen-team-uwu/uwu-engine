@@ -25,14 +25,6 @@ public:
 
       Total
     };
-
-    enum class lock
-    {
-      LOCKED,
-      UNLOCKED,
-
-      Total
-    };
     
     Camera();
     void Update() override;
@@ -60,6 +52,10 @@ public:
     static float getNearDistance();
     static float getFarDistance();
     static float getAspectRatio();
+    static void mouseMovement(float xOffSet, float yOffSet);
+    static void setFirstFlag(bool flag);
+    static bool getFirstFlag();
+    static state getCameraState();
 private:
     static void Print_Debug_Value();
     static void calculate_camera_data();
@@ -76,4 +72,9 @@ private:
     static float nearDistance;
     static float farDistance;
     static float aspectRatio;
+    static bool isFirst;
+    static float Yaw;
+    static float Pitch;
+    static state state_;
+    static bool switch_;
 };
