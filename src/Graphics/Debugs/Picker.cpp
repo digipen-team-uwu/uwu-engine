@@ -79,19 +79,19 @@ void Picker::Update()
 
     Editors::EntityViewer::SetSelectedEntity(saved_ID);
 
-    auto pos = TransformComponentManager::GetTranslation(saved_ID);
-    TraceLogger::Log(TraceLogger::DEBUG) << "current obj pos: x: " << pos.x <<
-      " y: " << pos.y << " z: " << pos.z << std::endl;
-
-    TransformComponentManager::SetTranslation(
-      { mouse_world.x,
-        mouse_world.y,
-        pos.z,1.0f },
-      saved_ID);
-
-    pos = TransformComponentManager::GetTranslation(saved_ID);
-    TraceLogger::Log(TraceLogger::DEBUG) << "after obj pos: x: " << pos.x <<
-      " y: " << pos.y << " z: " << pos.z << std::endl;
+    //auto pos = TransformComponentManager::GetTranslation(saved_ID);
+    //TraceLogger::Log(TraceLogger::DEBUG) << "current obj pos: x: " << pos.x <<
+    //  " y: " << pos.y << " z: " << pos.z << std::endl;
+    //
+    //TransformComponentManager::SetTranslation(
+    //  { mouse_world.x,
+    //    mouse_world.y,
+    //    pos.z,1.0f },
+    //  saved_ID);
+    //
+    //pos = TransformComponentManager::GetTranslation(saved_ID);
+    //TraceLogger::Log(TraceLogger::DEBUG) << "after obj pos: x: " << pos.x <<
+    //  " y: " << pos.y << " z: " << pos.z << std::endl;
 
     auto cameraPos = Camera::GetCameraPosition();
     TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
