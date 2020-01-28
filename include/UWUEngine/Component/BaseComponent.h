@@ -80,4 +80,4 @@ size_t RegisterComponentHelper<T>::RegisterComponentHelper_ID = EntityManager::t
 
 #define RegisterComponent(type, updateOrder) \
 template<> \
-size_t RegisterComponentHelper<type>::RegisterComponentHelper_ID = EntityManager::AddComponent<type>(ComponentUpdateOrder::updateOrder); \
+size_t RegisterComponentHelper<type>::RegisterComponentHelper_ID = EntityManager::AddComponent<type>(ComponentUpdateOrder::updateOrder);
