@@ -66,7 +66,7 @@ set(UWU_LIBS
 )
 
 #Extend compiler/OS specific libs
-if (MSVC)
+if (WIN32)
     set(UWU_LIBS
         ${UWU_LIBS}
         opengl32

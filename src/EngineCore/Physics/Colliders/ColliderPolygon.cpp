@@ -21,10 +21,10 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 
-#ifdef  _DEBUG
+//#ifdef  _DEBUG
 #include <glm/gtx/transform.hpp>
 GLSLShader ColliderPolygon::shader;
-#endif
+//#endif
 
 ColliderPolygon::ColliderPolygon(EntityID ID):
 Collider(ID, ShapeType::RECTANGLE)
@@ -79,18 +79,18 @@ void ColliderPolygon::Serialize(std::ofstream& stream) const
 
 void ColliderPolygon::Render()
 {
-  #ifdef _DEBUG
+  //#ifdef _DEBUG
   //If the vertex vector is empty, initialize it
   if (!shader.GetHandle())
   {
-    if (!shader.CompileShaderFromFile(GL_VERTEX_SHADER, "./shaders/colliderShader.vert"))
+    if (!shader.CompileShaderFromFile(GL_VERTEX_SHADER, "./data/shaders/colliderShader.vert"))
     {
-      TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./shaders/colliderShader.vert\"" << std::endl;
+      TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/colliderShader.vert\"" << std::endl;
       exit(-1);
     }
-    if (!shader.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./shaders/colliderShader.frag"))
+    if (!shader.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./data/shaders/colliderShader.frag"))
     {
-      TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./shaders/colliderShader.frag\"" << std::endl;
+      TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/colliderShader.frag\"" << std::endl;
       exit(-1);
     }
     shader.Link();
@@ -146,7 +146,7 @@ void ColliderPolygon::Render()
   shader.UnUse();
   glBindVertexArray(0);
 
-  #endif
+  //#endif
 }
 
 void ColliderPolygon::InsertVertex(glm::vec2 vertex)

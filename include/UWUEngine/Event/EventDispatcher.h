@@ -12,6 +12,7 @@ Copyright ? 2019 DigiPen, All rights reserved.
 #pragma once
 #include <queue>
 #include <unordered_map>
+#include <UWUEngine/Event/EventType.h>
 
 //Forward Declaration
 class IEventListener;

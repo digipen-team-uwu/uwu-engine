@@ -172,7 +172,7 @@ std::vector<EntityID> DeserializeLevel(const char* level)
 
   // Attempt to open the file for reading
   //printf("Attempting to open file %s for reading", filePath); // Debug print
-#ifdef _WIN64
+#ifdef _MSVC
   FILE* file;
   _wfopen_s(&file, filepath.str().c_str(), L"rb");
 #else

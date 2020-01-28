@@ -44,6 +44,7 @@ ColliderComponentManager::~ColliderComponentManager()
     delete i.second;
   }
   _collider.clear();
+  EventSystem::UnRegister(listener_);
 }
 
 void ColliderComponentManager::Update()

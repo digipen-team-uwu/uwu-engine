@@ -12,9 +12,9 @@ Copyright ? 2019 DigiPen, All rights reserved.
 #pragma once
 
 #include <functional>
+#include <UWUEngine/Event/EventType.h>
 
 //Forward Declarations
-enum class EventType;
 template <EventType type>
 class Event;
 

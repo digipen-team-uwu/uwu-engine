@@ -11,15 +11,9 @@ Copyright ? 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 #include <UWUEngine/BaseSystem.h>
-#include "EventListener.h"
-#include "EventDispatcher.h"
-
-enum class EventType
-{
-  Collision,
-  Spine,
-  Sound
-};
+#include <UWUEngine/Event/EventType.h>
+#include <UWUEngine/Event/EventListener.h>
+#include <UWUEngine/Event/EventDispatcher.h>
 
 class IEvent
 {
