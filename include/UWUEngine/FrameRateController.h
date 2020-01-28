@@ -27,6 +27,11 @@ class FrameRateController : public BaseSystem<FrameRateController>
           }
           return static_cast<T>((delta_time > .25f) ? 0.016666666667f : delta_time);
         }
+        template<typename T>
+        static T GetConstantDeltaTime()
+        {
+          return static_cast<T>((delta_time > .25f) ? 0.016666666667f : delta_time);
+        }
         static double GetFPS();
         void Update() override;
         static void SetPaused(bool pause);
