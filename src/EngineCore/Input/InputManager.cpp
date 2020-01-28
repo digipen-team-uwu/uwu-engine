@@ -19,6 +19,7 @@
 #include <UWUEngine/Helper.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
+#include "UWUEngine/Graphics/Camera.h"
 
 namespace ic = InputConstants;
 
@@ -37,9 +38,11 @@ std::array<GLFWgamepadstate, MAX_PLAYERS> InputManager::prevControllers;
 glm::vec2 InputManager::mousePos = {};
 glm::vec2 InputManager::scrollVec = {};
 glm::vec2 InputManager::deadzones{0.2f, 0.2f};
+glm::vec2 InputManager::prevMousePos;
 
 InputManager::InputManager()
 {
+  prevMousePos = { WindowConstants::WINDOW_WIDTH / 2.0f, WindowConstants::WINDOW_HEIGHT / 2.0f };
   glfwSetKeyCallback(WindowManager::getWindowHandle(), KeyCallback);
   glfwSetMouseButtonCallback(WindowManager::getWindowHandle(), MouseCallback);
   glfwSetCursorPosCallback(WindowManager::getWindowHandle(), MousePosCallback);
@@ -77,6 +80,20 @@ void InputManager::MousePosCallback(GLFWwindow* window, double xPos, double yPos
 {
   mousePos.x = static_cast<float>(xPos);
   mousePos.y = static_cast<float>(yPos);
+  if (Camera::getCameraState() == Camera::state::ENABLE_FPS)
+  {
+    if (Camera::getFirstFlag())
+    {
+      prevMousePos = mousePos;
+      Camera::setFirstFlag(false);
+    }
+    float xOffset = static_cast<float>(xPos) - prevMousePos.x;
+    float yOffset = prevMousePos.y - static_cast<float>(yPos); // y go from bottom to top
+
+    prevMousePos = { static_cast<float>(xPos), static_cast<float>(yPos) };
+
+    Camera::mouseMovement(xOffset, yOffset);
+  }
 }
 
 void InputManager::ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
