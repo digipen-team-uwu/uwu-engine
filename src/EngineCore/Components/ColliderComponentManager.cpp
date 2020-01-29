@@ -11,6 +11,7 @@ Copyright 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 
 #define GLM_FORCE_SWIZZLE
+#define EventSystemEnabled
 
 #include <UWUEngine/Component/ColliderComponentManager.h>
 
@@ -23,11 +24,18 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Physics/Colliders/ColliderPoint.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 
+#include <UWUEngine/Event/Event.h>
+
 #include <UWUEngine/Debugs/TraceLogger.h>
 
 std::unordered_map<EntityID, Collider*> ColliderComponentManager::_collider;
 
-void DispatchCollisionEvent(CollisionInfo const&);
+void DispatchCollisionEvent(Event<EventType::Collision> const&);
+
+ColliderComponentManager::ColliderComponentManager()
+{
+  EventSystem::Register(listener_);
+}
 
 ColliderComponentManager::~ColliderComponentManager()
 {
@@ -36,6 +44,7 @@ ColliderComponentManager::~ColliderComponentManager()
     delete i.second;
   }
   _collider.clear();
+  EventSystem::UnRegister(listener_);
 }
 
 void ColliderComponentManager::Update()
@@ -54,14 +63,18 @@ void ColliderComponentManager::Update()
       }
 
       //Collision Detection
-      const CollisionInfo info = i->second->IsColliding(*j->second);
+      const Event<EventType::Collision> event = i->second->IsColliding(*j->second);
 
       //TODO: event system
 
-      if (info.depth != 0)
+      if (event.depth != 0)
       {
+        #ifdef EventSystemEnabled
+        EventSystem::Push(event);
+        #else
         DispatchCollisionEvent(info);
         ResolveCollision(info);
+        #endif
       }
     }
   }
@@ -141,7 +154,7 @@ std::unordered_map<EntityID, Collider*>::const_iterator ColliderComponentManager
   return _collider.cend();
 }
 
-void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
+void ColliderComponentManager::ResolveCollision(Event<EventType::Collision> const& info)
 {
   // 1.Snap Them off
   glm::vec4 obj1trans = TransformComponentManager::GetTranslation(info.obj1);
@@ -177,39 +190,4 @@ void ColliderComponentManager::ResolveCollision(CollisionInfo const& info)
 
   PhysicsComponentManager::SetVelocity(glm::vec4(vel1, 0, 0), info.obj1);
   PhysicsComponentManager::SetVelocity(glm::vec4(vel2, 0, 0), info.obj2);
-}
-
-void DispatchCollisionEvent(CollisionInfo const& info)
-{
-  //Behavioral resolution
-  //TODO: event system
-
-  switch (EntityManager::GetType(info.obj1))
-  {
-  case Type::Player:
-    BehaviorComponentManager::GetBehavior<EntityManager::Player>(info.obj1)->OnCollide(info);
-    break;
-  case Type::Fang_:
-    BehaviorComponentManager::GetBehavior<EntityManager::Fang_>(info.obj1)->OnCollide(info);
-    break;
-  case Type::Perception:
-    BehaviorComponentManager::GetBehavior<EntityManager::Perception>(info.obj1)->OnCollide(info);
-    break;
-  default:;
-  }
-
-  switch (EntityManager::GetType(info.obj2))
-  {
-  case Type::Player:
-    BehaviorComponentManager::GetBehavior<EntityManager::Player>(info.obj2)->OnCollide(info);
-    break;
-  case Type::Fang_:
-    BehaviorComponentManager::GetBehavior<EntityManager::Fang_>(info.obj2)->OnCollide(info);
-    break;
-  case Type::Perception:
-    BehaviorComponentManager::GetBehavior<EntityManager::Perception>(info.obj2)->OnCollide(info);
-    break;
-  case Type::Solid:
-  default:;
-  }
 }

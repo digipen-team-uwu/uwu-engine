@@ -68,7 +68,7 @@ void PlayerStateMachine::Unload_Airborne()
 {
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollideAirborne(CollisionInfo const& info)
+void Behavior<EntityManager::Type::Player>::OnCollideAirborne(const Event<EventType::Collision>& info)
 {
   // Calculate the resolution angle
   glm::vec2 resolveAngle = CalculateResolveAngle(info);

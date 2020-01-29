@@ -50,7 +50,6 @@ void TransformComponentManager::InitObject(EntityID ID)
     scale_[ID] = { 1.f, 1.f, 1.f };
 }
 
-
 const glm::vec4& TransformComponentManager::GetTranslation(EntityID ID)
 {
     return translation_[ID];

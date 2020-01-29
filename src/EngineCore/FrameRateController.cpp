@@ -12,9 +12,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/FrameRateController.h>
 #include <GLFW/glfw3.h>
 
-template<>
-int RegisterSystemHelper<FrameRateController>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<FrameRateController>(SystemInitOrder::FIRST, SystemUpdateOrder::FrameRate);
-
 double FrameRateController::elapsed_time;
 double FrameRateController::curr_time;
 double FrameRateController::delta_time;

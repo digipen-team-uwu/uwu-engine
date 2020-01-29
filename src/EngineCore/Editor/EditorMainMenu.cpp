@@ -15,6 +15,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/EditorWindowManager.h>
 #include <UWUEngine/Editor/EditorHelper.h>
 #include <UWUEngine/Serialization.h>
+#include <UWUEngine/FrameRateController.h>
 
 #include <imgui.h>
 
@@ -124,6 +125,13 @@ void Editors::MainMenu()
       }
 
       ImGui::EndMenu();
+    }
+
+    if (ImGui::Button("Pause"))
+    {
+      static bool isPaused = true;
+      isPaused = !isPaused;
+      FrameRateController::SetPaused(isPaused);
     }
     ImGui::EndMainMenuBar();
   }

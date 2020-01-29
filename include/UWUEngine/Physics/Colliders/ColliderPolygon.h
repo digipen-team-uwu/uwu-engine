@@ -14,9 +14,9 @@ Copyright 2019 DigiPen, All rights reserved.
 #include "Collider.h"
 #include "map"
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include <UWUEngine/Graphics/Shader/glslshader.h>
-#endif
+//#endif
 
 class ColliderPolygon : public Collider
 {
@@ -37,12 +37,12 @@ private:
 	glm::vec2 center{0, 0};
 	std::map<float, glm::vec2> vertices;
 
-  #ifdef  _DEBUG
+  //#ifdef  _DEBUG
   GLuint lineVAO{static_cast<GLuint>(-1)};
   static GLSLShader shader;
 
   std::vector<glm::vec2> vertexLoop;
-  #endif
+  //#endif
 
 	Projection Project(Axis const& axis) const override;
 	std::vector<Axis> const& GenerateAxis() override;

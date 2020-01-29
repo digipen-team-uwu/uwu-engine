@@ -16,6 +16,7 @@
 #include "magic_enum.hpp"
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Component/ColliderComponentManager.h>
 
 //Colliders
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>

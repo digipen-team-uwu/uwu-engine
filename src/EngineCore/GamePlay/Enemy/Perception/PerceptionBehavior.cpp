@@ -13,6 +13,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/FrameRateController.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
+#include <UWUEngine/Component/ColliderComponentManager.h>
 
 Collider* Behavior<EntityManager::Type::Perception>::idleCollider;
 Collider* Behavior<EntityManager::Type::Perception>::attackCollider;
@@ -41,9 +42,14 @@ BaseBehavior(ID)
   }
   ColliderComponentManager::Activate(ID);
   ColliderComponentManager::SetCollider(ID, idleCollider);
+
+  EventSystem::Register(listener);
 }
 
-Behavior<EntityManager::Type::Perception>::~Behavior() = default;
+Behavior<EntityManager::Type::Perception>::~Behavior()
+{
+  EventSystem::UnRegister(listener);
+}
 
 void Behavior<EntityManager::Type::Perception>::Update()
 {
@@ -73,7 +79,7 @@ void Behavior<EntityManager::Type::Perception>::Deserialize(rapidjson::Value& ob
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::OnCollide(CollisionInfo const& info)
+void Behavior<EntityManager::Type::Perception>::OnCollide(const Event<EventType::Collision>& info)
 {
     // Figure out which object is the other object
     EntityID otherObject;

@@ -13,6 +13,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/GamePlay/PlayerController.h>
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
+#include <UWUEngine/Component/ColliderComponentManager.h>
 #include "glm/vec3.hpp"
 #include <UWUEngine/Audio/SoundInterface.h>
 

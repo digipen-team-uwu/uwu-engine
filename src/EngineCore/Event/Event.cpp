@@ -1,21 +1,45 @@
 #include <UWUEngine/Event/Event.h>
+#include <UWUEngine/Event/EventListener.h>
+#include <UWUEngine/Event/EventDispatcher.h>
 
-template<>
-int RegisterSystemHelper<EventSystem>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<EventSystem>(SystemInitOrder::Event, SystemUpdateOrder::Event);
+#define RegisterDispatcher(eventType) \
+dispatchers.insert({EventType::eventType, new eventType ## EventDispatcher()}); \
 
-std::priority_queue<Event> EventSystem::eventQueue;
+std::map<EventType, IEventDispatcher*> EventSystem::dispatchers;
+
+IEvent::IEvent(EventType type):
+type_(type)
+{
+}
+
+EventType IEvent::GetType() const
+{
+  return type_;
+}
+
+bool IEvent::IsType(EventType type) const
+{
+  return type == type_;
+}
+
+EventSystem::EventSystem()
+{
+  //Register all dispatchers
+  dispatchers.insert({EventType::Collision, new EventDispatcher<EventType::Collision>});
+}
+
+EventSystem::~EventSystem()
+{
+  for (auto dispatcher : dispatchers)
+  {
+    delete dispatcher.second;
+  }
+}
 
 void EventSystem::Update()
 {
-  DispatchEvents();
-}
-
-void EventSystem::Push(const Event& event)
-{
-  eventQueue.push(event);
-}
-
-void EventSystem::DispatchEvents()
-{
-  
+  for (auto dispatcher : dispatchers)
+  {
+    dispatcher.second->DispatchEvents();
+  }
 }

@@ -17,7 +17,7 @@
 
 #include <UWUEngine/PlatformSpecific.h>
 
-#ifdef _WIN64
+#ifdef _MSVC
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -107,7 +107,7 @@ namespace
 TraceLogger::TraceLogger()
 {
 #ifdef _DEBUG
-#ifdef _WIN64
+#ifdef _MSVC
   std::wstringstream log_filepath;
   wchar_t* path = 0;
   SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path);
@@ -147,7 +147,7 @@ TraceLogger::TraceLogger()
   std::ios_base::sync_with_stdio(true);
 
   std::setvbuf(stdout, stdout_buffer, _IOFBF, stdout_bufsize);
-#ifdef _WIN64
+#ifdef _MSVC
 
   if (IsDebuggerPresent())
   {

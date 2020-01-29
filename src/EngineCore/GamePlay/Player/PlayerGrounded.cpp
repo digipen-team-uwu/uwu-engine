@@ -117,7 +117,7 @@ void PlayerStateMachine::Unload_Grounded()
 {
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollideGrounded(CollisionInfo const& info)
+void Behavior<EntityManager::Type::Player>::OnCollideGrounded(const Event<EventType::Collision>& info)
 {
   glm::vec2 resolveAngle = CalculateResolveAngle(info);
   float angle = atan2(resolveAngle.y, resolveAngle.x);

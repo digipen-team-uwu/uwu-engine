@@ -28,7 +28,8 @@ public:
 	void Update() override;
 	void Render() override;
 	void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath) override;
-    void OnCollide(CollisionInfo const& info);
+    void OnCollide(const Event<EventType::Collision>& info);
+	  RegisterMemberListener(Collision, Behavior<EntityManager::Type::Fang_>::OnCollide, listener)
 
 #pragma region StateDeclarations
 	void Enter_Hurt() override;

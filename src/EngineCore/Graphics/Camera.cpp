@@ -151,7 +151,7 @@ void Camera::zoomOut(float amount)
 
 void Camera::moveCamera(float speed)
 {
-    float dt = FrameRateController::GetDeltaTime<float>();
+    float dt = FrameRateController::GetConstantDeltaTime<float>();
     cameraPos += cameraUp * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
     cameraPos += cameraRight * speed * dt * (float)(!!InputManager::KeyHeld('A') - !!InputManager::KeyHeld('D'));;
 }

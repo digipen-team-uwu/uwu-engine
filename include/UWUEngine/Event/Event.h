@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       EventSystem.h
+\file       Event.h
 \author     Yi Qian
 \date       2019/12/25
 \brief      Event Handling
@@ -10,64 +10,77 @@ Copyright ? 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-
-#include <list>
-#include <queue>
-#include <GLFW/glfw3.h>
-
 #include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/Event/EventType.h>
 #include <UWUEngine/Event/EventListener.h>
+#include <UWUEngine/Event/EventDispatcher.h>
 
-enum class EventType
+class IEvent
 {
-  COLLISION,
+public:
+  IEvent(EventType type);
+  virtual ~IEvent() = default;
+  [[nodiscard]] EventType GetType() const;
+  [[nodiscard]] bool IsType(EventType type) const;
 
-  COUNT
+private:
+  EventType type_;
 };
 
-struct Event
+template <EventType type>
+class Event final : public IEvent
 {
-  //Constructor
-  Event():
-  timeStamp(glfwGetTime())
-  {}
-
-  //Data
-  EventType type{};
-  double timeStamp;
-  void* data{};
+public:
+  ~Event() override = default;
 };
-
-namespace std
-{
-  template<>
-  struct less<Event>
-  {
-    bool operator()(const Event& lhs, const Event& rhs) const
-    {
-      return lhs.timeStamp < rhs.timeStamp;
-    }
-  };
-}
 
 class EventSystem final : public BaseSystem<EventSystem>
 {
 public:
-  EventSystem() = default;
-  ~EventSystem() override = default;
+  EventSystem();
+  ~EventSystem() override;
   void Update() override;
 
-  static void Push(const Event& event);
+  template <EventType type>
+  static void Push(const Event<type>& event);
+
+  template <EventType type>
+  static void Register(const EventListener<type>& listener);
+
+  template <EventType type>
+  static void UnRegister(const EventListener<type>& listener);
 
 private:
-  //Functions
-  void DispatchEvents();
-
-  //Data
-  static std::array<
-  std::list<EventListener>,
-  static_cast<size_t>(EventType::COUNT)>
-  listeners;
-
-  static std::priority_queue<Event> eventQueue;
+  static std::map<EventType, IEventDispatcher*> dispatchers;
 };
+
+template <EventType type>
+void EventSystem::Push(const Event<type>& event)
+{
+  IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
+  EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+
+  dispatcher->Push(event);
+}
+
+template <EventType type>
+void EventSystem::Register(const EventListener<type>& listener)
+{
+  IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
+  EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+
+  dispatcher->AddListeners(listener);
+}
+
+template <EventType type>
+void EventSystem::UnRegister(const EventListener<type>& listener)
+{
+  IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
+  EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+
+  dispatcher->RemoveListener(listener);
+}
+
+#pragma region EventSpecialization
+#include <UWUEngine/Event/Type/Collision.h>
+#pragma endregion 

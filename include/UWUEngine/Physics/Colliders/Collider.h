@@ -14,9 +14,11 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <glm/glm.hpp>
 #include <vector>
-#include <UWUEngine/constants.h>
 #include <fstream>
 
+#include <UWUEngine/Event/Type/Collision.h>
+
+using EntityID = unsigned;
 using Axis = glm::vec2;
 class ColliderComponentManager;
 
@@ -39,16 +41,6 @@ private:
 	float min{};
 	float max{};
 	const Axis axis;
-};
-
-struct CollisionInfo
-{
-	EntityID obj1{0};
-	EntityID obj2{0};
-	glm::vec2 direction{0, 0};
-	float depth{0};
-
-	CollisionInfo() = default;
 };
 
 class Collider
@@ -74,7 +66,7 @@ public:
   virtual void Serialize(std::ofstream& stream) const = 0;
   virtual void Render() = 0;
 
-	CollisionInfo IsColliding(Collider& rhs);
+	Event<EventType::Collision> IsColliding(Collider& rhs);
 
 	[[nodiscard]] virtual Projection Project(Axis const& axis) const = 0;
 	virtual std::vector<Axis> const& GenerateAxis() = 0;

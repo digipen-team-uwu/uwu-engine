@@ -204,7 +204,7 @@ void PlayerStateMachine::Unload_Dash()
     // Pointless
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollideDash(CollisionInfo const& info)
+void Behavior<EntityManager::Type::Player>::OnCollideDash(const Event<EventType::Collision>& info)
 {
   glm::vec2 resolveAngle = CalculateResolveAngle(info);
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;

@@ -18,7 +18,7 @@
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <vector>
-#include <UWUEngine/Engine.h>
+#include <UWUEngine/Component/ColliderComponentManager.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 
@@ -87,7 +87,7 @@ void DebugManager::DisableHitboxes()
 
 void DebugManager::Render()
 {
-  #ifdef _DEBUG
+  //#ifdef _DEBUG
   if (drawVectors || drawHitboxes)
   {
     glDisable(GL_DEPTH_TEST);
@@ -139,7 +139,7 @@ void DebugManager::Render()
     std::fill(DebugManager::atlasScale.begin(), DebugManager::atlasScale.end(), atlasscale);
     std::fill(DebugManager::uvs.begin(), DebugManager::uvs.end(), glm::vec2{ -1, -1 });
   }
-  #endif
+  //#endif
 }
 
 void DebugManager::Update()
