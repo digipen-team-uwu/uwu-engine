@@ -71,18 +71,8 @@ void Camera::Print_Debug_Value()
 
 void Camera::calculate_camera_data()
 {
-    if (state_ == state::ENABLE_FPS)
-    {
-      lookAtVector.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-      lookAtVector.y = sin(glm::radians(Pitch));
-      lookAtVector.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-      cameraTarget = cameraPos + lookAtVector;
-    }
-    else
-    {
-      cameraTarget = { cameraPos.x, cameraPos.y, -5000.0f };
-      lookAtVector = cameraTarget - cameraPos;
-    }
+    lookAtVector = state_ == state::ENABLE_FPS ? glm::vec3(cos(glm::radians(Yaw))* cos(glm::radians(Pitch)), sin(glm::radians(Pitch)), sin(glm::radians(Yaw)) * cos(glm::radians(Pitch))) : cameraTarget - cameraPos;
+    cameraTarget = state_ == state::ENABLE_FPS ? cameraPos + lookAtVector : cameraTarget = { cameraPos.x, cameraPos.y, -5000.0f };
     BackVector = glm::normalize(glm::vec3(-1) * lookAtVector);
     RightVector = glm::normalize(glm::cross(lookAtVector, relative_up));
     UpVector = glm::cross(BackVector, RightVector);
@@ -237,16 +227,8 @@ void Camera::zoomOut(float amount)
 void Camera::moveCamera(float speed)
 {
     float dt = FrameRateController::GetDeltaTime<float>();
-    if (state_ == state::DISABLE_FPS)
-    {
-      cameraPos += UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
-      cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
-    }
-    else
-    {
-      cameraPos += lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
-      cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
-    }
+    cameraPos += state_ == state::DISABLE_FPS ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
+    cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
     calculate_camera_data();
 }
 
