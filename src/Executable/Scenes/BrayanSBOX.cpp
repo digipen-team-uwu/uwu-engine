@@ -15,7 +15,6 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
-#include <UWUEngine/Engine.h>
 #include <UWUEngine/Component/LightingComponentManager.h>
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Audio/SoundInterface.h>
@@ -60,7 +59,6 @@ void GameStateMachine::Enter_BrayanSBOX()
   #endif
   TextureAtlaser::LoadAtlasPage();
 }
-
 
 void GameStateMachine::Unload_BrayanSBOX()
 {
