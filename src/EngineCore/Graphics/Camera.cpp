@@ -19,16 +19,18 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/FrameRateController.h>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
-#include <iostream>
+#include <UWUEngine/Debugs/TraceLogger.h>
 
 namespace ic = InputConstants;
 namespace wc = WindowConstants;
 namespace cc = CameraConstants;
 
+glm::vec3 Camera::relative_up;
+glm::vec3 Camera::lookAtVector;
 glm::vec3 Camera::cameraPos;
-glm::vec3 Camera::cameraFront;
-glm::vec3 Camera::cameraUp;
-glm::vec3 Camera::cameraRight;
+glm::vec3 Camera::BackVector;
+glm::vec3 Camera::UpVector;
+glm::vec3 Camera::RightVector;
 glm::vec3 Camera::cameraTarget;
 glm::mat4 Camera::projection;
 glm::mat4 Camera::view;
@@ -36,43 +38,83 @@ float Camera::FOV;
 float Camera::nearDistance;
 float Camera::farDistance;
 float Camera::aspectRatio;
+bool Camera::isFirst;
+float Camera::Yaw;
+float Camera::Pitch;
+Camera::state Camera::state_;
+bool Camera::switch_;
 
+template<>
+int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
 
-
-void Camera::calculate_camera_vector()
+void Camera::Print_Debug_Value()
 {
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    cameraFront = glm::normalize(cameraTarget - cameraPos);
-    cameraRight = glm::normalize(glm::cross(up, cameraFront));
-    cameraUp = glm::cross(cameraFront, cameraRight);
+  TraceLogger::Log(TraceLogger::DEBUG) <<
+    "Field of view: " << FOV << std::endl <<
+    "Camera Pos: " << std::endl <<
+    "x: " << cameraPos.x << std::endl <<
+    "y: " << cameraPos.y << std::endl <<
+    "z: " << cameraPos.z << std::endl <<
+    "Camera Target: " << std::endl <<
+    "x: " << cameraTarget.x << std::endl <<
+    "y: " << cameraTarget.y << std::endl <<
+    "z: " << cameraTarget.z << std::endl <<
+    "Look at Vector: " << std::endl <<
+    "x: " << lookAtVector.x << std::endl <<
+    "y: " << lookAtVector.y << std::endl <<
+    "z: " << lookAtVector.z << std::endl <<
+    "Back Vector: " << std::endl <<
+    "x: " << BackVector.x << std::endl <<
+    "y: " << BackVector.y << std::endl <<
+    "z: " << BackVector.z << std::endl;
+}
+
+void Camera::calculate_camera_data()
+{
+  lookAtVector = state_ == state::ENABLE_FPS ? glm::vec3(cos(glm::radians(Yaw)) * cos(glm::radians(Pitch)), sin(glm::radians(Pitch)), sin(glm::radians(Yaw)) * cos(glm::radians(Pitch))) : cameraTarget - cameraPos;
+  cameraTarget = state_ == state::ENABLE_FPS ? cameraPos + lookAtVector : cameraTarget = { cameraPos.x, cameraPos.y, -5000.0f };
+  BackVector = glm::normalize(glm::vec3(-1) * lookAtVector);
+  RightVector = glm::normalize(glm::cross(lookAtVector, relative_up));
+  UpVector = glm::cross(BackVector, RightVector);
+  projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+  view = glm::lookAt(cameraPos, cameraTarget, UpVector);
 }
 
 Camera::Camera()
 {
-    FOV = 45.0f;
-    nearDistance = 5.f;
-    farDistance = 100000.f;
-    aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
-    // initialize
-    cameraPos = glm::vec3(0.0f, 0.0f, cc::CAMERA_POSITION);
-    cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    calculate_camera_vector();
-    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+  switch_ = false;
+  state_ = state::DISABLE_FPS;
+  isFirst = true;
+  Yaw = -90.0f;
+  Pitch = 0.0f;
+  // initialize
+  FOV = 45.0f;
+  nearDistance = 5.f;
+  farDistance = 100000.f;
+  aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
+  relative_up = { 0.0f,1.0f,0.0f };
+  cameraPos = { 0.0f, 0.0f, cc::CAMERA_POSITION };
+  cameraTarget = { 0.0f, 0.0f, 0.0f };
+  calculate_camera_data();
 }
 
 void Camera::Update()
 {
-    //std::cout << "pos x: " << cameraPos.x << std::endl;
-    //std::cout << "pos y: " << cameraPos.y << std::endl;
-    //std::cout << "pos z: " << cameraPos.z << std::endl;
-    // calculate view matrix
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-    // sending data to Camera uniform buffer
-    UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
-    moveCamera(cameraPos.z >= 5.f ? cameraPos.z : 5);
-
-    zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
+  //Print_Debug_Value();
+  // sending data to Camera uniform buffer
+  UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
+  moveCamera(cameraPos.z >= 5.f ? cameraPos.z : 5);
+  zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
+  if (InputManager::KeyPressed('M'))
+  {
+    switch_ = !switch_ ? true : false;
+    state_ = switch_ ? state::ENABLE_FPS : state::DISABLE_FPS;
+    if (state_ == state::DISABLE_FPS)
+    {
+      ResetCameraPosition();
+      ResetCameraZoom();
+    }
+  }
 }
 
 void Camera::ResetCameraPosition()
@@ -84,14 +126,15 @@ void Camera::ResetCameraPosition()
 
 void Camera::ResetCameraZoom()
 {
-  cameraPos.z = cc::CAMERA_POSITION;
+  FOV = 45.0f;
+  projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
 void Camera::SetCameraPosition(const glm::vec3& new_position)
 {
-    cameraPos = new_position;
-    cameraTarget = glm::vec3(new_position.x, new_position.y, 0.f);
-    calculate_camera_vector();
+  cameraPos = new_position;
+  cameraTarget = glm::vec3(new_position.x, new_position.y, 0.f);
+  calculate_camera_data();
 }
 
 void Camera::SetCameraPosition(const glm::vec2& new_position)
@@ -99,67 +142,43 @@ void Camera::SetCameraPosition(const glm::vec2& new_position)
   cameraPos.x = new_position.x;
   cameraPos.y = new_position.y;
   cameraTarget = glm::vec3(new_position.x, new_position.y, 0.f);
-  calculate_camera_vector();
+  calculate_camera_data();
 }
 
+#pragma region Camera Getter
 const glm::vec3& Camera::GetCameraPosition()
 {
-    return cameraPos;
+  return cameraPos;
 }
 
-const glm::vec3& Camera::GetCameraFront()
+const glm::vec3& Camera::GetLookAtVector()
 {
-    return cameraFront;
+  return lookAtVector;
 }
 
 const glm::vec3& Camera::GetCameraUp()
 {
-    return cameraUp;
+  return UpVector;
 }
 
 const glm::vec3& Camera::GetCameraRight()
 {
-    return cameraRight;
-}
-
-//TODO: set target to player in small box around player
-
-void Camera::SetCameraTarget(const glm::vec3& target)
-{
-    cameraTarget = target;
-    calculate_camera_vector();
+  return RightVector;
 }
 
 const glm::vec3& Camera::GetCameraTarget()
 {
-    return cameraTarget;
+  return cameraTarget;
 }
 
 const glm::mat4& Camera::GetProjectionMatrix()
 {
-    return projection;
+  return projection;
 }
 
 const glm::mat4& Camera::GetViewMatrix()
 {
-    return view;
-}
-
-void Camera::zoomIn(float amount)
-{
-    cameraPos.z -= amount;
-}
-
-void Camera::zoomOut(float amount)
-{
-    cameraPos.z += amount;
-}
-
-void Camera::moveCamera(float speed)
-{
-    float dt = FrameRateController::GetConstantDeltaTime<float>();
-    cameraPos += cameraUp * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
-    cameraPos += cameraRight * speed * dt * (float)(!!InputManager::KeyHeld('A') - !!InputManager::KeyHeld('D'));;
+  return view;
 }
 
 float Camera::getFOV()
@@ -180,4 +199,67 @@ float Camera::getFarDistance()
 float Camera::getAspectRatio()
 {
   return aspectRatio;
+}
+
+#pragma endregion 
+//TODO: set target to player in small box around player
+
+void Camera::SetCameraTarget(const glm::vec3& target)
+{
+  cameraTarget = target;
+  calculate_camera_data();
+}
+
+void Camera::zoomIn(float amount)
+{
+  float dt = FrameRateController::GetDeltaTime<float>();
+  FOV = FOV >= 30.f && FOV <= 90.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
+  projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+}
+
+void Camera::zoomOut(float amount)
+{
+  float dt = FrameRateController::GetDeltaTime<float>();
+  FOV += amount * dt;
+  projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+}
+
+void Camera::moveCamera(float speed)
+{
+  float dt = FrameRateController::GetConstantDeltaTime<float>();
+  cameraPos += state_ == state::DISABLE_FPS ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
+  cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
+  calculate_camera_data();
+}
+
+void Camera::mouseMovement(float xOffSet, float yOffSet)
+{
+  if (state_ == state::ENABLE_FPS)
+  {
+    float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
+    float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
+
+    Yaw += x_offset;
+    Pitch += y_offset;
+
+    Pitch = Pitch > 89.0f ? 89.0f : Pitch;
+    Pitch = Pitch < -89.0f ? -89.0f : Pitch;
+
+    calculate_camera_data();
+  }
+}
+
+void Camera::setFirstFlag(bool flag)
+{
+  isFirst = flag;
+}
+
+bool Camera::getFirstFlag()
+{
+  return isFirst;
+}
+
+Camera::state Camera::getCameraState()
+{
+  return state_;
 }
