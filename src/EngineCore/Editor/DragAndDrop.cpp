@@ -20,6 +20,8 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/DragAndDrop.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
+#define DropTextures
+
 DragAndDrop::DragAndDrop()
 {
   glfwSetDropCallback(WindowManager::getWindowHandle(), DropCallback);
@@ -36,7 +38,7 @@ void DragAndDrop::DropCallback(GLFWwindow* window, int count, const char** paths
       EntityFactory::CreateObject(path);
     }
     else
-        TraceLogger::Log(TraceLogger::WARNING, "Dropped file is not a json/JSON file!!!");
+        TraceLogger::Log(TraceLogger::WARNING, "Dropped file is not a json/JSON file!!!\n");
 
   }
 
