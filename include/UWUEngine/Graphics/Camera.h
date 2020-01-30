@@ -25,6 +25,14 @@ public:
 
       Total
     };
+
+    enum class zoom_state
+    {
+      ENABLE_ZOOM,
+      DISABLE_ZOOM,
+
+      Total
+    };
     
     Camera();
     void Update() override;
