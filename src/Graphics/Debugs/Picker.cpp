@@ -44,8 +44,8 @@ void Picker::Update()
 
     Editors::EntityViewer::SetSelectedEntity(saved_ID);
 
-    TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
-    Reset();
+    //TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
+    //Reset();
     //auto pos = TransformComponentManager::GetTranslation(saved_ID);
     //TraceLogger::Log(TraceLogger::DEBUG) << "current obj pos: x: " << pos.x <<
     //  " y: " << pos.y << " z: " << pos.z << std::endl;
