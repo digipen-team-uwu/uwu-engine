@@ -37,6 +37,11 @@ float Camera::FOV;
 float Camera::nearDistance;
 float Camera::farDistance;
 float Camera::aspectRatio;
+bool Camera::isFirst;
+float Camera::Yaw;
+float Camera::Pitch;
+Camera::state Camera::state_;
+bool Camera::switch_;
 
 template<>
 int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
@@ -76,15 +81,20 @@ void Camera::calculate_camera_data()
 
 Camera::Camera()
 {
-    FOV = 45.0f;
-    nearDistance = 5.f;
-    farDistance = 100000.f;
-    aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
-    // initialize
-    cameraPos = glm::vec3(0.0f, 0.0f, cc::CAMERA_POSITION);
-    cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    calculate_camera_vector();
-    projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+  switch_ = false;
+  state_ = state::DISABLE_FPS;
+  isFirst = true;
+  Yaw = -90.0f;
+  Pitch = 0.0f;
+  // initialize
+  FOV = 45.0f;
+  nearDistance = 5.f;
+  farDistance = 100000.f;
+  aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
+  relative_up = { 0.0f,1.0f,0.0f };
+  cameraPos = { 0.0f, 0.0f, cc::CAMERA_POSITION };
+  cameraTarget = { 0.0f, 0.0f, 0.0f };
+  calculate_camera_data();
 }
 
 void Camera::Update()
@@ -92,26 +102,16 @@ void Camera::Update()
   //Print_Debug_Value();
   // sending data to Camera uniform buffer
   UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
-  moveCamera(1000.0f);
+  moveCamera(cameraPos.z >= 5.f ? cameraPos.z : 5);
   zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (InputManager::KeyPressed('M'))
   {
-    switch_ = !switch_;
+    switch_ = !switch_ ? true : false;
     state_ = switch_ ? state::ENABLE_FPS : state::DISABLE_FPS;
     if (state_ == state::DISABLE_FPS)
     {
-      lock_ = lock::UNLOCKED;
-      switch_lock_ = false;
       ResetCameraPosition();
       ResetCameraZoom();
-    }
-  }
-  if (state_ == state::ENABLE_FPS)
-  {
-    if (InputManager::KeyPressed('N'))
-    {
-      switch_lock_ = !switch_lock_;
-      lock_ = switch_lock_ ? lock::LOCKED : lock::UNLOCKED;
     }
   }
 }
@@ -226,27 +226,39 @@ void Camera::zoomOut(float amount)
 void Camera::moveCamera(float speed)
 {
   float dt = FrameRateController::GetConstantDeltaTime<float>();
-  cameraPos += state_ == state::DISABLE_FPS || lock_ == lock::LOCKED ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
+  cameraPos += state_ == state::DISABLE_FPS ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
   cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
   calculate_camera_data();
 }
 
-float Camera::getFOV()
+void Camera::mouseMovement(float xOffSet, float yOffSet)
 {
-  return FOV;
+  if (state_ == state::ENABLE_FPS)
+  {
+    float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
+    float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
+
+    Yaw += x_offset;
+    Pitch += y_offset;
+
+    Pitch = Pitch > 89.0f ? 89.0f : Pitch;
+    Pitch = Pitch < -89.0f ? -89.0f : Pitch;
+
+    calculate_camera_data();
+  }
 }
 
-float Camera::getNearDistance()
+void Camera::setFirstFlag(bool flag)
 {
-  return nearDistance;
+  isFirst = flag;
 }
 
-float Camera::getFarDistance()
+bool Camera::getFirstFlag()
 {
-  return farDistance;
+  return isFirst;
 }
 
-float Camera::getAspectRatio()
+Camera::state Camera::getCameraState()
 {
-  return aspectRatio;
+  return state_;
 }
