@@ -5,6 +5,7 @@ enum class SystemUpdateOrder
   FIRST        = 0,
   FrameRate    = 9250,
   StateMachine = 9300,
+  SceneManager = 9325,
   Editor       = 9350,
   Entity       = 9600,
   TexLoad      = 9603,
@@ -44,6 +45,7 @@ enum class SystemInitOrder
   Light         = 9800,
   Debug         = 9850,
   Render        = 9900,
+  SceneManager  = 9950,
   LAST          = 10000,
   StateMachine  = -2, // IT IS NOT AN ERROR THAT STATE MACHINE COMES AFTER THE LAST SYSTEM
   INVALID = -1,

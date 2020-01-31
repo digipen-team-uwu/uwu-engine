@@ -2,71 +2,17 @@
 #include <string>
 #include <UWUEngine/Serialization.h>
 
-class IScene
+class Scene
 {
 public:
-  IScene(const std::string& name);
-  virtual ~IScene();
+  Scene(std::string name);
+  virtual ~Scene() = default;
 
-  virtual void Load() = 0;
-  virtual void Init() = 0;
-  virtual void Update() = 0;
-  virtual void ShutDown() = 0;
-  virtual void UnLoad() = 0;
+  virtual void Load() const;
+  virtual void UnLoad() const;
 
-  const std::string& GetName();
+  const std::string& GetName() const;
 
 private:
   std::string name_;
 };
-
-template <const std::string& name>
-class Scene : public IScene
-{
-public:
-  Scene();
-  ~Scene() override = default;
-  void Load() override;
-  void Init() override;
-  void Update() override;
-  void ShutDown() override;
-  void UnLoad() override;
-};
-
-template <const std::string& name>
-Scene<name>::Scene():
-IScene(name)
-{
-}
-
-template <const std::string& name>
-void Scene<name>::Load()
-{
-  objects = DeserializeLevel(name);
-  TextureAtlaser::LoadAtlasPage();
-}
-
-template <const std::string& name>
-void Scene<name>::Init()
-{
-}
-
-template <const std::string& name>
-void Scene<name>::Update()
-{
-}
-
-template <const std::string& name>
-void Scene<name>::ShutDown()
-{
-}
-
-template <const std::string& name>
-void Scene<name>::UnLoad()
-{
-  SoundInterface::stopAllSounds();
-  EntityManager::DestroyAll();
-  TextureAtlaser::ClearData();
-}
-
-#include <UWUEngine/Scene/CustomScenes/BrayanSBOX.h>

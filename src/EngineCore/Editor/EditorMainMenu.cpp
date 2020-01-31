@@ -16,6 +16,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/EditorHelper.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/Scene/SceneManager.h>
 
 #include <imgui.h>
 
@@ -97,9 +98,20 @@ void Editors::MainMenu()
   {
     if (ImGui::BeginMenu("File"))
     {
-      if (ImGui::MenuItem("Open"))
+      if (ImGui::MenuItem("New"))
       {
-        fileMenuAction = FileMenuActions::OPEN;
+        
+      }
+      if (ImGui::BeginMenu("Open"))
+      {
+        for (auto i = SceneManager::Begin(); i != SceneManager::End(); ++i)
+        {
+          if (ImGui::MenuItem(i->first.c_str()))
+          {
+            SceneManager::SetNextScene(i);
+          }
+        }
+        ImGui::EndMenu();
       }
       if (ImGui::MenuItem("Save"))
       {

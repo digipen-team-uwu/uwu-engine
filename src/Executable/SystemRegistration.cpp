@@ -7,6 +7,7 @@
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 
+#include <UWUEngine/Scene/SceneManager.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Event/Event.h>
@@ -27,6 +28,7 @@
 
 #pragma region Systems
 //Register
+RegisterSystem(SceneManager, SceneManager, SceneManager)
 RegisterSystem(TraceLogger, Trace, LAST)
 RegisterSystem(Random, FIRST, FIRST)
 RegisterSystem(SoundInterface, FIRST, FIRST)
