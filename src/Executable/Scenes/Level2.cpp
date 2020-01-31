@@ -4,6 +4,7 @@
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Serialization.h>
+#include <UWUEngine/Deserialization.h>
 #include <UWUEngine/Graphics/Camera.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>

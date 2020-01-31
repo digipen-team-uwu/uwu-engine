@@ -18,7 +18,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/Serialization.h>
+#include <UWUEngine/Deserialization.h>
 #include <magic_enum.hpp>
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>

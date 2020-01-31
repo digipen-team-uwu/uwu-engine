@@ -15,7 +15,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Graphics/Camera.h>
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Editor.h>
-#include <UWUEngine/Serialization.h>
+#include <UWUEngine/Deserialization.h>
 #include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
 #include <UWUEngine/Component/LightingComponentManager.h>
 

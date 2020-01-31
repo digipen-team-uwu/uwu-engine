@@ -13,14 +13,10 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/Components/EditorPhysics.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include <imgui.h>
-#include <ponder/uses/archive/rapidjson.hpp>
-#include <ponder/uses/serialise.hpp>
 
 Editors::Physics::Physics(const std::string& name):
 Component(name)
 {
-  ponder::archive::RapidJsonArchive arch;
-  ponder::archive::ArchiveWriter<ponder::archive::RapidJsonArchive> writer(arch);
   //writer.write(arch. )
 }
 

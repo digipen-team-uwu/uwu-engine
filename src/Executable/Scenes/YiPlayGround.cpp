@@ -13,7 +13,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Input/InputManager.h>
-#include <UWUEngine/Serialization.h>
+#include <UWUEngine/Deserialization.h>
 #include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
 
 static std::vector<EntityID> objects;

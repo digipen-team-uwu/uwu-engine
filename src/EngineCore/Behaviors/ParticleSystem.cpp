@@ -20,6 +20,7 @@
 #include <UWUEngine/Component/ParentChildComponentManager.h>
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Serialization.h>
+#include <UWUEngine/Deserialization.h>
 #include <UWUEngine/UI/UIManager.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
