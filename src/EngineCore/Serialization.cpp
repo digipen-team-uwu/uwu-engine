@@ -15,9 +15,9 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include "stdio.h"
 #include <iomanip>
 #include <fstream>
-#include <rapidjson.h>
-#include <document.h>
-#include <filereadstream.h>
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
+#include <rapidjson/filereadstream.h>
 #include <vector>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Helper.h>

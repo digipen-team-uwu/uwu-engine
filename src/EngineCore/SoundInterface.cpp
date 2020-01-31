@@ -13,8 +13,8 @@
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include "fmod_errors.h"
-#include <document.h>
-#include <istreamwrapper.h>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
 #include <fstream>
 #include <UWUEngine/Debugs/ColoredOutput.h>
 

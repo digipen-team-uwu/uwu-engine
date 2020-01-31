@@ -12,7 +12,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #pragma once
 
 #include <UWUEngine/BaseSystem.h>
-#include <document.h>
+#include <rapidjson/document.h>
 #include "EntityManager.h"
 
 //!class EntityFactory

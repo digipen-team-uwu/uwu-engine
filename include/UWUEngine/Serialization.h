@@ -12,7 +12,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #pragma once
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
-#include <document.h>
+#include <rapidjson/document.h>
 #include <vector>
 #include <fstream>
 #include <UWUEngine/Entity/EntityManager.h>

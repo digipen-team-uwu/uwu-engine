@@ -15,8 +15,8 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Entity/EntityCacher.h>
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
-#include <document.h>
-#include <filereadstream.h>
+#include <rapidjson/document.h>
+#include <rapidjson/filereadstream.h>
 #include <UWUEngine/constants.h>
 #include <UWUEngine/Serialization.h>
 #include <magic_enum.hpp>
