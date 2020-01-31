@@ -63,6 +63,7 @@ set(UWU_LIBS
     RECTPACK2D
     STB
     L_SPINE_C
+    ponder
 )
 
 #Extend compiler/OS specific libs

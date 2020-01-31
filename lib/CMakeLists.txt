@@ -1,5 +1,6 @@
 # Let Sub modules build themselves
 add_subdirectory(glfw)
+add_subdirectory(ponder)
 
 option (glew-cmake_BUILD_SHARED "Build shared libraries" ON)
 set(glew-cmake_BUILD_SHARED OFF)
@@ -170,7 +171,7 @@ target_include_directories(MAGIC_ENUM INTERFACE ${MAGIC_ENUM_INCLUDE_DIR})
 
 # Find rapidjson
 #TODO::fix rapidjson include directory
-set(RAPID_JSON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson/include/rapidjson)
+set(RAPID_JSON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson/include)
 add_library(RAPID_JSON INTERFACE)
 target_include_directories(RAPID_JSON INTERFACE ${RAPID_JSON_INCLUDE_DIR})
 
