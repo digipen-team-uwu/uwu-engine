@@ -26,6 +26,7 @@ EventSystem::EventSystem()
 {
   //Register all dispatchers
   dispatchers.insert({EventType::Collision, new EventDispatcher<EventType::Collision>});
+  dispatchers.insert({EventType::SetNextScene, new EventDispatcher<EventType::SetNextScene>});
 }
 
 EventSystem::~EventSystem()

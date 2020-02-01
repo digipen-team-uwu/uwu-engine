@@ -19,6 +19,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Debugs/ColoredOutput.h>
 #include <UWUEngine/Serialization.h>
+#include <UWUEngine/EngineSettings.h>
 
 #include <glm/gtc/constants.hpp>
 
@@ -130,6 +131,16 @@ void Behavior<EntityManager::Type::Player>::Update()
     }
 
     PlayerData::isInvincible = !PlayerData::isInvincible;
+  }
+
+  //Dynamic Camera
+  if (EngineSettings::DynamicCamera)
+  {
+    Camera::ResetCameraZoom();
+    DynamicCamera::Activate();
+    DynamicCamera::SetTrackingPos(glm::vec4(glm::vec2(TransformComponentManager::GetTranslation(PlayerData::GetPlayerID())) + glm::vec2{ 0, 100 }, Camera::GetCameraPosition().z, 1));
+    DynamicCamera::SetTrackingSpeed(2);
+    DynamicCamera::SetInnerBounds(100, 100, { 0, 100 });
   }
 
   //Camera::SetCameraTarget(TransformComponentManager::GetTranslation(PlayerData::GetPlayerID()));

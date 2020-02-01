@@ -83,4 +83,5 @@ void EventSystem::UnRegister(const EventListener<type>& listener)
 
 #pragma region EventSpecialization
 #include <UWUEngine/Event/Type/Collision.h>
+#include <UWUEngine/Event/Type/NextScene.h>
 #pragma endregion 

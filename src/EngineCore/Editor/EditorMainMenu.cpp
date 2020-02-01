@@ -100,7 +100,7 @@ void Editors::MainMenu()
     {
       if (ImGui::MenuItem("New"))
       {
-        
+        EventSystem::Push(Event<EventType::SetNextScene>("Empty"));
       }
       if (ImGui::BeginMenu("Open"))
       {
@@ -108,7 +108,7 @@ void Editors::MainMenu()
         {
           if (ImGui::MenuItem(i->first.c_str()))
           {
-            SceneManager::SetNextScene(i);
+            EventSystem::Push(Event<EventType::SetNextScene>(i->second.GetName()));
           }
         }
         ImGui::EndMenu();
