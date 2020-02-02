@@ -14,6 +14,7 @@ Copyright ? 2019 DigiPen, All rights reserved.
 enum class EventType
 {
   Collision,
+  SetNextScene,
   Spine,
   Sound
 };
