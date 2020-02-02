@@ -4,9 +4,9 @@
     \file       WindowManager.h
     \author     Zach Rammell
     \date       2019/09/10
-    \brief      SDL window wrapper
+    \brief      GLFW window wrapper
 
-    Copyright � 2019 DigiPen, All rights reserved.
+    Copyright © 2019 DigiPen, All rights reserved.
     */
 /******************************************************************************/
 
@@ -15,18 +15,33 @@
 #include <GLFW/glfw3.h>
 #include <UWUEngine/BaseSystem.h>
 
-class WindowManager : public BaseSystem<WindowManager>
+namespace UWUEngine
+{
+
+class WindowManager final : public BaseSystem
 {
 public:
+  /* ====== SYSTEM FUNCTIONS ====== */
+
   WindowManager();
   ~WindowManager();
+  //! Swap the window's frame buffer, displaying anything rendered to the back buffer
+  void Update() override;
+
+  /* ========= INTERFACE ========== */
+
   [[nodiscard]]
-  static GLFWwindow* getWindowHandle();
-  static float getWindowHeight();
-  static float getWindowWidth();
-	//! Swap the window's frame buffer, displaying anything rendered to the back buffer
-	void Update();
+  GLFWwindow* getWindowHandle() const;
+
+  float getWindowHeight();
+  float getWindowWidth();
 private:
-	static inline GLFWwindow* window_ = nullptr;
+  /* ======== DATA MEMBERS ======== */
+
+  GLFWwindow* window_ = nullptr;
+
+  /* == IMPLEMENTATION FUNCTIONS == */
+  void SetupGLFW();
 };
 
+}

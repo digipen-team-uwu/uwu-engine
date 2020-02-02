@@ -4,9 +4,9 @@
     \file       WindowManager.cpp
     \author     Zach Rammell
     \date       2019/09/10
-    \brief      SDL window wrapper implementation
+    \brief      GLFW window wrapper implementation
 
-    Copyright � 2019 DigiPen, All rights reserved.
+    Copyright © 2019 DigiPen, All rights reserved.
     */
 /******************************************************************************/
 
@@ -17,9 +17,38 @@
 
 namespace wc = WindowConstants;
 
-//#define WM_FAIL_
+using UWUEngine::WindowManager;
+
+/* ======== HELPER FUNCTION DECLARATIONS ======= */
+namespace
+{
+void setup_glew();
+void setup_hints() noexcept;
+}
 
 WindowManager::WindowManager()
+{
+  SetupGLFW();
+  setup_glew();
+}
+
+WindowManager::~WindowManager()
+{
+  glfwDestroyWindow(window_);
+  glfwTerminate();
+}
+
+void WindowManager::Update()
+{
+  glfwSwapBuffers(window_);
+}
+
+GLFWwindow* WindowManager::getWindowHandle() const
+{
+	return window_;
+}
+
+void WindowManager::SetupGLFW()
 {
   if (glfwInit() == GLFW_FALSE)
   {
@@ -32,22 +61,7 @@ WindowManager::WindowManager()
     }
   }
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-  // disable deprecated code
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
-  glfwWindowHint(GLFW_RED_BITS, 8);
-  glfwWindowHint(GLFW_GREEN_BITS, 8);
-  glfwWindowHint(GLFW_BLUE_BITS, 8);
-  glfwWindowHint(GLFW_ALPHA_BITS, 8);
-#ifdef _DEBUG
-  glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-#else
-  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-#endif
-  glfwWindowHint(GLFW_DEPTH_BITS, 32);
+  setup_hints();
 
   window_ = glfwCreateWindow(wc::WINDOW_WIDTH, wc::WINDOW_HEIGHT, "uwuENGINE", nullptr, nullptr);
 
@@ -63,7 +77,14 @@ WindowManager::WindowManager()
 
   // makes buffer swap synchronized with the monitor's vertical refresh
   glfwSwapInterval(1);
+}
 
+/* ====== HELPER FUNCTION IMPLEMENTATIONS ====== */
+namespace
+{
+
+void setup_glew()
+{
   const auto err = glewInit();
   if (GLEW_OK != err)
   {
@@ -83,15 +104,26 @@ WindowManager::WindowManager()
   }
 }
 
-WindowManager::~WindowManager()
+void setup_hints() noexcept
 {
-  glfwDestroyWindow(window_);
-  glfwTerminate();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+  // disable deprecated code
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+  glfwWindowHint(GLFW_RED_BITS, 8);
+  glfwWindowHint(GLFW_GREEN_BITS, 8);
+  glfwWindowHint(GLFW_BLUE_BITS, 8);
+  glfwWindowHint(GLFW_ALPHA_BITS, 8);
+#ifdef _DEBUG
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+#else
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+#endif
+  glfwWindowHint(GLFW_DEPTH_BITS, 32);
 }
 
-GLFWwindow* WindowManager::getWindowHandle()
-{
-	return window_;
 }
 
 float WindowManager::getWindowHeight()
