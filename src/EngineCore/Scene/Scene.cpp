@@ -65,20 +65,12 @@ settings_(settings), name_(std::move(name))
 
 void Scene::Load() const
 {
-  if (name_ == "Empty")
-  {
-    return;
-  }
   DeserializeLevel(name_.c_str());
   TextureAtlaser::LoadAtlasPage();
 }
 
 void Scene::UnLoad() const
 {
-  if (name_ == "Empty")
-  {
-    return;
-  }
   SoundInterface::stopAllSounds();
   EntityManager::DestroyAll();
   TextureAtlaser::ClearData();

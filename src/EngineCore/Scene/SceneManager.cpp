@@ -31,8 +31,6 @@ SceneManager::SceneManager()
 
     scenes.insert({ sceneName, sceneName });
   }
-  //Insert an empty scene at last
-  scenes.insert({std::string("Empty"), std::string("Empty")});
 
   //Register scene event listener
   EventSystem::Register(listener_);
