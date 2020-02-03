@@ -18,6 +18,7 @@ add_library(UWU_ENGINE_CORE ${ENGINE_CORE_HEADERS} ${ENGINE_CORE_SRC})
 add_executable(Umbra ${EXECUTABLE_SRC})
 add_executable(uwuEditor ${EXECUTABLE_SRC})
 add_executable(uwuTest ${TESTS_HEADERS} ${TESTS_SRC})
+add_executable(uwuPonderTest ${PONDER_TEST_SRC})
 
 target_compile_definitions(uwuEditor PUBLIC _Editor)
 set_property(TARGET UWU_ENGINE_CORE Umbra uwuEditor uwuTest PROPERTY CXX_STANDARD 17)
@@ -87,6 +88,8 @@ target_link_libraries(UWU_ENGINE_CORE ${UWU_LIBS})
 target_link_libraries(Umbra UWU_ENGINE_CORE)
 target_link_libraries(uwuEditor UWU_ENGINE_CORE)
 target_link_libraries(uwuTest UWU_ENGINE_CORE CATCH2)
+
+target_link_libraries(uwuPonderTest ponder)
 
 # Copy FMOD dll
 if (WIN32)
