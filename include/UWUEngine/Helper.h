@@ -6,6 +6,10 @@
 #include <fstream>
 
 #define EXPAND(x) x
+#define SCAST(value, type) static_cast<type>(value)
+#define RCAST(value,type) reinterpret_cast<type*>(value)
+#define DCAST(value, type) dynamic_cast<type>(value)
+#define CCast(value ,type) const_cast<type>(value)
 
 namespace non_std
 {

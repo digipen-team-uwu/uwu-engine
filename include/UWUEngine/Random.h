@@ -86,8 +86,7 @@ public:
 
 private:
   static std::mt19937_64 rng; //!< random number generator, uses 64 bit Mersenne Twister engine
-  static std::normal_distribution<float> normalF;  //Normal distribution RNG for floats
-  static std::normal_distribution<double> normalD; //Normal distribution RNG for doubles
+
   /*!
     \brief
         helper function to prevent RNG from throwing by forcing min < max

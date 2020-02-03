@@ -10,21 +10,18 @@
 	*/
 	/******************************************************************************/
 #include <UWUEngine/Random.h>
-
+#include <UWUEngine/Helper.h>
+#define NORMAL_IMPLEMENTED
+template<>
+int RegisterSystemHelper<Random>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Random>(SystemInitOrder::FIRST, SystemUpdateOrder::FIRST);
 
 std::mt19937_64 Random::rng = std::mt19937_64(std::random_device{}());
-static std::normal_distribution<float> normalF;  //Normal distribution RNG for floats
-static std::normal_distribution<double> normalD; //Normal distribution RNG for doubles
 
 //initialize Random module, with a given seed
 Random::Random(unsigned long long int seed)
 {
 	if (seed)
 		rng.seed(seed);
-#ifdef NORMAL_IMPLEMENTED
-	normalF(rng);
-	normalD(rng);
-#endif
 }
 
 //generates int between min and max INCLUSIVE
@@ -32,7 +29,7 @@ int Random::Range(int min, int max, RNG distro)
 {
 	if (min > max)
 	{
-		auto temp = max;
+		int temp = max;
 		max = min;
 		min = temp;
 	}
@@ -40,17 +37,18 @@ int Random::Range(int min, int max, RNG distro)
 	switch (distro)
 	{
 		case Uniform:
+		{
 			std::uniform_int_distribution dist(min, max);
 			return dist(rng);
+		}
 
 #ifdef NORMAL_IMPLEMENTED
 		case Normal:
-
-			normalF.param(normalF.min);
-			normalF.max = max;
-			normalF.mean = .5f * (max + min) ;
-			normalF.stddev = max - normalF.mean;
-			return int(normalF(rng));
+		{
+			float mean = .5f * (max + min);
+			std::normal_distribution<float>normal(mean, max - mean);
+			return SCAST(normal(rng),int);
+		}
 #endif
 
 	}
@@ -69,17 +67,18 @@ float Random::Range(float min, float max, RNG distro)
 	switch (distro)
 	{
 		case Uniform:
+		{
 			std::uniform_real_distribution dist(min, std::nextafter(max, FLT_MAX));
 			return dist(rng);
+		}
 
 #ifdef NORMAL_IMPLEMENTED
 		case Normal:
-
-			normalF.min = min;
-			normalF.max = max;
-			normalF.mean = (max + min) * .5f;
-			normalF.stddev = max - normalF.mean;
-			return normalF(rng);
+		{
+			float mean = .5f * (max + min);
+			std::normal_distribution<float>normal(mean, max - mean);
+			return normal(rng);
+		}
 #endif
 	}
 
@@ -98,17 +97,19 @@ double Random::Range(double min, double max, RNG distro)
 	switch (distro)
 	{
 		case Uniform:
+		{
 			std::uniform_real_distribution<double> dist(min, std::nextafter(max, DBL_MAX));
 			return dist(rng);
+		}
 
 #ifdef NORMAL_IMPLEMENTED
 		case Normal:
+		{
+			double mean = .5 * (max + min);
+			std::normal_distribution<double>normal(mean, max - mean);
+			return normal(rng);
+		}
 
-			normalD.min = min;
-			normalD.max = max;
-			normalD.stddev = max - normalD.mean;
-			normalD.mean = (max + min) * .5;
-			return normalD(rng);
 #endif
 	}
 }
@@ -137,21 +138,9 @@ glm::vec4 Random::Range(glm::vec4 min, glm::vec4 max, RNG distro)
 			auto meanW = .5f * (min.w + max.w);
 
 			std::normal_distribution distx(meanX, max.x - meanX);
-			distx.min = min.x;
-			distx.max = max.x;
-
 			std::normal_distribution disty(meanY, max.y - meanY);
-			disty.min = min.y;
-			disty.max = max.y;
-
 			std::normal_distribution distz(meanZ, max.z - meanZ);
-			distz.min = min.z;
-			distz.max = max.z;
-
 			std::normal_distribution distw(meanW, max.w - meanW);
-			distw.min = min.w;
-			distw.max = max.w;
-
 			return { distx(rng), disty(rng), distz(rng), distw(rng) };
 		}
 #endif
@@ -181,16 +170,8 @@ glm::vec3 Random::Range(glm::vec3 min, glm::vec3 max, RNG distro)
 			auto meanZ = .5f * (min.z + max.z);
 
 			std::normal_distribution distx(meanX, max.x - meanX);
-			distx.min = min.x;
-			distx.max = max.x;
-
 			std::normal_distribution disty(meanY, max.y - meanY);
-			disty.min = min.y;
-			disty.max = max.y;
-
 			std::normal_distribution distz(meanZ, max.z - meanZ);
-			distz.min = min.z;
-			distz.max = max.z;
 			return { distx(rng), disty(rng), distz(rng) };
 		}
 #endif
@@ -219,13 +200,7 @@ glm::vec2 Random::Range(glm::vec2 min, glm::vec2 max, RNG distro)
 			auto meanY = .5f * (min.y + max.y);
 
 			std::normal_distribution distx(meanX, max.x - meanX);
-			distx.min = min.x;
-			distx.max = max.x;
-
 			std::normal_distribution disty(meanY, max.y - meanY);
-			disty.min = min.y;
-			disty.max = max.y;
-
 			return { distx(rng), disty(rng) };
 		}
 #endif
