@@ -13,18 +13,18 @@
 #pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 
 namespace UWUEngine
 {
 
-class WindowManager final : public BaseSystem
+class WindowSys final : public System
 {
 public:
   /* ====== SYSTEM FUNCTIONS ====== */
 
-  WindowManager();
-  ~WindowManager();
+  WindowSys(ISpace*);
+  ~WindowSys();
   //! Swap the window's frame buffer, displaying anything rendered to the back buffer
   void Update() override;
 
@@ -41,6 +41,7 @@ private:
   GLFWwindow* window_ = nullptr;
 
   /* == IMPLEMENTATION FUNCTIONS == */
+
   void SetupGLFW();
 };
 

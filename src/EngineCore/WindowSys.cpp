@@ -1,7 +1,7 @@
 /******************************************************************************/
     /*!
     \par        Project Umbra
-    \file       WindowManager.cpp
+    \file       WindowSys.cpp
     \author     Zach Rammell
     \date       2019/09/10
     \brief      GLFW window wrapper implementation
@@ -10,14 +10,12 @@
     */
 /******************************************************************************/
 
-#include <UWUEngine/WindowManager.h>
+#include <UWUEngine/WindowSys.h>
 #include <UWUEngine/constants.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Debugs/SystemException.h>
 
 namespace wc = WindowConstants;
-
-using UWUEngine::WindowManager;
 
 /* ======== HELPER FUNCTION DECLARATIONS ======= */
 namespace
@@ -26,29 +24,32 @@ void setup_glew();
 void setup_hints() noexcept;
 }
 
-WindowManager::WindowManager()
+namespace UWUEngine
+{
+
+WindowSys::WindowSys(ISpace* p) : System(p)
 {
   SetupGLFW();
   setup_glew();
 }
 
-WindowManager::~WindowManager()
+WindowSys::~WindowSys()
 {
   glfwDestroyWindow(window_);
   glfwTerminate();
 }
 
-void WindowManager::Update()
+void WindowSys::Update()
 {
   glfwSwapBuffers(window_);
 }
 
-GLFWwindow* WindowManager::getWindowHandle() const
+GLFWwindow* WindowSys::getWindowHandle() const
 {
-	return window_;
+  return window_;
 }
 
-void WindowManager::SetupGLFW()
+void WindowSys::SetupGLFW()
 {
   if (glfwInit() == GLFW_FALSE)
   {
@@ -57,7 +58,7 @@ void WindowManager::SetupGLFW()
     if (error)
     {
       TraceLogger::Log(TraceLogger::FAILURE) << "COULD NOT INITIALIZE GLFW! " << std::string(*buffer) << std::endl;
-      throw SystemStartupException<WindowManager>();
+      throw SystemStartupException<WindowSys>();
     }
   }
 
@@ -70,7 +71,7 @@ void WindowManager::SetupGLFW()
     const char** buffer;
     glfwGetError(buffer);
     TraceLogger::Log(TraceLogger::FAILURE) << "Window Not Opened Properly!" << std::string(*buffer) << std::endl;
-    throw SystemStartupException<WindowManager>();
+    throw SystemStartupException<WindowSys>();
   }
 
   glfwMakeContextCurrent(window_);
@@ -78,6 +79,8 @@ void WindowManager::SetupGLFW()
   // makes buffer swap synchronized with the monitor's vertical refresh
   glfwSwapInterval(1);
 }
+
+} // namespace UWUEngine
 
 /* ====== HELPER FUNCTION IMPLEMENTATIONS ====== */
 namespace
@@ -90,7 +93,7 @@ void setup_glew()
   {
     TraceLogger::Log(TraceLogger::FAILURE) << "Unable to initialize GLEW - error: "
       << glewGetErrorString(err) << std::endl;
-    throw SystemStartupException<WindowManager>();
+    throw SystemStartupException<UWUEngine::WindowSys>();
   }
   if (GLEW_VERSION_4_5)
   {
@@ -100,7 +103,7 @@ void setup_glew()
   else
   {
     TraceLogger::Log(TraceLogger::FAILURE) << "Driver doesn't support OpenGL 4.5" << std::endl;
-    throw SystemStartupException<WindowManager>();
+    throw SystemStartupException<UWUEngine::WindowSys>();
   }
 }
 

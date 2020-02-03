@@ -1,7 +1,7 @@
 ﻿/******************************************************************************/
   /*!
   \par        Project Umbra
-  \file       HUDManager.cpp
+  \file       HUDSys.cpp
   \author     Hadi Alhussieni
   \date       2019/12/05
   \brief      Implementation for player's HUD
@@ -9,30 +9,29 @@
   Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/UI/HUDManager.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/UI/HUDSys.h>
 #include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/GamePlay/PlayerController.h>
+#include <UWUEngine/constants.h>
 #include <iomanip>
-
-
-EntityID HUDManager::fps = goc::INVALID_ID;
-EntityID HUDManager::energyBar = goc::INVALID_ID;
-EntityID HUDManager::healthBar = goc::INVALID_ID;
 
 namespace wc = WindowConstants;
 
-HUDManager::HUDManager()
+namespace UWUEngine
 {
-  HUDManager::DisplayFPS();
-  HUDManager::DisplayHealth();
-  HUDManager::DisplayEnergy();
+
+HUDSys::HUDSys(ISpace* p) : System(p), fps(goc::INVALID_ID), healthBar(goc::INVALID_ID), energyBar(goc::INVALID_ID)
+{
+  DisplayFPS();
+  DisplayHealth();
+  DisplayEnergy();
 }
 
-void HUDManager::DisplayFPS()
+void HUDSys::DisplayFPS()
 {
   if (fps == goc::INVALID_ID)
   {
@@ -51,7 +50,7 @@ void HUDManager::DisplayFPS()
   }
 }
 
-void HUDManager::DisplayHealth()
+void HUDSys::DisplayHealth()
 {
   if (healthBar == goc::INVALID_ID)
   {
@@ -69,7 +68,7 @@ void HUDManager::DisplayHealth()
   }
 }
 
-void HUDManager::DisplayEnergy()
+void HUDSys::DisplayEnergy()
 {
   if (energyBar == goc::INVALID_ID)
   {
@@ -77,7 +76,7 @@ void HUDManager::DisplayEnergy()
     TextureComponentManager::Activate(energyBar);
     BehaviorComponentManager::Activate(energyBar);
     TransformComponentManager::Activate(energyBar);
-    TransformComponentManager::SetTranslation({- wc::WINDOW_WIDTH / 2 + 80, wc::WINDOW_HEIGHT / 2 - 100, 0, 1 }, energyBar);
+    TransformComponentManager::SetTranslation({ -wc::WINDOW_WIDTH / 2 + 80, wc::WINDOW_HEIGHT / 2 - 100, 0, 1 }, energyBar);
     TransformComponentManager::SetScale({ 273.f / 3, 487.f / 3, 1.f }, energyBar);
     TextureComponentManager::SetFilePath(energyBar, "./assets/UI/UI_Energy.png");
     EntityManager::SetClearImmunity(energyBar, true);
@@ -86,11 +85,11 @@ void HUDManager::DisplayEnergy()
   }
 }
 
-void HUDManager::Update()
+void HUDSys::Update()
 {
   if (fps != goc::INVALID_ID)
   {
-    double frames = FrameRateController::GetFPS();
+    double frames = Get<FrameRateController>().GetFPS();
     int pres;
     pres = (frames > 99) ? 3 : 2;
     BehaviorComponentManager::GetBehavior<EntityManager::Type::Text_>(fps)->SetText() << "FPS: " << std::setprecision(pres) << frames;
@@ -104,3 +103,5 @@ void HUDManager::Update()
     BehaviorComponentManager::GetBehavior<EntityManager::Type::HUDEnergy>(energyBar)->SetEnergy(PlayerData::GetEnergy());
   }
 }
+
+} // namespace UWUEngine

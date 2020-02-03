@@ -10,35 +10,40 @@ Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 
-
-class FrameRateController : public BaseSystem<FrameRateController>
+namespace UWUEngine
 {
-    public:
-        FrameRateController() = default;
-        ~FrameRateController() = default;
-        template<typename T>
-        static T GetDeltaTime()
-        {
-          if (paused)
-          {
-            return 0.0f;
-          }
-          return static_cast<T>((delta_time > .25f) ? 0.016666666667f : delta_time);
-        }
-        template<typename T>
-        static T GetConstantDeltaTime()
-        {
-          return static_cast<T>((delta_time > .25f) ? 0.016666666667f : delta_time);
-        }
-        static double GetFPS();
-        void Update() override;
-        static void SetPaused(bool pause);
-    private:
-        static double elapsed_time;
-        static double curr_time;
-        static double delta_time;
-        static double fps;
-        static bool paused;
+
+class FrameRateController : public System
+{
+public:
+  FrameRateController(ISpace*);
+  ~FrameRateController() = default;
+
+  template<typename T>
+  T GetDeltaTime()
+  {
+    if (paused)
+    {
+      return 0.0f;
+    }
+    return static_cast<T>((delta_time > .25f) ? 0.016666666667f : delta_time);
+  }
+  template<typename T>
+  T GetConstantDeltaTime()
+  {
+    return static_cast<T>((delta_time > .25f) ? 0.016666666667f : delta_time);
+  }
+  double GetFPS() const;
+  void Update() override;
+  void SetPaused(bool pause);
+private:
+  double elapsed_time;
+  double curr_time;
+  double delta_time;
+  double fps;
+  bool paused;
 };
+
+} // namespace UWUEngine

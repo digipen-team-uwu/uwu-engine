@@ -16,4 +16,4 @@ public:
   virtual ~Component() = default;
 };
 
-}
+} // namespace UWUEngine

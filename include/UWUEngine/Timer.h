@@ -1,35 +1,44 @@
 #pragma once
 #include <list>
-#include "BaseSystem.h"
+#include <UWUEngine/System.h>
 
-class Timer
+namespace UWUEngine
+{
+
+class TimerSys final : public System
 {
 public:
-  Timer(float duration);
-  Timer();
-  ~Timer();
-  
-  bool Finished();
-  bool Running();
-
-  void SetDuration(float newDuration);
-
-  void Start();
-  void Stop();
-
-  friend class TimerManager;
-private:
-  void Update();
-  float duration;
-  float time;
-  bool running;
-};
-
-class TimerManager : public BaseSystem<TimerManager>
-{
-public:
+  TimerSys(ISpace*);
   void Update() override;
-  friend class Timer;
+
+  class Timer
+  {
+    friend class TimerSys;
+  public:
+    Timer(TimerSys& parent, float duration = 0);
+    ~Timer();
+
+    bool Finished();
+    bool Running() const;
+
+    void SetDuration(float newDuration);
+
+    void Start();
+    void Stop();
+
+  private:
+    void Update();
+    float duration;
+    float time;
+    bool running;
+    TimerSys& parent;
+  };
+
+  void AddTimer(Timer*);
+  void RemoveTimer(Timer*);
+
 private:
-  static std::list<Timer*> timers;
+  std::list<Timer*> timers;
 };
+
+} // namespace UWUEngine

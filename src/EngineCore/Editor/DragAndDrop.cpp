@@ -22,29 +22,32 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 #define DropTextures
 
-DragAndDrop::DragAndDrop()
+namespace UWUEngine
 {
-  glfwSetDropCallback(WindowManager::getWindowHandle(), DropCallback);
+
+DragAndDropSys::DragAndDropSys(ISpace* p) : System(p), ch(this)
+{
+  glfwSetDropCallback(Get<WindowSys>().getWindowHandle(), ch.CDropCallback);
 }
 
-void DragAndDrop::DropCallback(GLFWwindow* window, int count, const char** paths)
+void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** paths)
 {
-  for(int i = 0; i < count; ++i)
+  for (int i = 0; i < count; ++i)
   {
     const std::string path = paths[i];
     const bool jsonCheck = path.find(".json") != path.npos || path.find(".JSON") != path.npos;
-    if(jsonCheck)
+    if (jsonCheck)
     {
       EntityFactory::CreateObject(path);
     }
     else
-        TraceLogger::Log(TraceLogger::WARNING, "Dropped file is not a json/JSON file!!!\n");
+      TraceLogger::Log(TraceLogger::WARNING, "Dropped file is not a json/JSON file!!!\n");
 
   }
 
 
 #ifdef DropTextures //I'll leave this here just in case we ever want this feature again
-    //TODO::to be replaced by picker
+  //TODO::to be replaced by picker
 //  GLint viewport[4]; //hold viewport info
 //  GLdouble model2View[16]; //model to view coords
 //  GLdouble projection[16]; //projection matrix
@@ -63,12 +66,12 @@ void DragAndDrop::DropCallback(GLFWwindow* window, int count, const char** paths
   //
   //gluUnProject(mousePos.x, mousePos.y, 100.f ,  model2View, projection, viewport, &worldX, &worldY, &worldZ);
 
-  for(int i = 0; i < count; ++i)
+  for (int i = 0; i < count; ++i)
   {
     TraceLogger::Log(TraceLogger::INFO, "Reading file: %s\n", paths[i]);
     std::string path(paths[i]);
     size_t const start = path.find("assets");
-    if(start == path.npos) //if texture is not in assets folder
+    if (start == path.npos) //if texture is not in assets folder
     {
       size_t nameStart = 0;
       size_t nameEnd = 0;
@@ -99,7 +102,7 @@ void DragAndDrop::DropCallback(GLFWwindow* window, int count, const char** paths
 #ifndef _WIN64
       pos = path.find('/', j);
 #endif
-      if(pos != path.npos)
+      if (pos != path.npos)
       {
         j = pos;
         path.replace(pos, 1, "/");
@@ -117,8 +120,22 @@ void DragAndDrop::DropCallback(GLFWwindow* window, int count, const char** paths
     TransformComponentManager::SetTranslation(glm::vec<4, double>(worldX, worldY, worldZ, 1.0), newEnt);
     TextureComponentManager::Activate(newEnt);
     TextureComponentManager::SetFilePath(newEnt, path.c_str());
-    
+
   }
   TextureAtlaser::LoadAtlasPage(true);
 #endif
+}
+
+DragAndDropSys* DragAndDropSys::DragAndDropCallbackHelper::bound{ nullptr };
+
+DragAndDropSys::DragAndDropCallbackHelper::DragAndDropCallbackHelper(DragAndDropSys* b)
+{
+  bound = b;
+}
+
+void DragAndDropSys::DragAndDropCallbackHelper::CDropCallback(GLFWwindow* window, int count, const char** paths)
+{
+  bound->DropCallback(window, count, paths);
+}
+
 }

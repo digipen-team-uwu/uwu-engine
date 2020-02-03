@@ -1,9 +1,11 @@
 #pragma once
+#include <UWUEngine/System.h>
+#include <UWUEngine/Component/Component.h>
 
 namespace UWUEngine
 {
 
-enum class SystemOrder
+enum class SystemOrder : unsigned
 {
   FrameRate,
   StateMachine,
@@ -25,7 +27,7 @@ enum class SystemOrder
   Window,
 };
 
-enum class ComponentOrder
+enum class ComponentOrder : unsigned
 {
   Animation,
   SpineAnimation,
@@ -35,6 +37,22 @@ enum class ComponentOrder
   Collider,
 };
 
-template <typename E, class T> constexpr E GetOrder();
+template<class T>
+constexpr SystemOrder GetSystemOrder();
+
+template<class T>
+constexpr ComponentOrder GetComponentOrder();
+
+template <class T>
+constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<System, T>, SystemOrder>::type
+{
+  return GetSystemOrder<T>();
+}
+
+template <class T>
+constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<Component, T>, ComponentOrder>::type
+{
+  return GetComponentOrder<T>();
+}
 
 } // namespace UWUEngine

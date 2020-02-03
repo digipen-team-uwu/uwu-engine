@@ -12,22 +12,27 @@ Copyright © 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 
-class Editor : public BaseSystem<Editor>
+namespace UWUEngine
+{
+
+class EditorSys : public System
 {
 public:
-  Editor();
-  ~Editor() override;
+  EditorSys(ISpace*);
+  ~EditorSys();
 
   void Update() override;
 
-  static bool IsActive();
+  bool IsActive() const;
 
 private:
   //Data
-  static bool isActive;
+  bool isActive;
 
   //Function
-  static void ToggleActivate();
+  void ToggleActivate();
 };
+
+} // namespace UWUEngine

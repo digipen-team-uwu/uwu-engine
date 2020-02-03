@@ -4,12 +4,21 @@
 namespace UWUEngine
 {
 
+class ISpace;
+
 class System : NonCopyable
 {
 public:
-  System() = default;
+  System(ISpace* p) : parent(p) {}
+  virtual ~System() = 0;
   virtual void Update() = 0;
-  virtual ~System() = default;
+
+  template <class T>
+  T& Get();
+private:
+  ISpace* parent;
 };
 
-}
+} // namespace UWUEngine
+
+#include <UWUEngine/System.template.cpp>
