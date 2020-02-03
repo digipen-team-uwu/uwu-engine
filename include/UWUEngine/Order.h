@@ -9,6 +9,7 @@ enum class SystemOrder : unsigned
 {
   FrameRate,
   StateMachine,
+  SceneManager,
   Editor,
   Entity,
   TexLoad,
@@ -37,11 +38,13 @@ enum class ComponentOrder : unsigned
   Collider,
 };
 
+// ReSharper disable CppFunctionIsNotImplemented
 template<class T>
 constexpr SystemOrder GetSystemOrder();
 
 template<class T>
 constexpr ComponentOrder GetComponentOrder();
+// ReSharper restore CppFunctionIsNotImplemented
 
 template <class T>
 constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<System, T>, SystemOrder>::type

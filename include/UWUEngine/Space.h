@@ -8,6 +8,7 @@ namespace UWUEngine
 class ISpace
 {
 public:
+  virtual ~ISpace() = default;
   virtual void* GetObject(unsigned i) = 0;
 };
 

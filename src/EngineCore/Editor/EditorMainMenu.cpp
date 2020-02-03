@@ -16,7 +16,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/EditorHelper.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/FrameRateController.h>
-#include <UWUEngine/Scene/SceneManager.h>
+#include <UWUEngine/Scene/SceneSys.h>
 
 #include <imgui.h>
 
