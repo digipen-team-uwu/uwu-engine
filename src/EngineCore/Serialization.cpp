@@ -9,6 +9,9 @@
 Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
+#include <ponder/classbuilder.hpp>
+#include<ponder/uses/runtime.hpp>
+
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Serialization.h>
@@ -16,28 +19,23 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <iomanip>
 #include <fstream>
 #include <rapidjson/rapidjson.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/stringbuffer.h>
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
-#include <vector>
-#include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Helper.h>
-#include <magic_enum.hpp>
-#include <UWUEngine/Component/TransformComponentManager.h>
-#include <UWUEngine/Component/AnimationComponentManager.h>
-#include <UWUEngine/Graphics/SpineAnimation/SpineDataManager.h>
-#include <UWUEngine/Component/SpineAnimationComponentManager.h>
-#include <UWUEngine/Component/SpineSkeletonComponentManager.h>
-#include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
+#include <sstream>
+#include <filesystem>
+#include <locale>
+#include <UWUEngine/Reflection.h>
+#include <UWUEngine/Behaviors/ParticleSystem.h>
 
 #ifdef _MSVC
 #include <Shlobj_core.h>
 #endif
 
-#include <sstream>
-#include <filesystem>
-#include <locale>
-#include <UWUEngine/Component/ColliderComponentManager.h>
+PONDER_TYPE(ParticleEvent)
 
 // Allows the RapidJSON Parser to function when members at the end of objects and arrays have trailing commas
 #undef RAPIDJSON_PARSE_DEFAULT_FLAGS
@@ -46,7 +44,43 @@ Copyright © 2019 DigiPen, All rights reserved.
 // Print the data stored in a vec3 to the stream using JSON array format
 using namespace Tabs;
 static char readBuffer[65536];
+using namespace rapidjson;
 
+
+void test3115()
+{
+  ParticleEvent event;
+  ponder::Class::declare<ParticleEvent>().constructor<>()
+    .property("UI", &ParticleEvent::UIParticles);
+  ponder::UserObject thing = ponder::UserObject::makeRef<ParticleEvent>(event);
+  ponder::UserObject& thing2 = thing;
+  auto& classy = thing2.getClass();
+
+  for (auto&& it : classy.propertyIterator())
+  {
+    auto& pp = thing.get(it.first);
+    it.name();
+    typeid(pp);
+  }
+
+}
+
+void SerializeObject(ponder::UserObject &obj, std::string file)
+{
+  StringBuffer string;
+  PrettyWriter<StringBuffer> writer(string);
+  
+  //auto& metaclass = obj.getClass();
+  //ponder::runtime::destroy(obj);
+  //for (auto&& it : metaclass.propertyIterator())
+  //{
+    //auto& pp = obj.get(it.first);
+    //writer.Key(it.name().to_string().c_str());
+
+    //typeid(pp);
+  //}
+  
+}
 
 void SerializeVec3(std::ofstream& stream, const char* name, glm::vec3 vector)
 {

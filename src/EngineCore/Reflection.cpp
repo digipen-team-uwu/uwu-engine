@@ -1,16 +1,29 @@
-#include <ponder/classbuilder.hpp> //DO THIS ORDER.... or else... ill f*********** kill you
-#include<ponder/uses/runtime.hpp>
+#include <UWUEngine/Reflection.h>
 #include <UWUEngine/Behaviors/ParticleSystem.h>
 
-PONDER_TYPE(ParticleEvent)
+//PONDER_TYPE(ParticleEvent)
+
+void Reflection::ReflectObject(EntityID id)
+{
+  for (auto&& it : ponder::classIterator())
+  {
+    //it.second->getUserObjectFromPointer(it.second.)
+  }
+}
+
+void SerializeObject(EntityID id)
+{
+
+}
 
 void test()
 {
   ParticleEvent event;
   ponder::Class::declare<ParticleEvent>().constructor<>()
     .property("UI", &ParticleEvent::UIParticles);
-  const ponder::UserObject thing = ponder::UserObject::makeRef<ParticleEvent>(event);
-  auto& classy = thing.getClass();
+  ponder::UserObject thing = ponder::UserObject::makeRef<ParticleEvent>(event);
+  ponder::UserObject& thing2 = thing;
+  auto& classy = thing2.getClass();
   
   for (auto&& it : classy.propertyIterator())
   {
