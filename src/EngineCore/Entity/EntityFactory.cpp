@@ -79,17 +79,24 @@ EntityID EntityFactory::CreateObject(std::string filepath, EntityManager::Type t
 	
 	if(type != EntityManager::Empty) //if type was given
 		resultID = EntityManager::New(type);// Get the EntityID from the manager
-	else
+    else if (doc.HasMember("type")) //if type is given in json file
+    {
+       auto magicType = magic_enum::enum_cast<EntityManager::Type>(std::string( doc["type"].GetString()));
+       type = magicType.value();
+       resultID = EntityManager::New(type);
+    }
+    else //last resort for figuring out type
 	{
-	  //figure it out from file name
+        TraceLogger::Log(TraceLogger::WARNING, "Loading JSON file, entity type not included in JSON file... resorting to figuring it out from filename: ERROR_PRONE!!!");
+	    //figure it out from file name
 		for (auto i : EntityManagerTypeIterator())
 		{
-            if (filepath.find(magic_enum::enum_name(i).data()) != std::string::npos)
-            {
+           if (filepath.find(magic_enum::enum_name(i).data()) != std::string::npos)
+           {
 		  	    type = i;
-                resultID = EntityManager::New(type);// Get the EntityID from the manager
-                break;
-            }
+               resultID = EntityManager::New(type);// Get the EntityID from the manager
+               break;
+           }
 		}
 	}
 	

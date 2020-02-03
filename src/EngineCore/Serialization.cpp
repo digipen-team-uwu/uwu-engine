@@ -808,26 +808,40 @@ glm::vec2 CreateMemberVec2(rapidjson::Value& object, const char* filePath,
 glm::vec4 CreateMemberVec4(rapidjson::Value& object, const char* filePath,
   const char* component, const char* member)
 {
+    float memberX;
+    float memberY;
+    float memberZ;
+    float memberW;
   // Check that the object has the member
   //printf("Checking that %s %s component has %s\n", filePath, component, member); // Debug print
-  assert(object[component].HasMember(member));
-  //printf("Checking that %s %s is array\n", filePath, member); // Debug print
-  assert(object[component][member].IsArray());
+  if (object[component].HasMember(member) && object[component][member].IsArray())
+  {
+    
+    //assert(object[component].HasMember(member));
+    //printf("Checking that %s %s is array\n", filePath, member); // Debug print
+    //assert(object[component][member].IsArray());
 
-  // Check that the member is properly formatted
-  // Format of JSON array should be [X, Y, Z, W] where X, Y, Z, and W are floats
-  // Also, W should be either 0.0 or 1.0
-  //printf("Checking that %s %s array is formatted properly\n", filePath, member); // Debug print
-  assert(object[component][member][0].IsFloat());
-  assert(object[component][member][1].IsFloat());
-  assert(object[component][member][2].IsFloat());
-  assert(object[component][member][3].IsFloat());
-
+    // Check that the member is properly formatted
+    // Format of JSON array should be [X, Y, Z, W] where X, Y, Z, and W are floats
+    // Also, W should be either 0.0 or 1.0
+    //printf("Checking that %s %s array is formatted properly\n", filePath, member); // Debug print
+    assert(object[component][member][0].IsFloat());
+    assert(object[component][member][1].IsFloat());
+    assert(object[component][member][2].IsFloat());
+    assert(object[component][member][3].IsFloat());
+    memberX = object[component][member][0].GetFloat();
+    memberY = object[component][member][1].GetFloat();
+    memberZ = object[component][member][2].GetFloat();
+    memberW = object[component][member][3].GetFloat();
+  }
+  else
+  {
+    memberX = 0.f;
+    memberY = 0.f;
+    memberZ = 0.f;
+    memberW = 0.f;
+  }
   // Get the relevant elements of the member. Done separate from constructor for clarity.
-  float memberX = object[component][member][0].GetFloat();
-  float memberY = object[component][member][1].GetFloat();
-  float memberZ = object[component][member][2].GetFloat();
-  float memberW = object[component][member][3].GetFloat();
 
   // Create the vec4 for the member
   glm::vec4 memberVec(memberX, memberY, memberZ, memberW);
@@ -913,11 +927,13 @@ float CheckFloat(rapidjson::Value& object, const char* filePath,
 {
   // Check for float
   //printf("Checking that %s %s component has %s\n", filePath, component, member); // Debug print
-  assert(object[component].HasMember(member));
-  //printf("Checking that %s %s is a float\n", filePath, member); // Debug print
-  assert((object[component])[member].IsFloat());
+    if(object[component].HasMember(member) && (object[component])[member].IsFloat())
+        return object[component][member].GetFloat();
 
-  return object[component][member].GetFloat();
+  //assert(object[component].HasMember(member));
+  //printf("Checking that %s %s is a float\n", filePath, member); // Debug print
+  //assert((object[component])[member].IsFloat());
+    return 0.f;
 }
 
 /******************************************************************************/
