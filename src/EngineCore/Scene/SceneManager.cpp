@@ -10,6 +10,7 @@ static const std::string initialSceneName = "BrayanSBOX";
 std::unordered_map<std::string, Scene> SceneManager::scenes;
 std::unordered_map<std::string, Scene>::const_iterator SceneManager::current;
 std::unordered_map<std::string, Scene>::const_iterator SceneManager::next;
+EventListener<EventType::SetNextScene> SceneManager::listener_{SceneManager::OnSetNextScene};
 
 SceneManager::SceneManager()
 {

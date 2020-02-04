@@ -1,6 +1,14 @@
 #include <UWUEngine/Event/Type/Collision.h>
 #include <UWUEngine/Event/EventDispatcher.h>
 
+namespace
+{
+  bool IsCollisionEventRelevant(Event<EventType::Collision> event, EntityID id)
+  {
+    return (event.obj1 == id) || (event.obj2 == id);
+  }
+}
+
 Event<EventType::Collision>::Event():
 IEvent(EventType::Collision)
 {
@@ -17,10 +25,13 @@ void EventDispatcher<EventType::Collision>::DispatchEvents()
   while (!events_.empty())
   {
     IEvent* event = &events_.front();
-    for (auto listener : listeners_)
+    Event<EventType::Collision>& eventCollision = *dynamic_cast<Event<EventType::Collision>*>(event);
+    for (const auto& listener : listeners_)
     {
-      
-      listener.second.OnNotify(*dynamic_cast<Event<EventType::Collision>*>(event));
+      if (IsCollisionEventRelevant(eventCollision, listener.second.GetID()) || !listener.second.GetID())
+      {
+        listener.second.OnNotify(eventCollision);
+      }
     }
     events_.pop();
   }

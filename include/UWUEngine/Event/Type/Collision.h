@@ -20,10 +20,5 @@ public:
   float depth{0};
 };
 
-template<>
+template <>
 void EventDispatcher<EventType::Collision>::DispatchEvents();
-
-namespace Events
-{
-  bool IsCollisionEventRelevant(const Event<EventType::Collision>& event, EntityID id);
-}

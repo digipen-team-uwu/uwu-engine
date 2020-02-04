@@ -97,7 +97,8 @@ PlayerStateMachine::_PlayerStateMachinestate PlayerData::GetCurrentState()
 }
 
 
-Behavior<EntityManager::Type::Player>::Behavior(EntityID id) :BaseBehavior(id)
+Behavior<EntityManager::Type::Player>::Behavior(EntityID id) :
+BaseBehavior(id), listener(MemberFunc(&Behavior<EntityManager::Type::Player>::OnCollide), id)
 {
   PlayerData::playerID = GetID();
   PlayerData::InitPlayer();

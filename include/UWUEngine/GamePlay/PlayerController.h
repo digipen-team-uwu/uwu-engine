@@ -79,7 +79,7 @@ public:
   void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath) override;
 
   void OnCollide(const Event<EventType::Collision>& info);
-  RegisterMemberListener(Collision, Behavior<EntityManager::Type::Player>::OnCollide, listener)
+  EventListener<EventType::Collision> listener;
 
 private:
   // State machine

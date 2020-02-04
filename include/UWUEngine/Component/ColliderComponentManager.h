@@ -43,6 +43,6 @@ public:
 
 private:
 	static void ResolveCollision(const Event<EventType::Collision>& info);
-	RegisterListener(Collision, ResolveCollision, listener_)
+	static EventListener<EventType::Collision> listener_;
 	static std::unordered_map<EntityID, Collider*> _collider;
 };
