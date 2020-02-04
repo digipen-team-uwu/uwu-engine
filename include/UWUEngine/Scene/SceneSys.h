@@ -18,6 +18,8 @@ namespace UWUEngine
     void SetNextScene(const std::string& name);
     void SetNextScene(std::unordered_map<std::string, Scene>::const_iterator scene);
 
+    void Reload() const;
+
     const std::string& GetCurrentName();
     const SceneSettings& GetCurrentSettings();
 
@@ -32,6 +34,6 @@ namespace UWUEngine
     std::unordered_map<std::string, Scene>::const_iterator next{};
 
     void OnSetNextScene(const Event<EventType::SetNextScene>& event);
-    RegisterMemberListener(SetNextScene, SceneSys::OnSetNextScene, listener_)
+    static EventListener<EventType::SetNextScene> listener_;
   };
 }

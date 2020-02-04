@@ -83,6 +83,12 @@ void SceneSys::SetNextScene(std::unordered_map<std::string, Scene>::const_iterat
   next = scene;
 }
 
+void SceneSys::Reload() const
+{
+  current->second.UnLoad();
+  current->second.Load();
+}
+
 const std::string& SceneSys::GetCurrentName()
 {
   return current->first;
