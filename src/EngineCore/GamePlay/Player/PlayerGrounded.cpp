@@ -34,6 +34,7 @@ void PlayerStateMachine::Enter_Grounded()
   if (ActionManager::GetActionHeld(ActionManager::Run)/*InputManager::KeyHeld('d') || InputManager::KeyHeld('a')*/)
   {
     SpineAnimationComponentManager::GetAnimation(PlayerData::GetPlayerID()).ChangeAnimation("run", true);
+    SoundInterface::playSound("player_step", true);
   }
 
     PlayerData::currState = Grounded;
@@ -111,6 +112,7 @@ void PlayerStateMachine::Update_Grounded(float dt)
 
 void PlayerStateMachine::Exit_Grounded()
 {
+  SoundInterface::stopSound("player_step");
 }
 
 void PlayerStateMachine::Unload_Grounded()

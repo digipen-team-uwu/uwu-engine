@@ -16,6 +16,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Input/ActionManager.h>
 #include <UWUEngine/GameStatesManager.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 //Don't implement
 void PlayerStateMachine::Load_Airborne()
@@ -84,6 +85,7 @@ void Behavior<EntityManager::Type::Player>::OnCollideAirborne(const Event<EventT
     if (GetAbstractDirection(angle)==ABSTRACT_DIR::TOP)
     {
       SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("jumpLand", false);
+      SoundInterface::playSound("player_land");
       player_state_.SetNextState(PlayerStateMachine::Grounded);
     }
     break;
