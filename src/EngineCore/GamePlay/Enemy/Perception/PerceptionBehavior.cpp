@@ -14,6 +14,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 #include <UWUEngine/Component/ColliderComponentManager.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 Collider* Behavior<EntityManager::Type::Perception>::idleCollider;
 Collider* Behavior<EntityManager::Type::Perception>::attackCollider;
@@ -42,7 +43,7 @@ BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Perception>
   }
   ColliderComponentManager::Activate(ID);
   ColliderComponentManager::SetCollider(ID, idleCollider);
-
+  SoundInterface::playSound("perception_idle", true);
   EventSystem::Register(listener);
 }
 
