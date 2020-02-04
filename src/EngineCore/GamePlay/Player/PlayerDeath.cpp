@@ -6,7 +6,7 @@
 \date       2019/11/18
 \brief      Manages the player's dash state
 
-Copyright © 2019 DigiPen, All rights reserved.
+Copyright ï¿½ 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 

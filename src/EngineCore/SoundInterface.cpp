@@ -23,7 +23,13 @@ using namespace ColoredOutput;
 
 FMOD::System* SoundInterface::system_;
 std::map<std::string, FMOD::Sound*> SoundInterface::sounds_;
-FMOD::ChannelGroup* SoundInterface::default_channel_;
+std::map<std::string, FMOD::ChannelGroup*> SoundInterface::channels_;
+
+void SoundInterface::playSound(char const* name, bool loop)
+{
+  playSound(std::string(name), loop);
+}
+
 
 SoundInterface::SoundInterface()
 {
@@ -41,11 +47,6 @@ SoundInterface::SoundInterface()
     TraceLogger::Log(TraceLogger::FAILURE) << "FMOD error! (" << result << ")" << FMOD_ErrorString(result);
   }
 
-  result = system_->createChannelGroup("default", &default_channel_);
-  if (result != FMOD_OK)
-  {
-    TraceLogger::Log(TraceLogger::FAILURE) << "FMOD error! (" << result << ")" << FMOD_ErrorString(result);
-  }
 
   std::ifstream sounds_file("./data/sounds.json");
   rapidjson::IStreamWrapper wrapper(sounds_file);
@@ -66,6 +67,8 @@ SoundInterface::SoundInterface()
     log_stream << " as " << Set(Cyan) << sound->name.GetString() << Set() << "\n";
     loadSound(sound->name.GetString(), sound->value.GetString());
   }
+
+  playSound("music_calm1", true);
 }
 
 void SoundInterface::Update()
@@ -90,17 +93,20 @@ void SoundInterface::playSound(std::string const& name, bool loop)
     sounds_.at(name)->setLoopPoints(0, FMOD_TIMEUNIT_MS, length, FMOD_TIMEUNIT_MS);
     sounds_.at(name)->setLoopCount(loop ? -1 : 1);
   }
-  system_->playSound(sounds_.at(name), default_channel_, false, nullptr);
-}
-
-void SoundInterface::playSound(char const* name, bool loop)
-{
-  playSound(std::string(name), loop);
+  system_->playSound(sounds_.at(name), channels_[name], false, nullptr);
 }
 
 void SoundInterface::loadSound(char const* name, char const* filepath)
 {
   loadSound(std::string(name), std::string(filepath));
+  FMOD::ChannelGroup* group;
+  system_->createChannelGroup("default", &group);
+  channels_[name] = group;
+}
+
+void SoundInterface::stopSound(char const* name)
+{
+  channels_[name]->stop();
 }
 
 void SoundInterface::loadSound(std::string const& name, std::string const& filepath)
@@ -120,5 +126,9 @@ void SoundInterface::loadSound(std::string const& name, std::string const& filep
 
 void SoundInterface::stopAllSounds()
 {
-  default_channel_->stop();
+  //for (auto& it : channels_)
+  //{
+    //it.second->stop();
+  //}
+  channels_.clear();
 }
