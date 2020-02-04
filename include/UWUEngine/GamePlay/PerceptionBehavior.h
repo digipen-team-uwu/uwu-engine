@@ -27,7 +27,7 @@ public:
     void Serialize(std::ofstream& stream) override;
     void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath) override;
     void OnCollide(const Event<EventType::Collision>& info);
-    RegisterMemberListener(Collision, Behavior<EntityManager::Type::Perception>::OnCollide, listener)
+    EventListener<EventType::Collision> listener;
     void SetHealth(size_t amount);
 
 #pragma region StateDeclarations

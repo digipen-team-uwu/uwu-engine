@@ -19,3 +19,6 @@ public:
   glm::vec2 direction{0};
   float depth{0};
 };
+
+template <>
+void EventDispatcher<EventType::Collision>::DispatchEvents();

@@ -42,9 +42,9 @@ enum class SystemInitOrder
   EntityVec     = 9760,
   UI            = 9762,
   HUD           = 9775,
-  SceneManager  = 9787,
   Light         = 9800,
   Debug         = 9850,
+  SceneManager  = 9875,
   Render        = 9900,
   LAST          = 10000,
   StateMachine  = -2, // IT IS NOT AN ERROR THAT STATE MACHINE COMES AFTER THE LAST SYSTEM

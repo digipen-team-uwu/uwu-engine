@@ -16,6 +16,8 @@ public:
   static void SetNextScene(const std::string & name);
   static void SetNextScene(std::unordered_map<std::string, Scene>::const_iterator scene);
 
+  static void Reload();
+
   static const std::string& GetCurrentName();
   static const SceneSettings& GetCurrentSettings();
 
@@ -30,5 +32,5 @@ private:
   static std::unordered_map<std::string, Scene>::const_iterator next;
 
   static void OnSetNextScene(const Event<EventType::SetNextScene>& event);
-  RegisterListener(SetNextScene, SceneManager::OnSetNextScene, listener_)
+  static EventListener<EventType::SetNextScene> listener_;
 };

@@ -29,7 +29,7 @@ public:
 	void Render() override;
 	void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath) override;
     void OnCollide(const Event<EventType::Collision>& info);
-	  RegisterMemberListener(Collision, Behavior<EntityManager::Type::Fang_>::OnCollide, listener)
+		EventListener<EventType::Collision> listener;
 
 #pragma region StateDeclarations
 	void Enter_Hurt() override;

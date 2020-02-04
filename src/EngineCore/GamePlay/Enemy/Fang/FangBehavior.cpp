@@ -4,7 +4,7 @@
 #include <UWUEngine/Serialization.h>
 
 Behavior<EntityManager::Type::Fang_>::Behavior(EntityID ID) :
-  BaseBehavior(ID)
+  BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Fang_>::OnCollide), ID)
 {
   EventSystem::Register(listener);
 }
