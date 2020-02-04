@@ -26,10 +26,10 @@ public:
       Total
     };
 
-    enum class zoom_state
+    enum class lock
     {
-      ENABLE_ZOOM,
-      DISABLE_ZOOM,
+      LOCKED,
+      UNLOCKED,
 
       Total
     };
@@ -85,4 +85,6 @@ private:
     static float Pitch;
     static state state_;
     static bool switch_;
+    static lock lock_;
+    static bool switch_lock_;
 };
