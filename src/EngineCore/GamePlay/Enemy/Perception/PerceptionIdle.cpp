@@ -31,6 +31,7 @@ void Behavior<EntityManager::Type::Perception>::Enter_Idle()
     // Set the idle animation
     SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("Idle", true);
     ColliderComponentManager::SetCollider(GetID(), idleCollider);
+    SoundInterface::playSound("perception_idle", true);
 }
 
 void Behavior<EntityManager::Type::Perception>::Load_Idle()
@@ -87,5 +88,6 @@ void Behavior<EntityManager::Type::Perception>::Unload_Idle()
 
 void Behavior<EntityManager::Type::Perception>::Exit_Idle()
 {
+  SoundInterface::playSound("perception_idle", false);
     // For now, exists to suppress compiler errors
 }

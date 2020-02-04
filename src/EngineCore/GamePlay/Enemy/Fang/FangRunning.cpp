@@ -2,6 +2,7 @@
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 #include "glm/vec3.hpp"
 
 void Behavior<EntityManager::Type::Fang_>::Load_Running()
@@ -12,6 +13,8 @@ void Behavior<EntityManager::Type::Fang_>::Load_Running()
 void Behavior<EntityManager::Type::Fang_>::Enter_Running()
 {
     SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("Run 2.0", true);
+    SoundInterface::playSound("fang_run", true);
+    
 }
 
 void Behavior<EntityManager::Type::Fang_>::Update_Running(float dt)
@@ -40,6 +43,7 @@ void Behavior<EntityManager::Type::Fang_>::Update_Running(float dt)
 
 void Behavior<EntityManager::Type::Fang_>::Exit_Running()
 {
+  SoundInterface::stopSound("fang_run");
     // Currently exists to suppress compiler warnings
 }
 

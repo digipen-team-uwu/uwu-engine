@@ -63,7 +63,6 @@ private:
   // Last safe position for hazard damage reset
   static glm::vec4 lastSafePos;
 
-
   //Cheats
   static bool isInvincible;
 };
