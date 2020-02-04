@@ -16,49 +16,75 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/BaseComponent.h>
 #include <string>
 
-class TextureComponentManager : public BaseComponent<TextureComponentManager>
+namespace UWUEngine
 {
-    public:
-        TextureComponentManager();
-        ~TextureComponentManager();
-        void InitObject(EntityID) override;
-        void ShutdownObject(EntityID ID) override;
-        void Update() override {};
+  class Texture
+  {
+  public:
+    Texture (glm::uvec2& dimension, glm::vec2& uvs, glm::vec4& colors, GLuint& textureID, std::array<std::string, goc::MAX_SPRITES>& filePath)
+      : dimensions_(dimension), uvs_(uvs), colors_(colors), textureID_(textureID), filePaths_(filePath)
+    {}
 
-        static void SetTextureID(EntityID, GLuint);
+#pragma region Setter
+    void SetDimension(const glm::uvec2& dimension);
+    void SetTextureID(GLuint textureID);
+    void SetUVS(const glm::vec2& uvs);
+    void SetColors(const glm::vec4& colors);
+    void SetFilePath(const std::string& filePath, unsigned accessID);
+#pragma endregion
 
-        static void SetUV(EntityID, const glm::vec2 &);
-        static glm::vec2 &GetUV(EntityID);
+#pragma region Getter
+    const glm::uvec2& GetDimension() const;
+    const GLuint& GetTextureID() const;
+    const glm::vec2& GetUVS() const;
+    const glm::vec4& GetColors() const;
+    const std::string& GetFilePaths(unsigned accessID) const;
+#pragma endregion
 
-        static void SetColor(EntityID, const glm::vec4&);
-        static glm::vec4& GetColor(EntityID);
-        static void RemoveColor(EntityID);
+  private:
+    glm::uvec2& dimensions_;
+    glm::vec2& uvs_;
+    glm::vec4& colors_;
+    GLuint& textureID_;
+    std::array<std::string, goc::MAX_SPRITES>& filePaths_;
+  };
 
-        static GLuint GetTextureID(EntityID);
+  class TextureComponentManager : public ...future......
+  {
+  public:
+    TextureComponentManager() = default;
+    ~TextureComponentManager();
+    void InitObject(EntityID ID) override;
+    void ShutdownObject(EntityID ID) override;
+    void Update() override {}
 
-        static void SetCurrentTexture(EntityID ID, unsigned accessID);
+    Texture operator[](EntityID ID);
 
-        static void SetDimensions(const glm::uvec2& dimensions, EntityID ID);
-        static glm::uvec2& GetDimensions(EntityID ID);
-        static void ShutDown();
+    Texture getTexture(EntityID ID);
 
-        static const std::string& getFilePath(EntityID id, unsigned int accessID = 0);
-        static bool HasFilepath(EntityID ID);
-        static void SetFilePath(EntityID id, const char * filepath, unsigned int access_id = 0);
-        static void SetFilePaths(EntityID id, const std::array<std::string, goc::MAX_SPRITES> &filePaths);
+#pragma region Setter
+    void SetFilePath(EntityID, const char* filePath, unsigned accessID);
+    void SetFilePaths(EntityID, const std::array<std::string, goc::MAX_SPRITES>& filePaths);
+#pragma endregion
 
-        static void Serialize(std::ofstream& stream, EntityID id);
+#pragma region Getter
+    const std::string& getFilePath(EntityID ID, unsigned accessID);
+    const EntityVector<glm::uvec2>& GetArrayDimensions() const;
+    const EntityVector<glm::vec2>& GetArrayUVS() const;
+    const EntityVector<glm::vec4>& GetArrayColors() const;
+    const std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>>& GetArrayFilePaths() const;
+#pragma endregion
 
-        static const std::vector<glm::uvec2>& GetArrayDimensions();
-        static const std::vector<glm::vec2>& GetArrayUVS();
-        static const std::vector<glm::vec4>& GetArrayColors();
-        static const std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>>& GetArrayFilePath();
-    private:
-        //TODO: add structure holding alternate texture data and add support for switching to alt textures
-        static EntityVector<glm::uvec2> dimensions_;
-        static EntityVector<glm::vec2> uvs_;
-        static EntityVector<glm::vec4> colors_;
-        static EntityVector<GLuint> textureID_;
+    void RemoveColor(EntityID ID);
+    bool HasFilepath(EntityID ID);
+    void SetCurrentTexture(EntityID ID, unsigned accessID);
+    void Serialize(std::ofstream& stream, EntityID id);
 
-        static std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>> filePaths_;
-};
+  private:
+    EntityVector<glm::uvec2> dimensions_;
+    EntityVector<glm::vec2> uvs_;
+    EntityVector<glm::vec4> colors_;
+    EntityVector<GLuint> textureID_;
+    std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>> filePaths_;
+  };
+}
