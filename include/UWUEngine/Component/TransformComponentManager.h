@@ -38,9 +38,9 @@ namespace UWUEngine
   #pragma endregion
 
   #pragma region Getter
-    const glm::vec4 GetTranslation() const;
-    const glm::vec3 GetScale() const;
-    const float GetRotation() const;
+    const glm::vec4& GetTranslation() const;
+    const glm::vec3& GetScale() const;
+    const float& GetRotation() const;
   #pragma endregion 
 
   private:

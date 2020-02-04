@@ -18,15 +18,13 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Entity/EntityVector.h>
 #include <UWUEngine/Component/BaseComponent.h>
 
-//Forward declaration
-namespace Editors
-{
-  class Physics;
-}
 
-class PhysicsComponentManager : public BaseComponent<PhysicsComponentManager>
+namespace UWUEngine
 {
-public:
+  namespace Editors
+  {
+    class Physics;
+  }
 
   enum class BodyType
   {
@@ -34,58 +32,81 @@ public:
     DYNAMIC
   };
 
-  PhysicsComponentManager() = default;
-  ~PhysicsComponentManager() = default;
-  void InitObject(EntityID ID) override;
-  void Update() override;
-  void ShutdownObject(EntityID ID) override {};
+  class Physics
+  {
+  public:
+    Physics(BodyType& type, glm::vec4& oldTranslation, glm::vec4& acceleration, glm::vec4& velocity, glm::vec4& drag, float& rotationalVelocity, float& inverseMass, float& restitution)
+      : type_(type), oldTranslation_(oldTranslation), acceleration_(acceleration), velocity_(velocity), drag_(drag), rotationalVelocity_(rotationalVelocity), inverseMass_(inverseMass), restitution_(restitution)
+    {}
 
-  static void SetBodyType(BodyType type, EntityID ID);
-  static void SetOldTranslation(const glm::vec4& oldTranslation, EntityID ID);
-  static void SetVelocity(const glm::vec4& velocity, EntityID ID);
-  static void SetAcceleration(const glm::vec4& acceleration, EntityID ID);
-  static void SetRotationalVelocity(const float rotationalVelocity, EntityID ID);
-  static void SetInverseMass(const float inverseMass, EntityID ID);
-  static void SetDrag(const glm::vec4& drag, EntityID ID);
-  static void SetRestitution(float restitution, EntityID ID);
+#pragma region Setter
+    void SetBodyType(const BodyType& type);
+    void SetOldTranslation(const glm::vec4& oldTranslation);
+    void SetAcceleration(const glm::vec4& acceleration);
+    void SetVelocity(const glm::vec4& velocity);
+    void SetDrag(const glm::vec4& drag);
+    void SetRotationalVelocity(const float& rotationalVelocity);
+    void SetInverseMass(const float& inverseMass);
+    void SetRestitution(const float& restitution);
+#pragma endregion
 
-  static BodyType GetBodyType(EntityID ID);
-  static const glm::vec4& GetAcceleration(EntityID ID);
-  static const glm::vec4& GetVelocity(EntityID ID);
-  static const glm::vec4& GetOldTranslation(EntityID ID);
-  static float GetRotationalVelocity(EntityID ID);
-  static const glm::vec4& GetDrag(EntityID ID);
-  static float GetInverseMass(EntityID ID);
-  static float GetRestitution(EntityID ID);
+#pragma region Getter
+    const BodyType& GetBodyType() const;
+    const glm::vec4& GetOldTranslation() const;
+    const glm::vec4& GetAcceleration() const;
+    const glm::vec4& GetVelocity() const;
+    const glm::vec4& GetDrag() const;
+    const float& GetRotationalVelocity() const;
+    const float& GetInverseMass() const;
+    const float& GetRestitution() const;
+#pragma endregion 
+  private:
+    BodyType& type_;
+    glm::vec4& oldTranslation_;
+    glm::vec4& acceleration_;
+    glm::vec4& velocity_;
+    glm::vec4& drag_;
+    float rotationalVelocity_;
+    float inverseMass_;
+    float restitution_;
+  };
 
-  static std::vector<glm::vec4>& GetDebugVelocities();
+  class PhysicsComponentManager : public ......... future.......
+  {
+  public:
+    PhysicsComponentManager() = default;
+    ~PhysicsComponentManager() = default;
+    void InitObject(EntityID ID) override;
+    void Update() override;
+    void ShutDownObject(EntityID ID) override {};
 
-  static void Serialize(std::ofstream& stream, EntityID id, bool partial = false);
+    Physics operator[](EntityID ID);
+    Physics getPhysics(EntityID ID);
 
-private:
+#pragma region Getter
+    const EntityVector<BodyType>& GetArrayBodyType() const;
+    const EntityVector<glm::vec4>& GetArrayOldTranslation() const;
+    const EntityVector<glm::vec4>& GetArrayAcceleration() const;
+    const EntityVector<glm::vec4>& GetArrayVelocity() const;
+    const EntityVector<glm::vec4>& GetArrayDrag() const;
+    const EntityVector<float>& GetArrayRotationalVelocity() const;
+    const EntityVector<float>& GetArrayInverseMass() const;
+    const EntityVector<float>& GetArrayRestitution() const;
+#pragma endregion
 
-  static EntityVector<BodyType> type_;
+    void Serialize(std::ofstream& stream, EntityID id, bool partial);
 
-  // Previous position.  May be used for resolving collisions.
-  static EntityVector<glm::vec4> oldTranslation_;
+  private:
+    EntityVector<BodyType> type_;
+    EntityVector<glm::vec4> oldTranslation_;
+    EntityVector<glm::vec4> acceleration_;
+    EntityVector<glm::vec4> velocity_;
+    EntityVector<glm::vec4> drag_;
+    EntityVector<float> rotationalVelocity_;
+    EntityVector<float> inverseMass_;
+    EntityVector<float> restitution_;
+    friend class Editors::Physics;
+  };
+}
 
-  // Acceleration = inverseMass * (sum of forces)
-  static EntityVector<glm::vec4> acceleration_;
 
-  // Velocity may be stored as a direction vector and speed scalar, instead.
-  static EntityVector<glm::vec4> velocity_;
-
-  // Rotational velocity (in radians).
-  static EntityVector<float> rotationalVelocity_;
-
-  // Drag to be applied to moving objects in order to slow them down.
-  static EntityVector<glm::vec4> drag_;
-
-  // Used when calculating acceleration due to forces.
-  // Used when resolving collision between two dynamic objects.
-  static EntityVector<float> inverseMass_;
-
-  static EntityVector<float> restitution_;
-
-  friend class Editors::Physics;
-};

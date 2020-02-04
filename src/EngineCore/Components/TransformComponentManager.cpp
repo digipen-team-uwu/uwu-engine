@@ -113,17 +113,17 @@ void Transform::SetRotation(const float& rotation)
 #pragma endregion
 
 #pragma region Getter
-const glm::vec4 Transform::GetTranslation() const
+const glm::vec4& Transform::GetTranslation() const
 {
   return translation_;
 }
 
-const glm::vec3 Transform::GetScale() const
+const glm::vec3& Transform::GetScale() const
 {
   return scale_;
 }
 
-const float Transform::GetRotation() const
+const float& Transform::GetRotation() const
 {
   return rotation_;
 }
