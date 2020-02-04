@@ -25,12 +25,12 @@
 [submodule "lib/FMOD"]
 	path = lib/FMOD
 	url = https://github.com/digipen-team-uwu/umbra-fmod.git
-[submodule "assets"]
-	path = assets
-	url = https://github.com/digipen-team-uwu/umbra-assets.git
 [submodule "data"]
 	path = data
 	url = https://github.com/digipen-team-uwu/umbra-data.git
 [submodule "lib/catch2"]
 	path = lib/catch2
 	url = https://github.com/catchorg/Catch2
+[submodule "assets"]
+	path = assets
+	url = https://github.com/digipen-team-uwu/umbra-assets-temp.git
