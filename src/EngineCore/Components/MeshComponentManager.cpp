@@ -15,34 +15,19 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 
-template<>
-size_t RegisterComponentHelper<MeshComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<MeshComponentManager>(ComponentUpdateOrder::LAST);
 
 namespace goc = GameObjectConstants;
-
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::primitive_type_vaoid_idx_cnt_entityMesh;
+using namespace UWUEngine;
 
 MeshComponentManager::MeshComponentManager()
 {
   primitive_type_vaoid_idx_cnt_entityMesh = getSquareMesh();
 }
 
-void MeshComponentManager::SetMesh(EntityID ID, std::tuple<GLenum, GLuint, GLuint> newMesh)
-{
-    return;
-}
-
-
 const std::tuple<GLenum, GLuint, GLuint>& MeshComponentManager::GetEntityMesh()
 {
   return primitive_type_vaoid_idx_cnt_entityMesh;
 }
-
-const std::tuple<GLenum, GLuint, GLuint>& MeshComponentManager::GetMesh(EntityID ID)
-{
-    return primitive_type_vaoid_idx_cnt_entityMesh;
-}
-
 
 // square mesh 1x1 by default unless specify
 std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::getSquareMesh()
