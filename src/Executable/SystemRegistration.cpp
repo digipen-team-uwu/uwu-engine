@@ -25,6 +25,7 @@
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
 #include <UWUEngine/DragAndDrop.h>
+#include <UWUEngine/Graphics/Debugs/Picker.h>
 
 #pragma region Systems
 //Register
@@ -51,7 +52,7 @@ RegisterSystem(InputManager, Input, Input)
 RegisterSystem(WindowManager, Window, Window)
 RegisterSystem(UniformBuffer, LAST, LAST)
 RegisterSystem(DragAndDrop, LAST, LAST)
-
+RegisterSystem(Picker, LAST, Picker)
 #pragma endregion 
 
 #pragma region Components

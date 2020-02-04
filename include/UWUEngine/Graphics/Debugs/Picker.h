@@ -41,8 +41,7 @@ private:
   static glm::mat3 ndc_to_vp;
   static glm::mat3 ndc_to_vf;
   static glm::vec3 mouse_world;
-  static glm::vec3 ray_world;
   static EntityID saved_ID;
-  static float saved_z;
-  static std::unordered_map<EntityID, float> ID_and_depth;
+  static float saved_d;
+  static std::unordered_map<EntityID, float> ID_and_distance;
 };
