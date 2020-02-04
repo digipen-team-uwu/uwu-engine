@@ -43,6 +43,8 @@ float Camera::Yaw;
 float Camera::Pitch;
 Camera::state Camera::state_;
 bool Camera::switch_;
+Camera::lock Camera::lock_;
+bool Camera::switch_lock_;
 
 template<>
 int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
@@ -82,6 +84,8 @@ void Camera::calculate_camera_data()
 
 Camera::Camera()
 {
+  lock_ = lock::UNLOCKED;
+  switch_lock_ = false;
   switch_ = false;
   state_ = state::DISABLE_FPS;
   isFirst = true;
@@ -107,12 +111,22 @@ void Camera::Update()
   zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (InputManager::KeyPressed('M'))
   {
-    switch_ = !switch_ ? true : false;
+    switch_ = !switch_;
     state_ = switch_ ? state::ENABLE_FPS : state::DISABLE_FPS;
     if (state_ == state::DISABLE_FPS)
     {
+      lock_ = lock::UNLOCKED;
+      switch_lock_ = false;
       ResetCameraPosition();
       ResetCameraZoom();
+    }
+  }
+  if (state_ == state::ENABLE_FPS)
+  {
+    if (InputManager::KeyPressed('N'))
+    {
+      switch_lock_ = !switch_lock_;
+      lock_ = switch_lock_ ? lock::LOCKED : lock::UNLOCKED;
     }
   }
 }
@@ -227,7 +241,7 @@ void Camera::zoomOut(float amount)
 void Camera::moveCamera(float speed)
 {
   float dt = FrameRateController::GetConstantDeltaTime<float>();
-  cameraPos += state_ == state::DISABLE_FPS ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
+  cameraPos += state_ == state::DISABLE_FPS || lock_ == lock::LOCKED ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
   cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
   calculate_camera_data();
 }
@@ -236,16 +250,19 @@ void Camera::mouseMovement(float xOffSet, float yOffSet)
 {
   if (state_ == state::ENABLE_FPS)
   {
-    float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
-    float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
+    if (lock_ == lock::UNLOCKED)
+    {
+      float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
+      float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
 
-    Yaw += x_offset;
-    Pitch += y_offset;
+      Yaw += x_offset;
+      Pitch += y_offset;
 
-    Pitch = Pitch > 89.0f ? 89.0f : Pitch;
-    Pitch = Pitch < -89.0f ? -89.0f : Pitch;
+      Pitch = Pitch > 89.0f ? 89.0f : Pitch;
+      Pitch = Pitch < -89.0f ? -89.0f : Pitch;
 
-    calculate_camera_data();
+      calculate_camera_data();
+    }
   }
 }
 
