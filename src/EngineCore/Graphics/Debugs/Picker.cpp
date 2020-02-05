@@ -25,29 +25,29 @@ Picker::Picker()
 
 void Picker::Update()
 {
-  if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
-  {
-    glm::vec2 mousePos = InputManager::GetMousePos();
-    TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
-      mousePos.y << std::endl;
-
-    CalculateMouseWorld(mousePos);
-    TraceLogger::Log(TraceLogger::DEBUG) << "Ray World x: " << mouse_world.x << " y: " <<
-      mouse_world.y << " z: " << mouse_world.z << std::endl;
-
-    Pick();
-    PickID();
-    TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
-
-    Editors::EntityViewer::SetSelectedEntity(saved_ID);
-
-    TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
-    Reset();
-    
-    auto cameraPos = Camera::GetCameraPosition();
-    TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
-      " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
-  }
+  //if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
+  //{
+  //  glm::vec2 mousePos = InputManager::GetMousePos();
+  //  TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
+  //    mousePos.y << std::endl;
+  //
+  //  CalculateMouseWorld(mousePos);
+  //  TraceLogger::Log(TraceLogger::DEBUG) << "Ray World x: " << mouse_world.x << " y: " <<
+  //    mouse_world.y << " z: " << mouse_world.z << std::endl;
+  //
+  //  Pick();
+  //  PickID();
+  //  TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
+  //
+  //  Editors::EntityViewer::SetSelectedEntity(saved_ID);
+  //
+  //  TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
+  //  Reset();
+  //  
+  //  auto cameraPos = Camera::GetCameraPosition();
+  //  TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
+  //    " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
+  //}
 }
 
 void Picker::CalculateMouseWorld(glm::vec2 Pos)
