@@ -14,10 +14,10 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
-#include <UWUEngine/Engine.h>
-#include <UWUEngine/Input/InputManager.h>
+#include <UWUEngine/Input/InputSys.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
-#include <UWUEngine/DragAndDrop.h>
+#include <UWUEngine/DragAndDropSys.h>
+#include <UWUEngine/CCallbackHelper.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
 #define DropTextures
@@ -25,9 +25,10 @@ Copyright � 2019 DigiPen, All rights reserved.
 namespace UWUEngine
 {
 
-DragAndDropSys::DragAndDropSys(ISpace* p) : System(p), ch(this)
+DragAndDropSys::DragAndDropSys(ISpace* p) : System(p)
 {
-  glfwSetDropCallback(Get<WindowSys>().getWindowHandle(), ch.CDropCallback);
+  DropCallbackHelper binder(this);
+  glfwSetDropCallback(Get<WindowSys>().getWindowHandle(), DropCallbackHelper::CCallback);
 }
 
 void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** paths)
@@ -71,15 +72,14 @@ void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** pa
     TraceLogger::Log(TraceLogger::INFO, "Reading file: %s\n", paths[i]);
     std::string path(paths[i]);
     size_t const start = path.find("assets");
-    if (start == path.npos) //if texture is not in assets folder
+    if (start == std::string::npos) //if texture is not in assets folder
     {
-      size_t nameStart = 0;
-      size_t nameEnd = 0;
+      size_t nameStart;
+      size_t nameEnd;
 #ifdef _WIN64
       nameStart = path.find("Users\\") + std::string("Users\\").length();
       nameEnd = path.find('\\', nameStart);
-#endif
-#ifndef _WIN64
+#else
       nameStart = path.find("home/") + std::string("home/").length();
       nameEnd = path.find('/', nameStart);
 #endif
@@ -98,8 +98,7 @@ void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** pa
       size_t pos;
 #ifdef _WIN64
       pos = path.find('\\', j);
-#endif
-#ifndef _WIN64
+#else
       pos = path.find('/', j);
 #endif
       if (pos != path.npos)
@@ -124,18 +123,6 @@ void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** pa
   }
   TextureAtlaser::LoadAtlasPage(true);
 #endif
-}
-
-DragAndDropSys* DragAndDropSys::DragAndDropCallbackHelper::bound{ nullptr };
-
-DragAndDropSys::DragAndDropCallbackHelper::DragAndDropCallbackHelper(DragAndDropSys* b)
-{
-  bound = b;
-}
-
-void DragAndDropSys::DragAndDropCallbackHelper::CDropCallback(GLFWwindow* window, int count, const char** paths)
-{
-  bound->DropCallback(window, count, paths);
 }
 
 }

@@ -13,6 +13,7 @@
 #pragma once
 #include <UWUEngine/System.h>
 #include <UWUEngine/WindowSys.h>
+#include <UWUEngine/CCallbackHelper.h>
 
 //class Editor;
 //class IBaseComponent;
@@ -30,16 +31,9 @@ public:
 	DragAndDropSys(ISpace*);
 	void DropCallback(GLFWwindow* window, int count, const char** paths);
 
-	// stupid hack class because GLFW callbacks only work with C functions
-	class DragAndDropCallbackHelper
-	{
-	public:
-		DragAndDropCallbackHelper(DragAndDropSys* bound);
-		static void CDropCallback(GLFWwindow* window, int count, const char** paths);
-		static DragAndDropSys* bound;
-	};
-
-	DragAndDropCallbackHelper ch;
+private:
+	using DropCallbackFn = void (DragAndDropSys::*)(GLFWwindow* window, int count, const char** paths);
+	using DropCallbackHelper = CCallbackHelper<DragAndDropSys, DropCallbackFn, DropCallback, void, GLFWwindow*, int, const char**>;
 };
 
 }
