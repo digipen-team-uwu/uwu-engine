@@ -561,8 +561,6 @@ void CheckTexture(rapidjson::Value& object, EntityID ID, const char* filePath)
 
 void CheckCollider(rapidjson::Value& object, EntityID ID, const char* filePath)
 {
-  //TODO:redo this later
-
   if (object.HasMember("collider"))
   {
     assert(object["collider"].IsObject());
@@ -586,8 +584,23 @@ void CheckCollider(rapidjson::Value& object, EntityID ID, const char* filePath)
     case Collider::ShapeType::CIRCLE:
       break;
     case Collider::ShapeType::POLYGON:
-      ColliderComponentManager::SetPolygonCollider(ID);
-      break;
+      {
+        TraceLogger::Assert(object["collider"]["center"].IsArray(), "Polygon Collider (center) is in correct format");
+        TraceLogger::Assert(object["collider"]["vertices"].IsArray(), "Polygon Collider (vertices) is in correct format");
+
+        ColliderPolygon collider = ColliderPolygon(
+          0,
+          DeserializeVec2(object["collider"]["center"])
+        );
+        for (rapidjson::SizeType i = 0; i < object["collider"]["vertices"].Size(); ++i)
+        {
+          glm::vec2 vertex = DeserializeVec2(object["collider"]["vertices"][i]);
+          collider.InsertVertex(vertex);
+        }
+        ColliderComponentManager::SetCollider(ID, &collider);
+        break;
+      }
+
     case Collider::ShapeType::RECTANGLE:
       ColliderComponentManager::SetRectangleCollider(ID);
       break;
