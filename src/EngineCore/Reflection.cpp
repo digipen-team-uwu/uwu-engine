@@ -5,7 +5,7 @@
 
 void Reflection::ReflectObject(EntityID id)
 {
-  for (auto&& it : ponder::classIterator())
+  //for (auto&& it : ponder::classIterator())
   {
     //it.second->getUserObjectFromPointer(it.second.)
   }
@@ -15,7 +15,7 @@ void SerializeObject(EntityID id)
 {
 
 }
-
+/*
 void test()
 {
   ParticleEvent event;
@@ -32,4 +32,4 @@ void test()
     typeid(pp);
   }
   
-}
+}*/

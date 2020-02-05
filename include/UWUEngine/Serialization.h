@@ -17,8 +17,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <fstream>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
-#include <ponder/classbuilder.hpp>
-#include<ponder/uses/runtime.hpp>
+#include <rttr/type.h>
 
 namespace Tabs //!< tab sizes
 {
@@ -32,7 +31,7 @@ namespace Tabs //!< tab sizes
 }
 
 
-//void SerializeObject( ponder::UserObject &obj, std::string file);
+void SerializeObject(rttr::type &obj, std::string file);
 
 void SerializeVec3(std::ofstream& stream, const char* name, glm::vec3 vector);
 

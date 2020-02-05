@@ -9,9 +9,6 @@
 Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <ponder/classbuilder.hpp>
-#include<ponder/uses/runtime.hpp>
-
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Serialization.h>
@@ -28,14 +25,12 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <sstream>
 #include <filesystem>
 #include <locale>
-#include <UWUEngine/Reflection.h>
 #include <UWUEngine/Behaviors/ParticleSystem.h>
+#include <rttr/type.h>
 
 #ifdef _MSVC
 #include <Shlobj_core.h>
 #endif
-
-PONDER_TYPE(ParticleEvent)
 
 // Allows the RapidJSON Parser to function when members at the end of objects and arrays have trailing commas
 #undef RAPIDJSON_PARSE_DEFAULT_FLAGS
@@ -47,38 +42,16 @@ static char readBuffer[65536];
 using namespace rapidjson;
 
 
-void test3115()
-{
-  ParticleEvent event;
-  ponder::Class::declare<ParticleEvent>().constructor<>()
-    .property("UI", &ParticleEvent::UIParticles);
-  ponder::UserObject thing = ponder::UserObject::makeRef<ParticleEvent>(event);
-  ponder::UserObject& thing2 = thing;
-  auto& classy = thing2.getClass();
-
-  for (auto&& it : classy.propertyIterator())
-  {
-    auto& pp = thing.get(it.first);
-    it.name();
-    typeid(pp);
-  }
-
-}
-
-void SerializeObject(ponder::UserObject &obj, std::string file)
+void SerializeObject(rttr::instance &obj, std::string file)
 {
   StringBuffer string;
   PrettyWriter<StringBuffer> writer(string);
   
-  //auto& metaclass = obj.getClass();
-  //ponder::runtime::destroy(obj);
-  //for (auto&& it : metaclass.propertyIterator())
-  //{
-    //auto& pp = obj.get(it.first);
-    //writer.Key(it.name().to_string().c_str());
-
-    //typeid(pp);
-  //}
+  for (auto& it : obj.get_type().get_properties())
+  {
+    writer.Key(it.get_name().to_string().c_str());
+    
+  }
   
 }
 

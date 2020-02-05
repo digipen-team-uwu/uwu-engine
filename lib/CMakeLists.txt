@@ -1,6 +1,6 @@
 # Let Sub modules build themselves
 add_subdirectory(glfw)
-add_subdirectory(ponder)
+add_subdirectory(rttr)
 
 option (glew-cmake_BUILD_SHARED "Build shared libraries" ON)
 set(glew-cmake_BUILD_SHARED OFF)
