@@ -16,7 +16,6 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/Helper.h>
 #include <UWUEngine/FrameRateController.h>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
@@ -107,7 +106,7 @@ void Camera::Update()
   //Print_Debug_Value();
   // sending data to Camera uniform buffer
   UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
-  moveCamera(cameraPos.z >= 5.f ? cameraPos.z : 5);
+  moveCamera(1000.0f);
   zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (InputManager::KeyPressed('M'))
   {
