@@ -2,7 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 
 
 namespace UWUEngine
@@ -19,11 +19,11 @@ namespace UWUEngine
     std::vector<EntityID>& children_;
   };
 
-  class ParentChildComponentManager
+  class ParentChildComp
   {
   public:
-    ParentChildComponentManager() = default;
-    ~ParentChildComponentManager() = default;
+    ParentChildComp() = default;
+    ~ParentChildComp() = default;
 
     void InitObject(EntityID ID) override {};
     void Update() override {};

@@ -16,7 +16,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Entity/EntityVector.h>
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 
 
 namespace UWUEngine
@@ -66,16 +66,16 @@ namespace UWUEngine
     glm::vec4& acceleration_;
     glm::vec4& velocity_;
     glm::vec4& drag_;
-    float rotationalVelocity_;
-    float inverseMass_;
-    float restitution_;
+    float& rotationalVelocity_;
+    float& inverseMass_;
+    float& restitution_;
   };
 
-  class PhysicsComponentManager : public ......... future.......
+  class PhysicsComp : public Component
   {
   public:
-    PhysicsComponentManager() = default;
-    ~PhysicsComponentManager() = default;
+    PhysicsComp() = default;
+    ~PhysicsComp() = default;
     void InitObject(EntityID ID) override;
     void Update() override;
     void ShutDownObject(EntityID ID) override {};

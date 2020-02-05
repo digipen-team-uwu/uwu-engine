@@ -17,29 +17,26 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 using namespace UWUEngine;
 
-template<>
-size_t RegisterComponentHelper<TransformComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<TransformComponentManager>(ComponentUpdateOrder::LAST);
-
 //TODO: SetRelativeTransform for children
 
-Transform TransformComponentManager::operator[](EntityID index)
+Transform TransformComp::operator[](EntityID index)
 {
   return Transform(rotation_[index], translation_[index], scale_[index]);
 }
 
-Transform TransformComponentManager::getTransform(EntityID index)
+Transform TransformComp::getTransform(EntityID index)
 {
   return Transform(rotation_[index], translation_[index], scale_[index]);
 }
 
-void TransformComponentManager::InitObject(EntityID ID)
+void TransformComp::InitObject(EntityID ID)
 {
   translation_[ID] = { 0.f, 0.f, 0.f, 1.f };
   rotation_[ID] = 0.f;
   scale_[ID] = { 1.f, 1.f, 1.f };
 }
 
-glm::mat4 TransformComponentManager::GetModelMatrix(EntityID ID)
+glm::mat4 TransformComp::GetModelMatrix(EntityID ID)
 {
   Transform transform = getTransform(ID);
   glm::vec3 translation = transform.GetTranslation();
@@ -51,7 +48,7 @@ glm::mat4 TransformComponentManager::GetModelMatrix(EntityID ID)
     glm::scale(scale);
 }
 
-glm::mat4 TransformComponentManager::GetSpineModelMatrix(EntityID ID)
+glm::mat4 TransformComp::GetSpineModelMatrix(EntityID ID)
 {
   Transform transform = getTransform(ID);
   glm::vec3 translation = transform.GetTranslation();
@@ -64,13 +61,13 @@ glm::mat4 TransformComponentManager::GetSpineModelMatrix(EntityID ID)
     glm::scale(scale);
 }
 
-const glm::vec4& TransformComponentManager::OffsetTranslation(EntityID ID, glm::vec3 const& offset)
+const glm::vec4& TransformComp::OffsetTranslation(EntityID ID, glm::vec3 const& offset)
 {
   return translation_[ID] += glm::vec4{ offset, 0 };
 }
 
 // The below code is written by Michael Rollosson Halbhuber
-void TransformComponentManager::Serialize(std::ofstream& stream, EntityID id)
+void TransformComp::Serialize(std::ofstream& stream, EntityID id)
 {
   // Check to see if the given object has a transform component
   if (IsActive(id))
@@ -128,17 +125,17 @@ const float& Transform::GetRotation() const
   return rotation_;
 }
 
-const std::vector<glm::vec4>& TransformComponentManager::GetArrayTranslation()
+const std::vector<glm::vec4>& TransformComp::GetArrayTranslation()
 {
   return translation_;
 }
 
-const std::vector<glm::vec3>& TransformComponentManager::GetArrayScale()
+const std::vector<glm::vec3>& TransformComp::GetArrayScale()
 {
   return scale_;
 }
 
-const std::vector<float>& TransformComponentManager::GetArrayRotation()
+const std::vector<float>& TransformComp::GetArrayRotation()
 {
   return rotation_;
 }

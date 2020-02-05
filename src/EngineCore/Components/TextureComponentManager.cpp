@@ -21,24 +21,24 @@ Copyright � 2019 DigiPen, All rights reserved.
 namespace goc = GameObjectConstants;
 using namespace UWUEngine;
 
-Texture TextureComponentManager::operator[](EntityID ID)
+Texture TextureComp::operator[](EntityID ID)
 {
   return Texture(dimensions_[ID], uvs_[ID], colors_[ID], textureID_[ID], filePaths_[ID]);
 }
 
-UWUEngine::Texture TextureComponentManager::getTexture(EntityID ID)
+UWUEngine::Texture TextureComp::getTexture(EntityID ID)
 {
   return Texture(dimensions_[ID], uvs_[ID], colors_[ID], textureID_[ID], filePaths_[ID]);
 }
 
-void TextureComponentManager::InitObject(EntityID ID)
+void TextureComp::InitObject(EntityID ID)
 {
   dimensions_[ID] = { 1, 1 };
   uvs_[ID] = { 0, 0 };
   colors_[ID] = { 1, 1, 1, 1 };
 }
 
-TextureComponentManager::~TextureComponentManager()
+TextureComp::~TextureComp()
 {
   for (auto i : EntityManager::GetIDs())
   {
@@ -46,18 +46,18 @@ TextureComponentManager::~TextureComponentManager()
   }
 }
 
-void TextureComponentManager::RemoveColor(EntityID ID)
+void TextureComp::RemoveColor(EntityID ID)
 {
   Texture texture = getTexture(ID);
   texture.SetColors(glm::vec4(1.0f));
 }
 
-void TextureComponentManager::ShutdownObject(EntityID ID)
+void TextureComp::ShutdownObject(EntityID ID)
 {
   uvs_[ID] = { -1,-1 };
 }
 
-bool TextureComponentManager::HasFilepath(EntityID ID)
+bool TextureComp::HasFilepath(EntityID ID)
 {
   return filePaths_.find(ID) != filePaths_.end();
 }
@@ -118,38 +118,38 @@ const std::string& Texture::GetFilePaths(unsigned accessID) const
 
 #pragma endregion 
 
-const std::string& TextureComponentManager::getFilePath(EntityID ID, unsigned accessID)
+const std::string& TextureComp::getFilePath(EntityID ID, unsigned accessID)
 {
   Texture texture = getTexture(ID);
   return texture.GetFilePaths(accessID);
 }
 
-void TextureComponentManager::SetFilePath(EntityID ID, const char *filePath, unsigned accessID)
+void TextureComp::SetFilePath(EntityID ID, const char *filePath, unsigned accessID)
 {
   Texture texture = getTexture(ID);
   texture.SetFilePath(std::string(filePath), accessID);
   TextureAtlaser::SetAtlasData(ID);
 }
 
-void TextureComponentManager::SetCurrentTexture(EntityID ID, unsigned accessID)
+void TextureComp::SetCurrentTexture(EntityID ID, unsigned accessID)
 {
   TextureAtlaser::SetAtlasData(ID, accessID);
 }
 
-void TextureComponentManager::SetFilePaths(EntityID ID, const std::array<std::string, goc::MAX_SPRITES>& filePaths)
+void TextureComp::SetFilePaths(EntityID ID, const std::array<std::string, goc::MAX_SPRITES>& filePaths)
 {
   filePaths_[ID] = filePaths;
   TextureAtlaser::SetAtlasData(ID);
 }
 
-void TextureComponentManager::Serialize(std::ofstream& stream, EntityID id)
+void TextureComp::Serialize(std::ofstream& stream, EntityID id)
 {
   stream << "\"texture\" :\n";
   stream << Tabs::TWO << "{\n";
 
-  if (TextureComponentManager::HasFilepath(id))
+  if (TextureComp::HasFilepath(id))
   {
-    stream << Tabs::THREE << R"("filepath" : ")" << TextureComponentManager::getFilePath(id) << '"';
+    stream << Tabs::THREE << R"("filepath" : ")" << TextureComp::getFilePath(id) << '"';
     stream << ",\n";
   }
 
@@ -162,22 +162,22 @@ void TextureComponentManager::Serialize(std::ofstream& stream, EntityID id)
 }
 
 #pragma region Array Getter
-const EntityVector<glm::uvec2>& TextureComponentManager::GetArrayDimensions() const
+const EntityVector<glm::uvec2>& TextureComp::GetArrayDimensions() const
 {
     return dimensions_;
 }
 
-const EntityVector<glm::vec2>& TextureComponentManager::GetArrayUVS() const
+const EntityVector<glm::vec2>& TextureComp::GetArrayUVS() const
 {
     return uvs_;
 }
 
-const EntityVector<glm::vec4>& TextureComponentManager::GetArrayColors() const
+const EntityVector<glm::vec4>& TextureComp::GetArrayColors() const
 {
     return colors_;
 }
 
-const std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>>& TextureComponentManager::GetArrayFilePaths() const
+const std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>>& TextureComp::GetArrayFilePaths() const
 {
     return filePaths_;
 }

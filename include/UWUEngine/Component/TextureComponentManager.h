@@ -13,7 +13,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 #include <string>
 
 namespace UWUEngine
@@ -49,11 +49,11 @@ namespace UWUEngine
     std::array<std::string, goc::MAX_SPRITES>& filePaths_;
   };
 
-  class TextureComponentManager : public ...future......
+  class TextureComp : public Component
   {
   public:
-    TextureComponentManager() = default;
-    ~TextureComponentManager();
+    TextureComp() = default;
+    ~TextureComp();
     void InitObject(EntityID ID) override;
     void ShutdownObject(EntityID ID) override;
     void Update() override {}

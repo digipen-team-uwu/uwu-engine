@@ -14,7 +14,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <glm/vec3.hpp>
 #include <glm/matrix.hpp>
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 #include <UWUEngine/Component/MeshComponentManager.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 
@@ -49,11 +49,11 @@ namespace UWUEngine
     glm::vec3& scale_;
   };
 
-  class TransformComponentManager : public BaseComponent<TransformComponentManager>
+  class TransformComp : public Component
   {
   public:
-    TransformComponentManager() = default;
-    ~TransformComponentManager() = default;
+    TransformComp() = default;
+    ~TransformComp() = default;
     void Update() override {}
     void ShutdownObject(EntityID ID) override {}
     void InitObject(EntityID ID) override;

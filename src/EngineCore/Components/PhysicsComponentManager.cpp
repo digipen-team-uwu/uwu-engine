@@ -108,61 +108,61 @@ const float& Physics::GetRestitution() const
 #pragma endregion
 
 #pragma region Array Getter
-const EntityVector<BodyType>& PhysicsComponentManager::GetArrayBodyType() const
+const EntityVector<BodyType>& PhysicsComp::GetArrayBodyType() const
 {
   return type_;
 }
 
-const EntityVector<glm::vec4>& PhysicsComponentManager::GetArrayOldTranslation() const
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayOldTranslation() const
 {
   return oldTranslation_;
 }
 
-const EntityVector<glm::vec4>& PhysicsComponentManager::GetArrayAcceleration() const
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayAcceleration() const
 {
   return acceleration_;
 }
 
-const EntityVector<glm::vec4>& PhysicsComponentManager::GetArrayDrag() const
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayDrag() const
 {
   return drag_;
 }
 
-const EntityVector<glm::vec4>& PhysicsComponentManager::GetArrayVelocity() const
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayVelocity() const
 {
   return velocity_;
 }
 
-const EntityVector<float>& PhysicsComponentManager::GetArrayRotationalVelocity() const
+const EntityVector<float>& PhysicsComp::GetArrayRotationalVelocity() const
 {
   return rotationalVelocity_;
 }
 
-const EntityVector<float>& PhysicsComponentManager::GetArrayInverseMass() const
+const EntityVector<float>& PhysicsComp::GetArrayInverseMass() const
 {
   return inverseMass_;
 }
 
-const EntityVector<float>& PhysicsComponentManager::GetArrayRestitution() const
+const EntityVector<float>& PhysicsComp::GetArrayRestitution() const
 {
   return restitution_;
 }
 #pragma endregion 
 
-Physics PhysicsComponentManager::operator[](EntityID ID)
+Physics PhysicsComp::operator[](EntityID ID)
 {
   return Physics(type_[ID], oldTranslation_[ID], acceleration_[ID], velocity_[ID], drag_[ID],
     rotationalVelocity_[ID], inverseMass_[ID], restitution_[ID]);
 }
 
-Physics PhysicsComponentManager::getPhysics(EntityID ID)
+Physics PhysicsComp::getPhysics(EntityID ID)
 {
   return Physics(type_[ID], oldTranslation_[ID], acceleration_[ID], velocity_[ID], drag_[ID], 
     rotationalVelocity_[ID], inverseMass_[ID], restitution_[ID]);
 }
 
 
-void PhysicsComponentManager::InitObject(EntityID ID)
+void PhysicsComp::InitObject(EntityID ID)
 {
   type_[ID] = BodyType::STATIC;
   rotationalVelocity_[ID] = 0.0f;
@@ -173,7 +173,7 @@ void PhysicsComponentManager::InitObject(EntityID ID)
   restitution_[ID] = 1.0f;
 }
 
-void PhysicsComponentManager::Update()
+void PhysicsComp::Update()
 {
   //TODO: Need a way to access transform manager to update physics correctly
   std::vector<EntityID> ids = EntityManager::GetIDs();
@@ -215,10 +215,10 @@ void PhysicsComponentManager::Update()
 }
 
 // Below code written by Michael Rollosson Halbhuber
-void PhysicsComponentManager::Serialize(std::ofstream& stream, EntityID id, bool partial)
+void PhysicsComp::Serialize(std::ofstream& stream, EntityID id, bool partial)
 {
   // Check if the given ID has an active physics component
-  if (PhysicsComponentManager::IsActive(id))
+  if (PhysicsComp::IsActive(id))
   {
     // Open a "physics" JSON object
     stream << "\"physics\" :\n";
