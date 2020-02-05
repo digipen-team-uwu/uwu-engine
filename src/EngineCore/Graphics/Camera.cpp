@@ -106,7 +106,7 @@ void Camera::Update()
   //Print_Debug_Value();
   // sending data to Camera uniform buffer
   UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
-  moveCamera(cameraPos.z >= 5.f ? cameraPos.z : 5);
+  moveCamera(1000.0f);
   zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (InputManager::KeyPressed('M'))
   {
