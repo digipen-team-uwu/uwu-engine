@@ -17,16 +17,17 @@ void Editors::Texture::CheckActive(EntityID id)
 
 void Editors::Texture::UpdateComponent(EntityID id)
 {
-  uv.UpdateElement(&TextureComponentManager::uvs_[id]);
-  color.UpdateElement(&TextureComponentManager::colors_[id]);
+  uv = &TextureComponentManager::uvs_[id];
+  color = &TextureComponentManager::colors_[id];
+
   path = TextureComponentManager::getFilePath(id);
   texture_ = SingleTexture(path.c_str());
 }
 
 void Editors::Texture::UpdateUI()
 {
-  uv.UpdateUI();
-  color.UpdateUI();
+  ImGui::DragFloat2("uv", &uv->x, 0.01);
+  ImGui::ColorEdit4("color", &color->x);
   ImGui::Text(path.c_str());
 
   float windowWidth = ImGui::GetWindowWidth();

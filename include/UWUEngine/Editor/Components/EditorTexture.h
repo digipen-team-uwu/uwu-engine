@@ -29,8 +29,8 @@ namespace Editors
     void UpdateUI() override;
 
   private:
-    Element<glm::vec2> uv{"uv"};
-    Element<glm::vec4> color{"color"};
+    glm::vec2* uv;
+    glm::vec4* color;
     std::string path;
     SingleTexture texture_;
   };
