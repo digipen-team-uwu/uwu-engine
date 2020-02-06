@@ -1,3 +1,4 @@
+#include "..\..\..\..\include\UWUEngine\Graphics\Debugs\Picker.h"
 #include <UWUEngine/Graphics/Debugs/Picker.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Graphics/Camera.h>
@@ -64,11 +65,7 @@ void Picker::Update()
   if (state_ == state::PICKED)
   {
     auto chosen_ID = Editors::EntityViewer::GetSelectedEntity();
-    auto mouse_offset = Camera::getMouseOffset();
-    auto chosen_obj_pos = TransformComponentManager::GetTranslation(chosen_ID);
-    chosen_obj_pos.x += mouse_offset.x * 6.f;
-    chosen_obj_pos.y += mouse_offset.y * 6.f;
-    TransformComponentManager::SetTranslation(chosen_obj_pos, chosen_ID);
+    DragObject(chosen_ID);
   }
 }
 
@@ -128,6 +125,15 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
   glm::vec4 temp = view_to_world * mouse_v;
   mouse_world = glm::vec3(temp);
 #pragma endregion 
+}
+
+void Picker::DragObject(EntityID chosen_ID)
+{
+  auto mouse_offset = Camera::getMouseOffset();
+  auto chosen_obj_pos = TransformComponentManager::GetTranslation(chosen_ID);
+  chosen_obj_pos.x += mouse_offset.x * 5.f;
+  chosen_obj_pos.y += mouse_offset.y * 5.f;
+  TransformComponentManager::SetTranslation(chosen_obj_pos, chosen_ID);
 }
 
 void Picker::Reset()

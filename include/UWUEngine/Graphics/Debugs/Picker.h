@@ -19,13 +19,14 @@ public:
   ~Picker() = default;
   void Update() override;
   static void Pick();
-  static void PickID();
   static glm::vec2 GetMouseWorld();
   static void CalculateMouseWorld(glm::vec2 Pos);
   static void Attaching(EntityID ID);
   static void Detaching();
 private:
+  static void DragObject(EntityID chosen_ID);
   static void Reset();
+  static void PickID();
   static glm::mat3 GLFW_to_vp;
   static glm::mat3 ndc_to_vp;
   static glm::mat3 ndc_to_vf;
