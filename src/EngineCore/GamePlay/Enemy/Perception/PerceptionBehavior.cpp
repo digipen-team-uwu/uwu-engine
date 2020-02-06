@@ -10,7 +10,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #include <UWUEngine/GamePlay/PerceptionBehavior.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 #include <UWUEngine/Component/ColliderComponentManager.h>

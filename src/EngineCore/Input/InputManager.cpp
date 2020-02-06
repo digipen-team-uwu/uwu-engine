@@ -12,7 +12,7 @@
 
 #include <UWUEngine/Input/InputManager.h>
 #include <cctype>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <iostream>
 #include <array>
 #include <UWUEngine/Debugs/TraceLogger.h>

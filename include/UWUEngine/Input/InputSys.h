@@ -60,6 +60,7 @@ private:
   std::array<GLFWgamepadstate, MAX_PLAYERS> controllers;
   std::array<GLFWgamepadstate, MAX_PLAYERS> prevControllers;
   glm::vec2 mousePos;
+  glm::vec2 prevMousePos;
   glm::vec2 scrollVec;
   glm::vec2 deadzones{ 0.2f, 0.2f }; // {x, y}
 

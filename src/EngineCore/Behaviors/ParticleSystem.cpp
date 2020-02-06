@@ -14,7 +14,7 @@
 #include <UWUEngine/Entity/EntityCacher.h>
 #include <UWUEngine/Behaviors/ParticleSystem.h>
 #include <UWUEngine/Engine.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/ParentChildComponentManager.h>

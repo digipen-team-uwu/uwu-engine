@@ -11,7 +11,7 @@ Copyright 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 
 #include <UWUEngine/Engine.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Debugs/TraceLogger.h>

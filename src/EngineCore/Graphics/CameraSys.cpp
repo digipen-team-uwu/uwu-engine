@@ -10,45 +10,25 @@ Copyright 2019 DigiPen, All rights reserved.
 
 */
 /******************************************************************************/
-#include <UWUEngine/Graphics/Camera.h>
+#include <UWUEngine/Graphics/CameraSys.h>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/FrameRateController.h>
 #include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/WindowSys.h>
+#include <UWUEngine/FrameLimiterSys.h>
 
 namespace ic = InputConstants;
 namespace wc = WindowConstants;
 namespace cc = CameraConstants;
 
-glm::vec3 Camera::relative_up;
-glm::vec3 Camera::lookAtVector;
-glm::vec3 Camera::cameraPos;
-glm::vec3 Camera::BackVector;
-glm::vec3 Camera::UpVector;
-glm::vec3 Camera::RightVector;
-glm::vec3 Camera::cameraTarget;
-glm::mat4 Camera::projection;
-glm::mat4 Camera::view;
-float Camera::FOV;
-float Camera::nearDistance;
-float Camera::farDistance;
-float Camera::aspectRatio;
-bool Camera::isFirst;
-float Camera::Yaw;
-float Camera::Pitch;
-Camera::state Camera::state_;
-bool Camera::switch_;
-Camera::lock Camera::lock_;
-bool Camera::switch_lock_;
+namespace UWUEngine
+{
 
-template<>
-int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
-
-void Camera::Print_Debug_Value()
+void CameraSys::Print_Debug_Value()
 {
   TraceLogger::Log(TraceLogger::DEBUG) <<
     "Field of view: " << FOV << std::endl <<
@@ -70,7 +50,7 @@ void Camera::Print_Debug_Value()
     "z: " << BackVector.z << std::endl;
 }
 
-void Camera::calculate_camera_data()
+void CameraSys::calculate_camera_data()
 {
   lookAtVector = state_ == state::ENABLE_FPS ? glm::vec3(cos(glm::radians(Yaw)) * cos(glm::radians(Pitch)), sin(glm::radians(Pitch)), sin(glm::radians(Yaw)) * cos(glm::radians(Pitch))) : cameraTarget - cameraPos;
   cameraTarget = state_ == state::ENABLE_FPS ? cameraPos + lookAtVector : cameraTarget = { cameraPos.x, cameraPos.y, -5000.0f };
@@ -81,7 +61,7 @@ void Camera::calculate_camera_data()
   view = glm::lookAt(cameraPos, cameraTarget, UpVector);
 }
 
-Camera::Camera()
+CameraSys::CameraSys(ISpace* p) : System(p)
 {
   lock_ = lock::UNLOCKED;
   switch_lock_ = false;
@@ -94,19 +74,19 @@ Camera::Camera()
   FOV = 45.0f;
   nearDistance = 5.f;
   farDistance = 100000.f;
-  aspectRatio = WindowManager::getWindowWidth() / WindowManager::getWindowHeight();
+  aspectRatio = Get<WindowSys>().getWindowWidth() / Get<WindowSys>().getWindowHeight();
   relative_up = { 0.0f,1.0f,0.0f };
   cameraPos = { 0.0f, 0.0f, cc::CAMERA_POSITION };
   cameraTarget = { 0.0f, 0.0f, 0.0f };
   calculate_camera_data();
 }
 
-void Camera::Update()
+void CameraSys::Update()
 {
   //Print_Debug_Value();
   // sending data to Camera uniform buffer
   UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
-  moveCamera(1000.0f);
+  move(1000.0f);
   zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (InputManager::KeyPressed('M'))
   {
@@ -116,8 +96,8 @@ void Camera::Update()
     {
       lock_ = lock::UNLOCKED;
       switch_lock_ = false;
-      ResetCameraPosition();
-      ResetCameraZoom();
+      ResetPosition();
+      ResetZoom();
     }
   }
   if (state_ == state::ENABLE_FPS)
@@ -130,27 +110,27 @@ void Camera::Update()
   }
 }
 
-void Camera::ResetCameraPosition()
+void CameraSys::ResetPosition()
 {
   cameraPos.x = 0.f;
   cameraPos.y = 0.f;
   cameraPos.z = cc::CAMERA_POSITION;
 }
 
-void Camera::ResetCameraZoom()
+void CameraSys::ResetZoom()
 {
   FOV = 45.0f;
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
-void Camera::SetCameraPosition(const glm::vec3& new_position)
+void CameraSys::SetPosition(const glm::vec3& new_position)
 {
   cameraPos = new_position;
   cameraTarget = glm::vec3(new_position.x, new_position.y, 0.f);
   calculate_camera_data();
 }
 
-void Camera::SetCameraPosition(const glm::vec2& new_position)
+void CameraSys::SetPosition(const glm::vec2& new_position)
 {
   cameraPos.x = new_position.x;
   cameraPos.y = new_position.y;
@@ -159,100 +139,99 @@ void Camera::SetCameraPosition(const glm::vec2& new_position)
 }
 
 #pragma region Camera Getter
-const glm::vec3& Camera::GetCameraPosition()
+const glm::vec3& CameraSys::GetPosition() const
 {
   return cameraPos;
 }
 
-const glm::vec3& Camera::GetLookAtVector()
+const glm::vec3& CameraSys::GetLookAtVector() const
 {
   return lookAtVector;
 }
 
-const glm::vec3& Camera::GetCameraUp()
+const glm::vec3& CameraSys::GetUp() const
 {
   return UpVector;
 }
 
-const glm::vec3& Camera::GetCameraRight()
+const glm::vec3& CameraSys::GetRight() const
 {
   return RightVector;
 }
 
-const glm::vec3& Camera::GetCameraTarget()
+const glm::vec3& CameraSys::GetTarget() const
 {
   return cameraTarget;
 }
 
-const glm::mat4& Camera::GetProjectionMatrix()
+const glm::mat4& CameraSys::GetProjectionMatrix() const
 {
   return projection;
 }
 
-const glm::mat4& Camera::GetViewMatrix()
+const glm::mat4& CameraSys::GetViewMatrix() const
 {
   return view;
 }
 
-float Camera::getFOV()
+float CameraSys::getFOV() const
 {
   return FOV;
 }
 
-float Camera::getNearDistance()
+float CameraSys::getNearDistance() const
 {
   return nearDistance;
 }
 
-float Camera::getFarDistance()
+float CameraSys::getFarDistance() const
 {
   return farDistance;
 }
 
-float Camera::getAspectRatio()
+float CameraSys::getAspectRatio() const
 {
   return aspectRatio;
 }
 
-#pragma endregion 
-//TODO: set target to player in small box around player
+#pragma endregion
 
-void Camera::SetCameraTarget(const glm::vec3& target)
+void CameraSys::SetTarget(const glm::vec3& target)
 {
   cameraTarget = target;
   calculate_camera_data();
 }
 
-void Camera::zoomIn(float amount)
+void CameraSys::zoomIn(float amount)
 {
-  float dt = FrameRateController::GetDeltaTime<float>();
+  const float dt = Get<FrameLimiterSys>().GetDeltaTime<float>();
   FOV = FOV >= 30.f && FOV <= 90.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
-void Camera::zoomOut(float amount)
+void CameraSys::zoomOut(float amount)
 {
-  float dt = FrameRateController::GetDeltaTime<float>();
+  float dt = Get<FrameLimiterSys>().GetDeltaTime<float>();
   FOV += amount * dt;
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
-void Camera::moveCamera(float speed)
+void CameraSys::move(float speed)
 {
-  float dt = FrameRateController::GetConstantDeltaTime<float>();
-  cameraPos += state_ == state::DISABLE_FPS || lock_ == lock::LOCKED ? UpVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * (float)(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
-  cameraPos += RightVector * speed * dt * (float)(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
+  float dt = Get<FrameLimiterSys>().GetConstantDeltaTime<float>();
+  cameraPos += state_ == state::DISABLE_FPS || lock_ == lock::LOCKED ? UpVector * speed * dt * static_cast<float>(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S')) : lookAtVector * speed * dt * static_cast<float>(!!InputManager::KeyHeld('W') - !!InputManager::KeyHeld('S'));
+  cameraPos += RightVector * speed * dt * static_cast<float>(!!InputManager::KeyHeld('D') - !!InputManager::KeyHeld('A'));
   calculate_camera_data();
 }
 
-void Camera::mouseMovement(float xOffSet, float yOffSet)
+void CameraSys::mouseMovement(float xOffSet, float yOffSet)
 {
   if (state_ == state::ENABLE_FPS)
   {
     if (lock_ == lock::UNLOCKED)
     {
-      float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
-      float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
+      const float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
+      const float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
 
       Yaw += x_offset;
       Pitch += y_offset;
@@ -265,17 +244,19 @@ void Camera::mouseMovement(float xOffSet, float yOffSet)
   }
 }
 
-void Camera::setFirstFlag(bool flag)
+void CameraSys::setFirstFlag(bool flag)
 {
   isFirst = flag;
 }
 
-bool Camera::getFirstFlag()
+bool CameraSys::getFirstFlag()
 {
   return isFirst;
 }
 
-Camera::state Camera::getCameraState()
+CameraSys::state CameraSys::getState() const
 {
   return state_;
+}
+
 }

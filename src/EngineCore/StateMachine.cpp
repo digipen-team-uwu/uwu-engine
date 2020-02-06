@@ -1,5 +1,5 @@
 #include <UWUEngine/statemachine.hpp>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 
 void StateMachineUpdater::StartUp()
 {

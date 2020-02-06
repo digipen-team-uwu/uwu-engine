@@ -5,7 +5,7 @@
 #include "GLFW/glfw3.h"
 #include <UWUEngine/WindowManager.h>
 #include "sstream"
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/GamePlay/PlayerController.h>
 
 // Systems

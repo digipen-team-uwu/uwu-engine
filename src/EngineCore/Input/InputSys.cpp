@@ -12,20 +12,16 @@
 
 #include <UWUEngine/Input/InputSys.h>
 #include <cctype>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <iostream>
 #include <array>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Helper.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
+#include <UWUEngine/Graphics/CameraSys.h>
 
 namespace ic = InputConstants;
-
-
-
-//TODO: make drag and drop callback for dragging pictures and jsons
-//TODO::Remove all existence of GLFWgamepadstate.buttons2
 
 namespace UWUEngine
 {
@@ -73,8 +69,22 @@ void InputSys::MouseCallback(GLFWwindow* window, int button, int action, int mod
 
 void InputSys::MousePosCallback(GLFWwindow* window, double xPos, double yPos)
 {
+  prevMousePos = mousePos;
   mousePos.x = static_cast<float>(xPos);
   mousePos.y = static_cast<float>(yPos);
+
+  if (Get<CameraSys>().getState() == CameraSys::state::ENABLE_FPS)
+  {
+    if (Get<CameraSys>().getFirstFlag())
+    {
+      prevMousePos = mousePos;
+      Get<CameraSys>().setFirstFlag(false);
+    }
+    const float xOffset = static_cast<float>(xPos) - prevMousePos.x;
+    const float yOffset = prevMousePos.y - static_cast<float>(yPos); // y go from bottom to top
+
+    Get<CameraSys>().mouseMovement(xOffset, yOffset);
+  }
 }
 
 void InputSys::ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
@@ -136,24 +146,18 @@ bool InputSys::ButtonPressed(int button, int controllerID)
 {
   if (button < ic::BUTTONSAMOUNT)
     return controllers[controllerID].buttons[button] == ic::InputResult::PRESSED;
-  //return controllers[controllerID].buttons2[button - ic::BUTTONSAMOUNT] == ic::InputResult::PRESSED;
-    //TODO::Remove all existence of GLFWgamepadstate.buttons2
 }
 
 bool InputSys::ButtonReleased(int button, int controllerID)
 {
   if (button < ic::BUTTONSAMOUNT)
     return controllers[controllerID].buttons[button] == ic::InputResult::RELEASED;
-  //return controllers[controllerID].buttons2[button - ic::BUTTONSAMOUNT] == ic::InputResult::RELEASED;
-    //TODO::Remove all existence of GLFWgamepadstate.buttons2
 }
 
 bool InputSys::ButtonHeld(int button, int controllerID)
 {
   if (button < ic::BUTTONSAMOUNT)
     return controllers[controllerID].buttons[button] == ic::InputResult::HELD;
-  //return controllers[controllerID].buttons2[button - ic::BUTTONSAMOUNT] == ic::InputResult::HELD;
-    //TODO::Remove all existence of GLFWgamepadstate.buttons2
 }
 
 float InputSys::GetAxis(ic::Axes axis, int controllerID)
@@ -205,17 +209,21 @@ ic::InputResult InputSys::InputKey(std::map<int, ic::InputResult>& map, int key)
 void InputSys::Update()
 {
   UpdateGamepads();
-  if (InputSys::scrollVec.y > 0)
+  if (scrollVec.y > 0)
   {
-    InputSys::scrollVec.y -= FrameRateController::GetDeltaTime<float>() * ic::SCROLL_FRICTION;
-    if (InputSys::scrollVec.y < 0)
-      InputSys::scrollVec.y = 0;
+    scrollVec.y -= Get<FrameLimiterSys>().GetDeltaTime<float>() * ic::SCROLL_FRICTION;
+    if (scrollVec.y < 0)
+    {
+      scrollVec.y = 0;
+    }
   }
   else if (InputSys::scrollVec.y < 0)
   {
-    InputSys::scrollVec.y += FrameRateController::GetDeltaTime<float>() * ic::SCROLL_FRICTION;
-    if (InputSys::scrollVec.y > 0)
-      InputSys::scrollVec.y = 0;
+    scrollVec.y += Get<FrameLimiterSys>().GetDeltaTime<float>() * ic::SCROLL_FRICTION;
+    if (scrollVec.y > 0)
+    {
+      scrollVec.y = 0;
+    }
   }
 
   AdvanceMap(keys, prevKeys);

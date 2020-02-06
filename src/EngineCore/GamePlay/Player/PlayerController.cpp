@@ -10,7 +10,7 @@ Copyright 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/constants.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/GamePlay/PlayerController.h>

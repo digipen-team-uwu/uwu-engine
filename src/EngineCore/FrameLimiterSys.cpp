@@ -9,15 +9,15 @@
 Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <GLFW/glfw3.h>
 
 namespace UWUEngine
 {
 
-FrameRateController::FrameRateController(ISpace* p) : System(p), elapsed_time(0), curr_time(0), delta_time(0), fps(0), paused(false) {}
+FrameLimiterSys::FrameLimiterSys(ISpace* p) : System(p), elapsed_time(0), curr_time(0), delta_time(0), fps(0), paused(false) {}
 
-void FrameRateController::Update()
+void FrameLimiterSys::Update()
 {
   double fps_calc_interval = 1;
   // get elapsed time (in seconds) between previous and current frames
@@ -43,12 +43,12 @@ void FrameRateController::Update()
   }
 }
 
-double FrameRateController::GetFPS() const
+double FrameLimiterSys::GetFPS() const
 {
   return fps;
 }
 
-void FrameRateController::SetPaused(bool pause)
+void FrameLimiterSys::SetPaused(bool pause)
 {
   paused = pause;
 }

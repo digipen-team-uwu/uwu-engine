@@ -11,7 +11,7 @@
 /******************************************************************************/
 #include <UWUEngine/Behaviors/DynamicCamera.h>
 #include <UWUEngine/Graphics/Camera.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Serialization.h>
 #include <limits>

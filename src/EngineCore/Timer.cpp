@@ -10,7 +10,7 @@
 */
 /******************************************************************************/
 #include <UWUEngine/Timer.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 
 namespace UWUEngine
 {
@@ -25,7 +25,7 @@ void TimerSys::Update()
 void TimerSys::Timer::Update()
 {
   if (running)
-    time -= Get<FrameRateController>().GetDeltaTime<float>();
+    time -= Get<FrameLimiterSys>().GetDeltaTime<float>();
 }
 
 void TimerSys::Timer::Start()

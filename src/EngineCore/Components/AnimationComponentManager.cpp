@@ -16,7 +16,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <fstream>
@@ -60,7 +60,7 @@ void AnimationComp::Update()
             AnimationData& data = GetCurrentData(*it);
             if (data.isRunning_)
             {
-              data.frameDelay_ -= FrameRateController::GetDeltaTime<float>();
+              data.frameDelay_ -= FrameLimiterSys::GetDeltaTime<float>();
               if (data.frameDelay_ < 0)
               {
                 ++data.currentFrame_;

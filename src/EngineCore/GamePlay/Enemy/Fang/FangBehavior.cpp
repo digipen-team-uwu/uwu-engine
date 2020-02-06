@@ -1,5 +1,5 @@
 #include <UWUEngine/GamePlay/FangBehavior.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Serialization.h>
 

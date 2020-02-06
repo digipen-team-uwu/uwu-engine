@@ -17,7 +17,7 @@ Copyright ☺ 2019 DigiPen, All rights reserved.
 #include <glm/gtx/transform.hpp>
 #include <UWUEngine/constants.h>
 #include <UWUEngine/Serialization.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <magic_enum.hpp>
 
 using namespace UWUEngine;
@@ -185,7 +185,7 @@ void PhysicsComp::Update()
   {
     if (TransformComponentManager::IsActive(*it) && IsActive(*it))
     {
-      float dt = FrameRateController::GetDeltaTime<float>();
+      float dt = FrameLimiterSys::GetDeltaTime<float>();
       const glm::vec4 pos = oldTranslation_[*it];
       const glm::vec4 vel = velocity_[*it];
       const glm::vec4 acl = acceleration_[*it];

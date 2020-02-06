@@ -10,7 +10,7 @@
 */
 /******************************************************************************/
 #include <UWUEngine/UI/HUDSys.h>
-#include <UWUEngine/FrameRateController.h>
+#include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
@@ -89,7 +89,7 @@ void HUDSys::Update()
 {
   if (fps != goc::INVALID_ID)
   {
-    double frames = Get<FrameRateController>().GetFPS();
+    double frames = Get<FrameLimiterSys>().GetFPS();
     int pres;
     pres = (frames > 99) ? 3 : 2;
     BehaviorComponentManager::GetBehavior<EntityManager::Type::Text_>(fps)->SetText() << "FPS: " << std::setprecision(pres) << frames;
