@@ -12,13 +12,13 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #pragma once
 #include <unordered_map>
-
+#include <iostream>
 #include <UWUEngine/Component/Component.h>
 #include <UWUEngine/Physics/Colliders/Collider.h>
 
 namespace UWUEngine
 {
-  class ColliderComp final : public Component
+  class ColliderComp final : public Component<ColliderComp, Collider>
   {
   public:
     ColliderComp();
@@ -38,15 +38,15 @@ namespace UWUEngine
 
     Collider const* GetCollider(EntityID ID);
 
-    void Serialize(std::ofstream& stream, EntityID id);
+    void Serialize(::std::ofstream& stream, EntityID id);
 
-    std::unordered_map<EntityID, Collider*>::const_iterator begin();
-    std::unordered_map<EntityID, Collider*>::const_iterator end();
+    ::std::unordered_map<EntityID, Collider*>::const_iterator begin();
+    ::std::unordered_map<EntityID, Collider*>::const_iterator end();
 
   private:
     //TODO: part of event collision sys
     //void ResolveCollision(const Event<EventType::Collision>& info);
     //EventListener<EventType::Collision> listener_;
-    std::unordered_map<EntityID, Collider*> _collider;
+    ::std::unordered_map<EntityID, Collider*> _collider;
   };
 }

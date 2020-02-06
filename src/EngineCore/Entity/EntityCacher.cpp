@@ -24,14 +24,10 @@
 #include <UWUEngine/Physics/Colliders/ColliderPoint.h>
 #include <UWUEngine/Physics/Colliders/ColliderLine.h>
 
-template<>
-int RegisterSystemHelper<EntityCacher>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<EntityCacher>(SystemInitOrder::Cacher, SystemUpdateOrder::LAST);
-
 namespace sc = SerializationConstants;
 
-std::unordered_map<EntityManager::Type, CachedEntity> EntityCacher::entities;
-std::vector<std::string> EntityCacher::cachedFilepaths;
-std::unordered_map<std::string, BaseCachedBehavior*> EntityCacher::behaviors;
+namespace UWUEngine
+{
 
 void EntityCacher::UpdateCachedBehavior(std::string filename)
 {
@@ -192,7 +188,7 @@ EntityCacher::EntityCacher()
         entity.collider.collider = static_cast<Collider*>(new ColliderPoint(
           0,
           DeserializeVec2(obj["collider"]["position"])
-        ));
+          ));
         break;
       case Collider::ShapeType::LINE:
         TraceLogger::Assert(obj["collider"]["start"].IsArray(), "Line Collider (start) is in correct format");
@@ -202,7 +198,7 @@ EntityCacher::EntityCacher()
           0,
           DeserializeVec2(obj["collider"]["start"]),
           DeserializeVec2(obj["collider"]["end"])
-        ));
+          ));
         break;
       case Collider::ShapeType::CIRCLE:
         TraceLogger::Assert(obj["collider"]["center"].IsArray(), "Circle Collider (center) is in correct format");
@@ -212,7 +208,7 @@ EntityCacher::EntityCacher()
           0,
           DeserializeVec2(obj["collider"]["center"]),
           obj["collider"]["radius"].GetFloat()
-        ));
+          ));
         break;
       case Collider::ShapeType::POLYGON:
       {
@@ -360,4 +356,6 @@ bool EntityCacher::EntityIsCached(EntityManager::Type type)
 const CachedEntity& EntityCacher::GetCachedEntity(EntityManager::Type type)
 {
   return entities[type];
+}
+
 }

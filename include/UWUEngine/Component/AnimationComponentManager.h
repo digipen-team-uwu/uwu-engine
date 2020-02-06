@@ -18,7 +18,9 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 namespace UWUEngine
 {
-  class AnimationComp : public Component
+class Animations;
+
+  class AnimationComp : public Component<AnimationComp, Animations>
   {
   public:
     AnimationComp() = default;

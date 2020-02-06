@@ -26,10 +26,13 @@ namespace UWUEngine
     class Transform;
   }
 
+  class TransformComp;
+
   class Transform
   {
   public:
-    Transform(float& rotation, glm::vec4& translation, glm::vec3& scale) : rotation_(rotation), translation_(translation), scale_(scale) {}
+    Transform(TransformComp& t, EntityID id);
+    Transform(float& rotation, glm::vec4& translation, glm::vec3& scale);
 
   #pragma region Setter
     void SetTranslation(const glm::vec4& translation);
@@ -49,7 +52,7 @@ namespace UWUEngine
     glm::vec3& scale_;
   };
 
-  class TransformComp : public Component
+  class TransformComp : public Component<TransformComp, Transform>
   {
   public:
     TransformComp() = default;
@@ -77,6 +80,8 @@ namespace UWUEngine
     EntityVector<float> rotation_;
     EntityVector<glm::vec4> translation_;
     EntityVector<glm::vec3> scale_;
+
+    friend class Transform;
 
     // don't know who added
     friend class Editors::Transform;

@@ -10,37 +10,30 @@
 */
 /******************************************************************************/
 #include <UWUEngine/Behaviors/DynamicCamera.h>
-#include <UWUEngine/Graphics/Camera.h>
+#include <UWUEngine/Graphics/CameraSys.h>
 #include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Serialization.h>
 #include <limits>
 
-template<>
-int RegisterSystemHelper<DynamicCamera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<DynamicCamera>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
+namespace UWUEngine
+{
 
-bool DynamicCamera::IsActive;
-glm::vec4 DynamicCamera::position{};
-float DynamicCamera::inwidth = 0;
-float DynamicCamera::inheight = 0;
-glm::vec2 DynamicCamera::inoffset{};
-float DynamicCamera::followSpeed = 0;
-std::vector<EntityID> DynamicCamera::bounds;
+DynamicCamera::DynamicCamera(ISpace* p) : System(p) {}
 
-//static EntityID debug = GameObjectConstants::INVALID_ID;
 void DynamicCamera::Update()
 {
   if (!IsActive)
   {
     return;
   }
-  glm::vec4 newPos = glm::vec4(Camera::GetCameraPosition(), 1);
+  glm::vec4 newPos = glm::vec4(Get<CameraSys>().GetPosition(), 1);
   //check if camera pos is within target bounds
 
   /*static EntityID debug = EntityFactory::CreateObject(EntityManager::Type::Cyclone);
   static EntityID debug2 = EntityFactory::CreateObject(EntityManager::Type::Cyclone);
   TransformComponentManager::SetScale({ 100, 100, 0 }, debug);
-  TransformComponentManager::SetTranslation(glm::vec4(glm::vec2(newPos), 15, 1), debug); 
+  TransformComponentManager::SetTranslation(glm::vec4(glm::vec2(newPos), 15, 1), debug);
   EntityManager::SetClearImmunity(debug, true);*/
   /*
   if (!InAnyBounds(position))
@@ -51,53 +44,53 @@ void DynamicCamera::Update()
     {
       return;
     }
-    
+
     TransformComponentManager::SetScale({ 100, 100, 0 }, debug2);
     TransformComponentManager::SetTranslation(glm::vec4(closestPoint, 15, 1), debug2);
     EntityManager::SetClearImmunity(debug2, true);
- 
+
       //TODO: interpolate between old target position and new target position to smooth out camera further
     Camera::SetCameraPosition(glm::mix(glm::vec2(newPos), closestPoint, followSpeed * FrameRateController::GetDeltaTime<float>()));
   } */
-   if (newPos.x > position.x + inoffset.x + inwidth / 2
+  if (newPos.x > position.x + inoffset.x + inwidth / 2
       || newPos.x < position.x + inoffset.x - inwidth / 2
       || newPos.y > position.y + inoffset.y + inheight / 2
       || newPos.y < position.y + inoffset.y - inheight / 2)
+  {
+    glm::vec4 direction = glm::normalize((position + glm::vec4(inoffset, 0, 0)) - newPos);
+    //raycast camera pos onto AABB bounds, find minimum T
+    glm::vec4 invDir = 1.f / direction;
+    float min = ((invDir.x < 0 ? position.x + inoffset.x + inwidth / 2 : position.x + inoffset.x - inwidth / 2) - newPos.x) * invDir.x;
+    float ymin = ((invDir.y < 0 ? position.y + inoffset.y + inheight / 2 : position.y + inoffset.y - inheight / 2) - newPos.y) * invDir.y;
+    if (ymin > min)
+      min = ymin;
+
+    //TransformComponentManager::SetScale({ 100, 100, 0 }, debug2);
+    //TransformComponentManager::SetTranslation(glm::vec4(glm::vec2(position), 15, 0), debug2);
+
+    glm::vec4 closest = (newPos + direction * min);
+    if (!InAnyBounds(position))
     {
-        glm::vec4 direction = glm::normalize((position + glm::vec4(inoffset, 0, 0)) - newPos);
-        //raycast camera pos onto AABB bounds, find minimum T
-        glm::vec4 invDir = 1.f / direction;
-        float min = ((invDir.x < 0 ? position.x + inoffset.x + inwidth / 2 : position.x + inoffset.x - inwidth / 2) - newPos.x) * invDir.x;
-        float ymin = ((invDir.y < 0 ? position.y + inoffset.y + inheight / 2 : position.y + inoffset.y - inheight / 2) - newPos.y) * invDir.y;
-        if (ymin > min)
-          min = ymin;
-        
-        //TransformComponentManager::SetScale({ 100, 100, 0 }, debug2);
-        //TransformComponentManager::SetTranslation(glm::vec4(glm::vec2(position), 15, 0), debug2);
-
-        glm::vec4 closest = (newPos + direction * min);
-        if (!InAnyBounds(position))
-        {
-          glm::vec2 closestPoint = GetClosestPointOnBounds(closest, glm::normalize(newPos - closest));
-          if (closestPoint == psc::UNUSED_VEC2)
-          {
-            return;
-          }
-          Camera::SetCameraPosition(glm::mix(glm::vec2(newPos), closestPoint, followSpeed * FrameRateController::GetDeltaTime<float>()));
-          return;
-        }
-
-        //camera pos + direction towards target times t is point of intersection
-        newPos = glm::mix(newPos, newPos + direction * min, followSpeed * FrameRateController::GetDeltaTime<float>());
-        
-        //EntityManager::SetClearImmunity(debug2, true);
-        Camera::SetCameraPosition(glm::vec3(newPos));
+      glm::vec2 closestPoint = GetClosestPointOnBounds(closest, glm::normalize(newPos - closest));
+      if (closestPoint == psc::UNUSED_VEC2)
+      {
+        return;
       }
-    /*else
-    {
-      Camera::SetCameraTarget(glm::vec3( glm::vec2(position), 0 ));
-    }*/
-  
+      Get<CameraSys>().SetPosition(glm::mix(glm::vec2(newPos), closestPoint, followSpeed * Get<FrameLimiterSys>().GetDeltaTime<float>()));
+      return;
+    }
+
+    //camera pos + direction towards target times t is point of intersection
+    newPos = glm::mix(newPos, newPos + direction * min, followSpeed * Get<FrameLimiterSys>().GetDeltaTime<float>());
+
+    //EntityManager::SetClearImmunity(debug2, true);
+    Get<CameraSys>().SetPosition(glm::vec3(newPos));
+  }
+  /*else
+  {
+    Camera::SetCameraTarget(glm::vec3( glm::vec2(position), 0 ));
+  }*/
+
 }
 
 void DynamicCamera::Activate()
@@ -170,13 +163,13 @@ void DynamicCamera::RemoveBoundsObject(EntityID bound)
   bounds.erase(std::find(bounds.begin(), bounds.end(), bound));
 }
 
-Behavior<EntityManager::Type::CameraBounds>::Behavior(EntityID id) : BaseBehavior(id) 
-{ 
-  DynamicCamera::AddBoundsObject(id); 
+Behavior<EntityManager::Type::CameraBounds>::Behavior(EntityID id) : BaseBehavior(id)
+{
+  DynamicCamera::AddBoundsObject(id);
 }
 Behavior<EntityManager::Type::CameraBounds>::~Behavior()
-{ 
-  DynamicCamera::RemoveBoundsObject(GetID()); 
+{
+  DynamicCamera::RemoveBoundsObject(GetID());
 }
 
 glm::vec2 Behavior<EntityManager::Type::CameraBounds>::GetClosestPoint(glm::vec2 pos, glm::vec2 direction)
@@ -186,9 +179,9 @@ glm::vec2 Behavior<EntityManager::Type::CameraBounds>::GetClosestPoint(glm::vec2
   glm::vec2 invDir = 1.f / direction;
   float min = ((invDir.x < 0 ? position.x + scale.x / 2 : position.x - scale.x / 2) - pos.x) * invDir.x;
   float max = ((invDir.x < 0 ? position.x - scale.x / 2 : position.x + scale.x / 2) - pos.x) * invDir.x;
-  float ymin = ((invDir.y < 0 ? position.y  + scale.y / 2 : position.y - scale.y / 2) - pos.y) * invDir.y;
+  float ymin = ((invDir.y < 0 ? position.y + scale.y / 2 : position.y - scale.y / 2) - pos.y) * invDir.y;
   float ymax = ((invDir.y < 0 ? position.y - scale.y / 2 : position.y + scale.y / 2) - pos.y) * invDir.y;
-  
+
   if (min > ymax || ymin > max)
     return psc::UNUSED_VEC2;
 
@@ -204,20 +197,22 @@ bool Behavior<EntityManager::Type::CameraBounds>::InBounds(glm::vec2 pos)
   glm::vec3 scale = TransformComponentManager::GetScale(GetID());
 
   if (pos.x < position.x + scale.x / 2
-    && pos.x > position.x - scale.x / 2
-    && pos.y < position.y + scale.y / 2
-    && pos.y > position.y - scale.y / 2)
+      && pos.x > position.x - scale.x / 2
+      && pos.y < position.y + scale.y / 2
+      && pos.y > position.y - scale.y / 2)
   {
     return true;
   }
   return false;
 }
 
-void Behavior<EntityManager::Type::CameraBounds>::Serialize(std::ofstream& stream)
+void Behavior<EntityManager::Type::CameraBounds>::Serialize(::std::ofstream& stream)
 {
   stream << ",\n";
   stream << Tabs::TWO;
   stream << "\"behavior\" : " << "true" << "\n";
+}
+
 }
 
 /*

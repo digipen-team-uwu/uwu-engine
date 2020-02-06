@@ -3,8 +3,11 @@
 #include <algorithm>
 #include <list>
 #include <UWUEngine/constants.h>
-#include "EntityIDManager.h"
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/Entity/EntityIDManager.h>
+#include <UWUEngine/System.h>
+
+namespace UWUEngine
+{
 
 class EntityVectorBase
 {
@@ -14,66 +17,66 @@ public:
   virtual void Resize(size_t size) = 0;
 };
 
-class EntityVectorManager : public BaseSystem<EntityVectorManager>
+class EntityVectorManager : public System
 {
 public:
-    template<typename T>
-    static void QuickSortBy(std::vector<T> &sort, int low = 0, int high = vectorSize - 1)
+  template<typename T>
+  static void QuickSortBy(std::vector<T>& sort, int low = 0, int high = vectorSize - 1)
+  {
+    if (low < high)
     {
-        if (low < high)
-        {
-            int part = Partition<T>(sort, low, high);
-            QuickSortBy<T>(sort, low, part - 1);
-            QuickSortBy<T>(sort, part + 1, high);
-        }
+      int part = Partition<T>(sort, low, high);
+      QuickSortBy<T>(sort, low, part - 1);
+      QuickSortBy<T>(sort, part + 1, high);
     }
+  }
 
-    static void ResizeVectors()
+  static void ResizeVectors()
+  {
+    vectorSize *= 2;
+
+    if (vectorSize == 0)
+      vectorSize = 1;
+
+    for (auto& it : GetVectors())
     {
-        vectorSize *= 2;
+      it->Resize(vectorSize);
+    }
+  }
 
-        if (vectorSize == 0)
-            vectorSize = 1;
-
+  template<typename T>
+  static int Partition(std::vector<T>& sort, int low, int high)
+  {
+    T pivot = sort[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++)
+    {
+      if (sort[j] < pivot)
+      {
+        ++i;
         for (auto& it : GetVectors())
         {
-            it->Resize(vectorSize);
+          it->Swap(i, j);
         }
+        EntityIDManager::ChangeIDPos(EntityIDManager::GetID(i), j);
+        EntityIDManager::ChangeIDPos(EntityIDManager::GetID(j), i);
+      }
     }
-
-    template<typename T>
-    static int Partition(std::vector<T>& sort, int low, int high)
+    for (auto& it : GetVectors())
     {
-        T pivot = sort[high];
-        int i = (low - 1);
-        for (int j = low; j <= high - 1; j++)
-        {
-            if (sort[j] < pivot)
-            {
-                ++i;
-                for (auto& it : GetVectors())
-                {
-                    it->Swap(i, j);
-                }
-                EntityIDManager::ChangeIDPos(EntityIDManager::GetID(i), j);
-                EntityIDManager::ChangeIDPos(EntityIDManager::GetID(j), i);
-            }
-        }
-        for (auto& it : GetVectors())
-        {
-            it->Swap(i + 1, high);
-        }
-        EntityIDManager::ChangeIDPos(EntityIDManager::GetID(i + 1), high);
-        EntityIDManager::ChangeIDPos(EntityIDManager::GetID(high), i + 1);
-        return i + 1;
+      it->Swap(i + 1, high);
     }
+    EntityIDManager::ChangeIDPos(EntityIDManager::GetID(i + 1), high);
+    EntityIDManager::ChangeIDPos(EntityIDManager::GetID(high), i + 1);
+    return i + 1;
+  }
 
-    template<typename> friend class EntityVector;
+  template<typename> friend class EntityVector;
 
-    static size_t GetVectorSize() { return vectorSize; }
+  static size_t GetVectorSize() { return vectorSize; }
 private:
-    static std::vector<EntityVectorBase*>& GetVectors() { static std::vector<EntityVectorBase*> vectors; return vectors; }
-    static size_t vectorSize;
+  static std::vector<EntityVectorBase*>& GetVectors() { static std::vector<EntityVectorBase*> vectors; return vectors; }
+  static size_t vectorSize;
 };
 
 template<typename T>
@@ -81,21 +84,26 @@ class EntityVector : EntityVectorBase
 {
 public:
   EntityVector() = default;
-  EntityVector(size_t size, T fill = {}) : data(size, fill) 
+  EntityVector(size_t size, T fill = {}) : data(size, fill)
   {
-    EntityVectorManager::GetVectors().push_back(dynamic_cast<EntityVectorBase *>(this)); 
+    EntityVectorManager::GetVectors().push_back(dynamic_cast<EntityVectorBase*>(this));
   }
-  auto operator[](size_t index) -> decltype(std::vector<T>().operator[](index)) 
-  { 
+  auto operator[](size_t index) -> decltype(std::vector<T>().operator[](index))
+  {
     //return data[EntityIDManager::GetPos(index)]; 
     return data[index];
   }
 
-  T operator[](size_t index) const 
-  { 
+  T operator[](size_t index) const
+  {
     return data[index];
   }
-  
+
+  T& get_ref(size_t index)
+  {
+    return data[index];
+  }
+
   operator std::vector<T>& () { return data; }
 
   auto begin() -> decltype(std::vector<T>().begin())
@@ -120,3 +128,5 @@ public:
 private:
   std::vector<T> data;
 };
+
+}

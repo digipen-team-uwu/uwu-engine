@@ -1,11 +1,14 @@
 #pragma once
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 #include <UWUEngine/Helper.h>
 #include <fstream>
 
 #define TEE(x) EXPAND(TraceLogger::Tee((x), #x, FUNCTION_SIGNATURE))
 
-class TraceLogger : public BaseSystem<TraceLogger>
+namespace UWUEngine
+{
+
+class TraceLogger : public System
 {
 public:
   class LogStream
@@ -34,7 +37,7 @@ public:
     SERIALIZATION,
     TRACE,
     DEBUG,
-    INFO, 
+    INFO,
     WARNING,
     ERROR,
     FAILURE,
@@ -59,4 +62,6 @@ private:
   static LogStream log_null;
 };
 
-#include "TraceLogger.inline.cpp" /* Template implementations. */
+}
+
+#include <UWUEngine/Debugs/LogSys.inline.cpp> /* Template implementations. */

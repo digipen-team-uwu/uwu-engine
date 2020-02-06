@@ -92,12 +92,12 @@ public:
 	//    call only once at the beginning of the game
 	//  \return
 	//    nothing  
-	EntityManager();
+	EntitySys();
 	//! \brief
 	//    frees up all memory used by the entity manager
 	//  \return
 	//    nothing  
-	~EntityManager();
+	~EntitySys();
 	//! \brief
 	//    updates all active entities and destroys those marked
 	//    for destroy

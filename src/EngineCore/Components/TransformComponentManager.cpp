@@ -15,9 +15,16 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/constants.h>
 #include <UWUEngine/Serialization.h>
 
-using namespace UWUEngine;
-
 //TODO: SetRelativeTransform for children
+
+namespace UWUEngine
+{
+
+Transform::Transform(TransformComp& t, EntityID id) :
+  Transform(t.rotation_[id], t.translation_[id], t.scale_[id]) {}
+
+Transform::Transform(float& rotation, glm::vec4& translation, glm::vec3& scale) :
+  rotation_(rotation), translation_(translation), scale_(scale) {}
 
 Transform TransformComp::operator[](EntityID index)
 {
@@ -140,3 +147,5 @@ const std::vector<float>& TransformComp::GetArrayRotation()
   return rotation_;
 }
 #pragma endregion
+
+}

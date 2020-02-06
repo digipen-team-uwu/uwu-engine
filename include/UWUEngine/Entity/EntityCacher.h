@@ -1,13 +1,16 @@
 #pragma once
 #include <UWUEngine/Component/AnimationComponentManager.h>
-#include <UWUEngine/BaseSystem.h>
-#include "EntityManager.h"
+#include <UWUEngine/System.h>
+#include <UWUEngine/Entity/EntityManager.h>
 #include <vector>
 #include <array>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include <UWUEngine/Physics/Colliders/Collider.h>
 #include <rapidjson/document.h>
 
+
+namespace UWUEngine
+{
 
 struct BaseCachedBehavior;
 
@@ -44,45 +47,47 @@ struct CachedEntity
   {
     bool active = false;
     Collider::ShapeType type;
-	Collider* collider;
+    Collider* collider;
   }collider;
 
   struct
   {
     bool active = false;
-    std::array<std::string, goc::MAX_SPRITES> filepaths;
+    std::array<::std::string, goc::MAX_SPRITES> filepaths;
   }texture;
 
   struct
   {
     bool active = false;
-    std::string name;
-    std::string json;
-    std::string atlas;
-    std::string skin;
-    std::string defualtAnim;
+    ::std::string name;
+    ::std::string json;
+    ::std::string atlas;
+    ::std::string skin;
+    ::std::string defualtAnim;
     float scaleOffset;
   }spineSkeleton;
-  
+
 };
 
-class EntityCacher : public BaseSystem<EntityCacher>
+class EntityCacher : public System
 {
 public:
   EntityCacher();
-  static void CacheEntity(const CachedEntity& entity);
-  static void CacheBehavior(std::string filepath, BaseCachedBehavior *behavior);
-  static bool EntityIsCached(EntityManager::Type type);
-  static EntityID CreateCachedEntity(const CachedEntity& entity);
-  static const CachedEntity& GetCachedEntity(EntityManager::Type type);
+  void CacheEntity(const CachedEntity& entity);
+  void CacheBehavior(::std::string filepath, BaseCachedBehavior* behavior);
+  bool EntityIsCached(EntityManager::Type type);
+  EntityID CreateCachedEntity(const CachedEntity& entity);
+  const CachedEntity& GetCachedEntity(EntityManager::Type type);
   void Update() override {}
-  static void CacheFile(std::string file);
-  static void InstantiateCachedBehavior(EntityID id, std::string fileName);
-  static const std::vector<std::string>& GetCachedFilepaths();
-  static void UpdateCachedBehavior(std::string filename);
+  void CacheFile(::std::string file);
+  void InstantiateCachedBehavior(EntityID id, ::std::string fileName);
+  const ::std::vector<::std::string>& GetCachedFilepaths();
+  void UpdateCachedBehavior(::std::string filename);
 private:
-  static void MakeJsonObject(const char* filepath, rapidjson::Document& obj);
-  static std::unordered_map<EntityManager::Type, CachedEntity> entities;
-  static std::unordered_map<std::string, BaseCachedBehavior*> behaviors;
-  static std::vector<std::string> cachedFilepaths;
+  void MakeJsonObject(const char* filepath, rapidjson::Document& obj);
+  ::std::unordered_map<EntityManager::Type, CachedEntity> entities;
+  ::std::unordered_map<::std::string, BaseCachedBehavior*> behaviors;
+  ::std::vector<::std::string> cachedFilepaths;
 };
+
+}

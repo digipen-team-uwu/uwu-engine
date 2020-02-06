@@ -24,7 +24,7 @@ namespace UWUEngine
   namespace Editors
   {
     class Physics;
-  }
+  };
 
   enum class BodyType
   {
@@ -71,7 +71,7 @@ namespace UWUEngine
     float& restitution_;
   };
 
-  class PhysicsComp : public Component
+  class PhysicsComp : public Component<PhysicsComp, Physics>
   {
   public:
     PhysicsComp() = default;
@@ -94,7 +94,7 @@ namespace UWUEngine
     const EntityVector<float>& GetArrayRestitution() const;
 #pragma endregion
 
-    void Serialize(std::ofstream& stream, EntityID id, bool partial);
+    void Serialize(::std::ofstream& stream, EntityID id, bool partial);
 
   private:
     EntityVector<BodyType> type_;
