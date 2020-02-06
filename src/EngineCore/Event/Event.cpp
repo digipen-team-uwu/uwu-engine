@@ -5,42 +5,44 @@
 #define RegisterDispatcher(eventType) \
 dispatchers.insert({EventType::eventType, new eventType ## EventDispatcher()}); \
 
-std::map<EventType, IEventDispatcher*> EventSystem::dispatchers;
-
-IEvent::IEvent(EventType type):
-type_(type)
+namespace UWUEngine
 {
-}
-
-EventType IEvent::GetType() const
-{
-  return type_;
-}
-
-bool IEvent::IsType(EventType type) const
-{
-  return type == type_;
-}
-
-EventSystem::EventSystem()
-{
-  //Register all dispatchers
-  dispatchers.insert({EventType::Collision, new EventDispatcher<EventType::Collision>});
-  dispatchers.insert({EventType::SetNextScene, new EventDispatcher<EventType::SetNextScene>});
-}
-
-EventSystem::~EventSystem()
-{
-  for (auto dispatcher : dispatchers)
+  IEvent::IEvent(EventType type):
+  type_(type)
   {
-    delete dispatcher.second;
   }
-}
 
-void EventSystem::Update()
-{
-  for (auto dispatcher : dispatchers)
+  EventType IEvent::GetType() const
   {
-    dispatcher.second->DispatchEvents();
+    return type_;
+  }
+
+  bool IEvent::IsType(EventType type) const
+  {
+    return type == type_;
+  }
+
+  EventSystem::EventSystem(ISpace* p):
+  System(p)
+  {
+    //Register all dispatchers
+    dispatchers.insert({EventType::Collision, new EventDispatcher<EventType::Collision>});
+    dispatchers.insert({EventType::SetNextScene, new EventDispatcher<EventType::SetNextScene>});
+  }
+
+  EventSystem::~EventSystem()
+  {
+    for (auto dispatcher : dispatchers)
+    {
+      delete dispatcher.second;
+    }
+  }
+
+  void EventSystem::Update()
+  {
+    for (auto dispatcher : dispatchers)
+    {
+      dispatcher.second->DispatchEvents();
+    }
   }
 }

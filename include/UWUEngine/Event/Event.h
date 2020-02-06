@@ -10,50 +10,54 @@ Copyright ? 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 #include <UWUEngine/Event/EventType.h>
 #include <UWUEngine/Event/EventListener.h>
 #include <UWUEngine/Event/EventDispatcher.h>
 
-class IEvent
-{
-public:
-  IEvent(EventType type);
-  virtual ~IEvent() = default;
-  [[nodiscard]] EventType GetType() const;
-  [[nodiscard]] bool IsType(EventType type) const;
+#include <map>
 
-private:
-  EventType type_;
-};
-
-template <EventType type>
-class Event final : public IEvent
+namespace UWUEngine
 {
-public:
-  ~Event() override = default;
-};
+  class IEvent
+  {
+  public:
+    IEvent(EventType type);
+    virtual ~IEvent() = default;
+    [[nodiscard]] EventType GetType() const;
+    [[nodiscard]] bool IsType(EventType type) const;
 
-class EventSystem final : public BaseSystem<EventSystem>
-{
-public:
-  EventSystem();
-  ~EventSystem() override;
-  void Update() override;
+  private:
+    EventType type_;
+  };
 
   template <EventType type>
-  static void Push(const Event<type>& event);
+  class Event final : public IEvent
+  {
+  public:
+    ~Event() override = default;
+  };
 
-  template <EventType type>
-  static void Register(const EventListener<type>& listener);
+  class EventSystem final : public System
+  {
+  public:
+    EventSystem(ISpace* p);
+    ~EventSystem() override;
+    void Update() override;
 
-  template <EventType type>
-  static void UnRegister(const EventListener<type>& listener);
+    template <EventType type>
+    void Push(const Event<type>& event);
 
-private:
-  static std::map<EventType, IEventDispatcher*> dispatchers;
-};
+    template <EventType type>
+    void Register(const EventListener<type>& listener);
 
+    template <EventType type>
+    void UnRegister(const EventListener<type>& listener);
+
+  private:
+    std::map<EventType, IEventDispatcher*> dispatchers;
+  };
+}
 #include "Event.inl"
 
 #pragma region EventSpecialization

@@ -14,40 +14,44 @@ Copyright ? 2019 DigiPen, All rights reserved.
 #include <functional>
 #include <UWUEngine/Event/EventType.h>
 
-//Forward Declarations
-template <EventType type>
-class Event;
-using EntityID = unsigned;
-
-class IEventListener
+namespace UWUEngine
 {
-public:
-  virtual ~IEventListener() = default;
-  IEventListener(EventType type, bool autoRegister = false);
-  bool IsType(EventType type) const;
-  EventType GetType() const;
+  //Forward Declarations
+  template <EventType type>
+  class Event;
+  using EntityID = unsigned;
 
-private:
-  EventType type_;
-};
+  class IEventListener
+  {
+  public:
+    virtual ~IEventListener() = default;
+    IEventListener(EventType type, bool autoRegister = false);
+    bool IsType(EventType type) const;
+    EventType GetType() const;
 
-template <EventType type>
-class EventListener : public IEventListener
-{
-public:
-  EventListener(std::function<void(const Event<type> &)> func_ = nullptr, EntityID id = 0);
-  ~EventListener() override = default;
+  private:
+    EventType type_;
+  };
 
-  void SetFunc(std::function<void(const Event<type>&)> func_);
-  void SetID(EntityID id);
-  void OnNotify(const Event<type>& event) const;
+  template <EventType type>
+  class EventListener : public IEventListener
+  {
+  public:
+    EventListener(std::function<void(const Event<type> &)> func_ = nullptr, EntityID id = 0);
+    ~EventListener() override = default;
 
-  EntityID GetID() const;
+    void SetFunc(std::function<void(const Event<type>&)> func_);
+    void SetID(EntityID id);
+    void OnNotify(const Event<type>& event) const;
 
-private:
-  std::function<void(const Event<type>&)> func;
-  EntityID id{0};
-};
+    EntityID GetID() const;
+
+  private:
+    std::function<void(const Event<type>&)> func;
+    EntityID id{0};
+  };
+
+}
 
 #include "EventListener.inl"
 

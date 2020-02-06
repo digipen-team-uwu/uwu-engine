@@ -1,6 +1,6 @@
 #include <UWUEngine/Scene/SceneSys.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
-#include <UWUEngine/Graphics/Camera.h>
+#include <UWUEngine/Graphics/CameraSys.h>
 
 #include <filesystem>
 
@@ -58,8 +58,8 @@ void SceneSys::Update()
     current->second.UnLoad();
     next->second.Load();
 
-    Camera::ResetCameraPosition();
-    Camera::ResetCameraZoom();
+    Get<CameraSys>().ResetPosition();
+    Get<CameraSys>().ResetZoom();
 
     current = next;
   }
