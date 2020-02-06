@@ -226,13 +226,13 @@ void InputManager::Update()
   UpdateGamepads();
   if (InputManager::scrollVec.y > 0)
   {
-    InputManager::scrollVec.y -= FrameRateController::GetDeltaTime<float>() * ic::SCROLL_FRICTION;
+    InputManager::scrollVec.y -= FrameRateController::GetConstantDeltaTime<float>() * ic::SCROLL_FRICTION;
     if (InputManager::scrollVec.y < 0)
       InputManager::scrollVec.y = 0;
   }
   else if(InputManager::scrollVec.y < 0)
   {
-    InputManager::scrollVec.y += FrameRateController::GetDeltaTime<float>() * ic::SCROLL_FRICTION;
+    InputManager::scrollVec.y += FrameRateController::GetConstantDeltaTime<float>() * ic::SCROLL_FRICTION;
     if (InputManager::scrollVec.y > 0)
       InputManager::scrollVec.y = 0;
   }

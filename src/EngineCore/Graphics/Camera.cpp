@@ -225,15 +225,14 @@ void Camera::SetCameraTarget(const glm::vec3& target)
 
 void Camera::zoomIn(float amount)
 {
-  float dt = FrameRateController::GetDeltaTime<float>();
-  FOV = FOV >= 30.f && FOV <= 90.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
+  float dt = FrameRateController::GetConstantDeltaTime<float>();
+  FOV = FOV >= 0.f && FOV <= 180.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
 void Camera::zoomOut(float amount)
 {
-  float dt = FrameRateController::GetDeltaTime<float>();
-  FOV += amount * dt;
+  FOV += amount * FrameRateController::GetConstantDeltaTime<float>();
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 

@@ -119,6 +119,11 @@ void Picker::Reset()
 
 void Picker::Pick()
 {
+  if (Editors::EntityViewer::GetSelectedEntity() != goc::INVALID_ID)
+  {
+    TextureComponentManager::SetColor(Editors::EntityViewer::GetSelectedEntity(), { 1.0f,1.0f,1.0f,1.0f });
+  }
+  
   // get a list of current active objects
   auto ids = EntityManager::GetIDs();
   auto cameraPos = Camera::GetCameraPosition();
@@ -141,7 +146,6 @@ void Picker::Pick()
     glm::vec3 bottom_right = { objectPos.x + scale.x / 2, objectPos.y - scale.y / 2, objectPos.z };
     glm::vec3 top_right = { objectPos.x + scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
 
-    float max_scale = glm::max(glm::max(scale.x, scale.y), scale.z) / 2.f;
     float intersection_dist;
 
     glm::vec2 baryPosition;

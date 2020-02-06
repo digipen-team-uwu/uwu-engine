@@ -5,7 +5,7 @@
 #include <filesystem>
 
 static const std::string scenePath{ "data/levels" };
-static const std::string initialSceneName = "BrayanSBOX";
+static const std::string initialSceneName = "Empty";
 
 std::unordered_map<std::string, Scene> SceneManager::scenes;
 std::unordered_map<std::string, Scene>::const_iterator SceneManager::current;
