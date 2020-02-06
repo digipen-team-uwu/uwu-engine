@@ -19,7 +19,7 @@ namespace Editors
   class Window
   {
   public:
-    Window(std::string name, bool isActive = false) :name(std::move(name)), isActive(isActive) {}
+    Window(std::string name, bool isActive = false, bool manual = false) :name(std::move(name)), isActive(isActive), manual(manual) {}
     virtual ~Window() = default;
 
     void Render();
@@ -31,9 +31,11 @@ namespace Editors
   protected:
     virtual void Setup() = 0;
     virtual void Update() = 0;
+    bool* SetActive();
 
   private:
     const std::string name;
     bool isActive;
+    bool manual;
   };
 }

@@ -107,6 +107,10 @@ void InputManager::MousePosCallback(GLFWwindow* window, double xPos, double yPos
 void InputManager::ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
   ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+  if (ImGui::GetIO().WantCaptureMouse)
+  {
+    return;
+  }
   scrollVec.x = static_cast<float>(xOffset);
   if(scrollVec.y < ic::MAX_SCROLL && scrollVec.y > -ic::MAX_SCROLL)
     scrollVec.y += static_cast<float>(yOffset) * ic::SCROLL_RATE;

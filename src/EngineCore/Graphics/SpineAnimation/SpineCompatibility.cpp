@@ -20,7 +20,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Graphics/SpineAnimation/SpineCompatibility.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 
-Texture::Texture(const char* path) {
+SingleTexture::SingleTexture(const char* path) {
 	this->path = path;
 	std::string filename = std::string(path);
 
@@ -56,7 +56,26 @@ Texture::Texture(const char* path) {
 	}
 }
 
-Texture::~Texture() {
+void SingleTexture::operator=(SingleTexture& rhs)
+{
+  if (this == &rhs)
+  {
+    return;
+  }
+	id = rhs.id;
+	width = rhs.width;
+	height = rhs.height;
+	type = rhs.type;
+	path = rhs.path;
+
+	rhs.id = 0;
+}
+
+SingleTexture::~SingleTexture() {
+  if (id == 0)
+  {
+    return;
+  }
 	glDeleteTextures(1, &id);
 }
 //End of temporary texture Loader
@@ -69,7 +88,7 @@ char* _spUtil_readFile(const char* path, int* length)
 
 void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
 {
-	auto* texture = new Texture(path);
+	auto* texture = new SingleTexture(path);
 	self->rendererObject = texture;
 
 	self->width = texture->width;
@@ -78,5 +97,5 @@ void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
 
 void _spAtlasPage_disposeTexture(spAtlasPage* self)
 {
-	delete static_cast<Texture*>(self->rendererObject);
+	delete static_cast<SingleTexture*>(self->rendererObject);
 }

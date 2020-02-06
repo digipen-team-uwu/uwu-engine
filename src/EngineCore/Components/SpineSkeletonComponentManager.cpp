@@ -112,7 +112,7 @@ void SpineSkeleton::Draw() const
 		float tintA = skeleton->color.a * slot->color.a;
 
 		//Data for mesh setup
-		Texture* texture;
+		SingleTexture* texture;
 		//float* vertexPositions;
 		std::vector<float> vertexPositions;
 		std::vector<Vertex> vertices;
@@ -122,7 +122,7 @@ void SpineSkeleton::Draw() const
 			//cast the current attachment to regional attachment
 			auto* regionAttachment = reinterpret_cast<spRegionAttachment*>(attachment);
 			//Get according texture
-			texture = static_cast<Texture*>(static_cast<spAtlasRegion*>(regionAttachment->rendererObject)->page->rendererObject);
+			texture = static_cast<SingleTexture*>(static_cast<spAtlasRegion*>(regionAttachment->rendererObject)->page->rendererObject);
 			//Allocate buffer and load Vertex position data
 			vertexPositions.resize(8);
 			vertices.reserve(4);
@@ -162,7 +162,7 @@ void SpineSkeleton::Draw() const
 			auto* mesh = reinterpret_cast<spMeshAttachment*>(attachment);
 
 			//Get according texture
-			texture = static_cast<Texture*>(static_cast<spAtlasRegion*>(mesh->rendererObject)->page->rendererObject);
+			texture = static_cast<SingleTexture*>(static_cast<spAtlasRegion*>(mesh->rendererObject)->page->rendererObject);
 			//Calculate Vertex position
 			const int verticesCount = mesh->super.verticesCount * 2;
 			//vertexPositions = new float[verticesCount];

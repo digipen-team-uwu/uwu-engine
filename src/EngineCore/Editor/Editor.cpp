@@ -63,9 +63,6 @@ void Editor::Update()
   Editors::MainMenu();
   Editors::DockSpace();
   Editors::WindowManager::Update();
-
-  // Show demo window
-  ImGui::ShowDemoWindow();
 }
 
 bool Editor::IsActive()

@@ -16,6 +16,11 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/BaseComponent.h>
 #include <string>
 
+namespace Editors
+{
+  class Texture;
+}
+
 class TextureComponentManager : public BaseComponent<TextureComponentManager>
 {
     public:
@@ -61,4 +66,6 @@ class TextureComponentManager : public BaseComponent<TextureComponentManager>
         static EntityVector<GLuint> textureID_;
 
         static std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>> filePaths_;
+
+        friend Editors::Texture;
 };

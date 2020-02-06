@@ -15,6 +15,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Editor/Windows/EditorComponentViewer.h>
+#include <UWUEngine/Editor/Windows/EditorImGUIDemo.h>
 
 using namespace Editors;
 
@@ -29,6 +30,7 @@ void WindowManager::StartUp()
   //Register all windows
   REGISTER_WINDOW(EntityViewer)
   REGISTER_WINDOW(ComponentViewer)
+  REGISTER_WINDOW(Demo);
 }
 
 void WindowManager::Update()

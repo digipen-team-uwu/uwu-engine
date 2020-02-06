@@ -13,7 +13,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #pragma once
 #include <string>
 
-class Texture {
+class SingleTexture {
 public:
 	// Variables
 	unsigned int id{};
@@ -23,7 +23,10 @@ public:
 	std::string path;
 
 	// Constructor
-	explicit Texture(const char* path);
+	explicit SingleTexture(const char* path);
+
+	void operator=(SingleTexture& rhs);
+
 	// Destructor
-	~Texture();
+	~SingleTexture();
 };
