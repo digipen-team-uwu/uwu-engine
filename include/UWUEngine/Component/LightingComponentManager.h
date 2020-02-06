@@ -1,29 +1,45 @@
 #pragma once
-#include "BaseComponent.h"
 #include <UWUEngine/constants.h>
 #include <UWUEngine/Graphics/Lighting/Lighting.h>
+#include <UWUEngine/Component/Component.h>
+#include <vector>
 
 namespace LC = LightingConstant;
 
-class LightingComponentManager : public BaseComponent<LightingComponentManager>
+namespace UWUEngine
 {
-public:
-    LightingComponentManager() = default;
-    ~LightingComponentManager() = default;
+  class Light
+  {
+  public:
+    Light(float& shininess) : shininess_(shininess) {}
+    void SetShininess(const float& shininess);
+    const float& GetShininess() const;
+  private:
+    float& shininess_;
+  };
+
+  class LightingComp : public Component
+  {
+  public:
+    LightingComp() = default;
+    ~LightingComp() = default;
     void Update() override;
     void InitObject(EntityID ID) override {};
     void ShutdownObject(EntityID ID) override {};
 
-    // Material
-    static void SetShininess(EntityID ID, const float shininess);
-    static float GetShininess(EntityID ID);
-    static const std::vector<float>& GetArrayShininess();
+    Light operator[](EntityID ID);
 
-private:
+    // Material
+    void SetShininess(EntityID ID, const float shininess);
+    float GetShininess(EntityID ID);
+    const std::vector<float>& GetArrayShininess();
+
+  private:
 
     // TODO: instancing those vectors below in the future
-    static EntityVector<LightType> lightTypes;
+    //EntityVector<LightType> lightTypes;
 
     // Material
-    static EntityVector<float> shininess_;
-};
+    std::vector<float> shininess_;
+  };
+}

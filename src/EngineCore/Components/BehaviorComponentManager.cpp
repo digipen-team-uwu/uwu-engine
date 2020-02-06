@@ -14,9 +14,6 @@
 #include <UWUEngine/Graphics/Render.h>
 #include <UWUEngine/Entity/EntityManager.h>
 
-
-namespace goc = GameObjectConstants;
-
 namespace UWUEngine
 {
   BehaviorComp::~BehaviorComponentManager()

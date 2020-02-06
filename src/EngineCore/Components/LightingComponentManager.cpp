@@ -1,28 +1,40 @@
 #include <UWUEngine/Component/LightingComponentManager.h>
 
-template<> size_t RegisterComponentHelper<LightingComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<LightingComponentManager>(ComponentUpdateOrder::LAST);
-
-EntityVector<LightType> LightingComponentManager::lightTypes{ goc::INITIAL_OBJECT_COUNT };
-EntityVector<float> LightingComponentManager::shininess_{ goc::INITIAL_OBJECT_COUNT };
-using Type = EntityManager::Type;
-
-void LightingComponentManager::Update()
+namespace UWUEngine
 {
-    
-}
+  void Light::SetShininess(const float& shininess)
+  {
+    shininess_ = shininess;
+  }
 
-void LightingComponentManager::SetShininess(EntityID ID, const float shininess)
-{
-    shininess_[ID] = shininess;
-}
-
-float LightingComponentManager::GetShininess(EntityID ID)
-{
-    return shininess_[ID];
-}
-
-const std::vector<float>& LightingComponentManager::GetArrayShininess()
-{
+  const float& Light::GetShininess() const
+  {
     return shininess_;
-}
+  }
 
+  void LightingComp::Update()
+  {
+  }
+
+  Light LightingComp::operator[](EntityID ID)
+  {
+    return Light(shininess_[ID]);
+  }
+
+  void LightingComp::SetShininess(EntityID ID, const float shininess)
+  {
+    Light light = this->operator[](ID);
+    light.SetShininess(shininess);
+  }
+
+  float LightingComp::GetShininess(EntityID ID)
+  {
+    Light light = this->operator[](ID);
+    return light.GetShininess();
+  }
+
+  const std::vector<float>& LightingComp::GetArrayShininess()
+  {
+    return shininess_;
+  }
+}

@@ -155,7 +155,7 @@ void LightSys::Update()
   {
     if (EntityManager::GetType(i) != EntityManager::Dropped)
     {
-      LightingComponentManager::SetShininess(i, 16.0f);
+      LightingComp::SetShininess(i, 16.0f);
     }
   }
 }
