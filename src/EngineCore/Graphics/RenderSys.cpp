@@ -82,9 +82,9 @@ void RenderSys::Update()
 		{
 			BehaviorComp::GetBaseBehavior(id)->Render();
 		}
-		if (SpineSkeletonComponentManager::IsActive(id))
+		if (SpineSkeletonComp::IsActive(id))
 		{
-			SpineSkeletonComponentManager::Render(id);
+			SpineSkeletonComp::Render(id);
 		}
 	}
 

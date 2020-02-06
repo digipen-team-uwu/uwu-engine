@@ -13,46 +13,49 @@ Copyright 2019 DigiPen, All rights reserved.
 #pragma once
 
 #include <UWUEngine/Graphics/SpineAnimation/SpineDataManager.h>
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 #include <unordered_map>
 
-//Component
-class SpineAnimation
+namespace UWUEngine
 {
-public:
-	//Constructors
-	explicit SpineAnimation(SpineData& data);
+  //Component
+  class SpineAnimation
+  {
+  public:
+    //Constructors
+    explicit SpineAnimation(SpineData& data);
 
-	//Functions
-	void UpdateAnimation(float dt) const;
-	void ChangeAnimation(const char* animationName, bool isLooping) const;
-	void StartPlaying();
-	void StopPlaying();
-	bool IsPlaying() const;
+    //Functions
+    void UpdateAnimation(float dt) const;
+    void ChangeAnimation(const char* animationName, bool isLooping) const;
+    void StartPlaying();
+    void StopPlaying();
+    bool IsPlaying() const;
 
-	//Getters
-	spAnimationState* GetAnimationState() const;
-	const spAnimationStateData* GetAnimationStateData() const;
-	const spSkeletonData* GetSkeletonData() const;
-	
-private:
-	//Data
-	spAnimationState* animationState;
-	bool isPlaying{true};
-};
+    //Getters
+    spAnimationState* GetAnimationState() const;
+    const spAnimationStateData* GetAnimationStateData() const;
+    const spSkeletonData* GetSkeletonData() const;
 
-//Component Manager
-class SpineAnimationComponentManager : public BaseComponent<SpineAnimationComponentManager>
-{
-public:
-	void Update() override;
-	void InitObject(EntityID ID) override;
-	void ShutdownObject(EntityID ID) override;
+  private:
+    //Data
+    spAnimationState* animationState;
+    bool isPlaying{ true };
+  };
 
-	static void SetAnimation(EntityID ID, SpineData& data);
-	static void SetAnimation(EntityID ID, const char* dataName);
-	static SpineAnimation& GetAnimation(EntityID ID);
-	
-private:
-	static std::unordered_map<EntityID, SpineAnimation> animations;
-};
+  //Component Manager
+  class SpineAnimationComp : public Component
+  {
+  public:
+    void Update() override;
+    void InitObject(EntityID ID) override;
+    void ShutdownObject(EntityID ID) override;
+
+    void SetAnimation(EntityID ID, SpineData& data);
+    void SetAnimation(EntityID ID, const char* dataName);
+    SpineAnimation& GetAnimation(EntityID ID);
+
+  private:
+    std::unordered_map<EntityID, SpineAnimation> animations;
+  };
+}

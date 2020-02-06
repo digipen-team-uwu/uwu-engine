@@ -87,7 +87,7 @@ void UBOModule::ShootDataToUBO(Type name, EntityID ID)
     glBufferSubData(GL_UNIFORM_BUFFER,
                     sizeof(glm::mat4),
                     sizeof(glm::mat4),
-                    glm::value_ptr(SpineSkeletonComponentManager::GetScaleOffSet(ID)));
+                    glm::value_ptr(SpineSkeletonComp::GetScaleOffSet(ID)));
     glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
   }
   else if (name == Light)

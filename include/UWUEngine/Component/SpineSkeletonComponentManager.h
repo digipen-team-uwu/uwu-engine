@@ -14,7 +14,7 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <unordered_map>
 
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 #include <UWUEngine/Graphics/SpineAnimation/SpineDataManager.h>
 #include <UWUEngine/Graphics/Shader/glslshader.h>
 
@@ -22,68 +22,70 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 #endif
 
-
-//Forward Declaration
-struct Vertex;
-class SpineSkeletonComponentManager;
-
-//Component
-class SpineSkeleton
+namespace UWUEngine
 {
-public:
-	//Constructors
-	explicit SpineSkeleton(SpineData&, EntityID);
+  //Forward Declaration
+  struct Vertex;
+  class SpineSkeletonComp;
 
-	//Functions
-	void Draw() const;
-	void ChangeSkin(const char* skinName);
+  //Component
+  class SpineSkeleton
+  {
+  public:
+    //Constructors
+    explicit SpineSkeleton(SpineData&, EntityID);
 
-	//Getters
-	[[nodiscard]] spSkeleton* GetSkeleton() const;
-	[[nodiscard]] spSkeletonData* GetSkeletonData() const;
+    //Functions
+    void Draw() const;
+    void ChangeSkin(const char* skinName);
 
-    friend SpineSkeletonComponentManager;
+    //Getters
+    [[nodiscard]] spSkeleton* GetSkeleton() const;
+    [[nodiscard]] spSkeletonData* GetSkeletonData() const;
 
-  #ifdef _DEBUG
+    friend SpineSkeletonComp;
+
+#ifdef _DEBUG
     friend ColliderPolygon;
-  #endif
+#endif
 
 
-private:
-	
-	//Data Member
-	spSkeleton* skeleton{};
-	EntityID ID;
-	float scaleOffset{1.0f};
+  private:
 
-	//Static Data Member
-	static GLSLShader shader_;
+    //Data Member
+    spSkeleton* skeleton{};
+    EntityID ID;
+    float scaleOffset{ 1.0f };
 
-	//Functions
-	static void DrawMesh(
-		std::vector<Vertex> vertices,
-		std::vector<unsigned> indices,
-		GLuint textureID
-	);
-};
+    //Static Data Member
+    GLSLShader shader_;
 
-//Manager
-class SpineSkeletonComponentManager : public BaseComponent<SpineSkeletonComponentManager>
-{
-public:
-	SpineSkeletonComponentManager() = default;
-	void Update() override;
-	void InitObject(EntityID ID) override;
-	void ShutdownObject(EntityID ID) override;
-	static void Render(EntityID ID);
+    //Functions
+    void DrawMesh(
+      std::vector<Vertex> vertices,
+      std::vector<unsigned> indices,
+      GLuint textureID
+    );
+  };
 
-	static void SetSkeleton(EntityID ID, SpineData& spineData);
-	static void SetSkeleton(EntityID ID, const char* name);
-	static SpineSkeleton& GetSkeleton(EntityID);
+  //Manager
+  class SpineSkeletonComp : public Component<SpineSkeletonComp>
+  {
+  public:
+    SpineSkeletonComp() = default;
+    void Update() override;
+    void InitObject(EntityID ID) override;
+    void ShutdownObject(EntityID ID) override;
+    void Render(EntityID ID);
 
-    static const glm::mat4 GetScaleOffSet(EntityID ID);
+    void SetSkeleton(EntityID ID, SpineData& spineData);
+    void SetSkeleton(EntityID ID, const char* name);
+    SpineSkeleton& GetSkeleton(EntityID);
 
-private:
-	//Containers
-	static std::unordered_map<EntityID, SpineSkeleton> skeletons;
-};
+    const glm::mat4 GetScaleOffSet(EntityID ID);
+
+  private:
+    //Containers
+    std::unordered_map<EntityID, SpineSkeleton> skeletons;
+  };
+}
