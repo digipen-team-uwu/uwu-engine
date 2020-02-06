@@ -25,29 +25,31 @@ Picker::Picker()
 
 void Picker::Update()
 {
-  //if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
-  //{
-  //  glm::vec2 mousePos = InputManager::GetMousePos();
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
-  //    mousePos.y << std::endl;
-  //
-  //  CalculateMouseWorld(mousePos);
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "Ray World x: " << mouse_world.x << " y: " <<
-  //    mouse_world.y << " z: " << mouse_world.z << std::endl;
-  //
-  //  Pick();
-  //  PickID();
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
-  //
-  //  Editors::EntityViewer::SetSelectedEntity(saved_ID);
-  //
-  //  TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
-  //  Reset();
-  //  
-  //  auto cameraPos = Camera::GetCameraPosition();
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
-  //    " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
-  //}
+  if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
+  {
+    glm::vec2 mousePos = InputManager::GetMousePos();
+    TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
+      mousePos.y << std::endl;
+  
+    CalculateMouseWorld(mousePos);
+    TraceLogger::Log(TraceLogger::DEBUG) << "Mouse World x: " << mouse_world.x << " y: " <<
+      mouse_world.y << " z: " << mouse_world.z << std::endl;
+  
+    Pick();
+    PickID();
+    TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
+
+    if (saved_ID != static_cast<unsigned>(-1))
+    {
+      Editors::EntityViewer::SetSelectedEntity(saved_ID);
+      TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
+      Reset();
+    }
+    
+    auto cameraPos = Camera::GetCameraPosition();
+    TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
+      " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
+  }
 }
 
 void Picker::CalculateMouseWorld(glm::vec2 Pos)
@@ -93,7 +95,7 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
   ndc_to_vf[2].y = 0.0f;
   ndc_to_vf[2].z = 1.0f;
 
-  glm::vec3 mouse_vf = glm::mat3(glm::inverse(Camera::GetProjectionMatrix())) * mouse_ndc;
+  glm::vec3 mouse_vf = ndc_to_vf * mouse_ndc;
 #pragma endregion 
 
 #pragma region convert view finder to view frame
@@ -112,14 +114,7 @@ void Picker::Reset()
 {
   saved_d = std::numeric_limits<float>::max();
   saved_ID = static_cast<unsigned>(-1);
-}
-
-bool Picker::IsPointInAABB(AABB aabb, Point p)
-{
-  return p.x >= aabb.bottom_left.x &&
-         p.y >= aabb.bottom_left.y &&
-         p.x <= aabb.bottom_left.x + aabb.w &&
-         p.y <= aabb.bottom_left.y + aabb.h;
+  ID_and_distance.clear();
 }
 
 void Picker::Pick()
@@ -141,10 +136,19 @@ void Picker::Pick()
     // scale factors of object
     glm::vec3 scale = TransformComponentManager::GetScale(*it);
 
+    glm::vec3 bottom_left = { objectPos.x - scale.x / 2, objectPos.y - scale.y / 2 , objectPos.z};
+    glm::vec3 top_left = { objectPos.x - scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
+    glm::vec3 bottom_right = { objectPos.x + scale.x / 2, objectPos.y - scale.y / 2, objectPos.z };
+    glm::vec3 top_right = { objectPos.x + scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
+
+    float max_scale = glm::max(glm::max(scale.x, scale.y), scale.z) / 2.f;
     float intersection_dist;
 
-    if (glm::intersectRayPlane(cameraPos, glm::normalize(mouse_world - cameraPos), 
-      objectPos, {0.f,0.f,1.f}, intersection_dist))
+    glm::vec2 baryPosition;
+
+    if (glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_left, bottom_left, bottom_right,
+      baryPosition, intersection_dist) || glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_right, top_left, bottom_right,
+        baryPosition, intersection_dist))
     {
       ID_and_distance[*it] = intersection_dist;
     }
