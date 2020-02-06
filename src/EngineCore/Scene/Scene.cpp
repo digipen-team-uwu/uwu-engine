@@ -1,6 +1,6 @@
 #include <UWUEngine/Scene/Scene.h>
 #include <UWUEngine/Serialization.h>
-#include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
+#include <UWUEngine/Graphics/Texture/AtlasModule.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/EngineSettings.h>
 #include <UWUEngine/Graphics/Lighting/Lighting.h>

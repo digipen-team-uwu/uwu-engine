@@ -13,7 +13,7 @@
 #include <UWUEngine/Graphics/SpineAnimation/SpineDataManager.h>
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
-#include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
+#include <UWUEngine/Graphics/Texture/AtlasModule.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <sstream>
 #include <filesystem>

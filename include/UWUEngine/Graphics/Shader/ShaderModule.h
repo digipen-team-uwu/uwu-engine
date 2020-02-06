@@ -11,20 +11,26 @@ Copyright © 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 #include <UWUEngine/Graphics/Shader/glslshader.h>
+#include <UWUEngine/System.h>
 
-class ShaderModule
+namespace UWUEngine
+{
+
+class ShaderModule : System
 {
 public:
-  ShaderModule() = default;
+  ShaderModule(ISpace*);
   ~ShaderModule() = default;
 
-    static GLSLShader CreateShader(const char* vertex_shader_filePath,
-        const char* fragment_shader_filePath);
-    static GLSLShader CreateComputeShader(char const* compute_shader_filePath);
-    static GLSLShader GetEntityShader();
-    static GLSLShader GetHudShader();
+  GLSLShader CreateShader(const char* vertex_shader_filePath,
+                                 const char* fragment_shader_filePath) const;
+  GLSLShader CreateComputeShader(char const* compute_shader_filePath) const;
+  GLSLShader GetEntityShader();
+  GLSLShader GetHudShader();
 
 private:
-    static GLSLShader entityShader;
-    static GLSLShader hudShader;
+  GLSLShader entityShader;
+  GLSLShader hudShader;
 };
+
+}

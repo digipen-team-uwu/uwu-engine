@@ -68,7 +68,7 @@ void UISys::Render()
 
   glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, NULL, static_cast<GLsizei>(bufferSize));
 
-  UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::HUDMatrices);
+  UniformBufferSys::ShootDataToUniformBuffer(UniformBufferSys::Type::HUDMatrices);
 
   glBindVertexArray(0);
   shader.UnUse();

@@ -18,7 +18,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/DragAndDropSys.h>
 #include <UWUEngine/CCallbackHelper.h>
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include "UWUEngine/Graphics/Texture/AtlasModule.h"
 
 #define DropTextures
 
@@ -115,13 +115,13 @@ void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** pa
 
     EntityID newEnt = EntityManager::New(EntityManager::Type::Dropped);
     TransformComponentManager::Activate(newEnt);
-    TransformComponentManager::SetScale(glm::vec3(TextureAtlaser::GetBrayanTexture(paths[i]), 1.f), newEnt);
+    TransformComponentManager::SetScale(glm::vec3(AtlasModule::GetBrayanTexture(paths[i]), 1.f), newEnt);
     TransformComponentManager::SetTranslation(glm::vec<4, double>(worldX, worldY, worldZ, 1.0), newEnt);
     TextureComponentManager::Activate(newEnt);
     TextureComponentManager::SetFilePath(newEnt, path.c_str());
 
   }
-  TextureAtlaser::LoadAtlasPage(true);
+  AtlasModule::LoadAtlasPage(true);
 #endif
 }
 

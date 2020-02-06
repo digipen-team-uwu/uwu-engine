@@ -22,7 +22,7 @@
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/Deserialization.h>
 #include <UWUEngine/UI/UIManager.h>
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include "UWUEngine/Graphics/Texture/AtlasModule.h"
 #include<rttr/registration.h>
 
 typedef EntityManager::Type type;

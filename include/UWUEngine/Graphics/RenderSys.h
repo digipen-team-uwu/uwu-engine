@@ -11,18 +11,23 @@ Copyright � 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 #include <UWUEngine/constants.h>
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 
-class Render : public BaseSystem<Render>
+namespace UWUEngine
+{
+
+class RenderSys : public System
 {
 public:
-  Render();
-  ~Render() = default;
+  RenderSys(ISpace*);
+  ~RenderSys() = default;
   void Update() override;
   static void DrawObject(EntityID ID);
 
 private:
-    
-    // data member to represent geometric model to be rendered
-    // C++ requires this object to have a definition in render.cpp!!!
+
+  // data member to represent geometric model to be rendered
+  // C++ requires this object to have a definition in render.cpp!!!
 };
+
+}

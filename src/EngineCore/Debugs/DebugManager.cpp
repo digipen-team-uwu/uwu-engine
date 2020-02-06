@@ -19,7 +19,7 @@
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <vector>
 #include <UWUEngine/Component/ColliderComponentManager.h>
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include "UWUEngine/Graphics/Texture/AtlasModule.h"
 
 
 

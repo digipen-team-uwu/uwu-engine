@@ -10,22 +10,21 @@ Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Graphics/Render.h>
+#include <UWUEngine/Graphics/RenderSys.h>
 #include <array>
 #include <GL/glew.h>
 #include <UWUEngine/Graphics/Shader/glslshader.h>
-#include <UWUEngine/Engine.h>
-#include "imgui.h"
+#include <imgui.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Debugs/DebugManager.h>
 #include <UWUEngine/Editor.h>
-#include "imgui_impl_glfw.h"
+#include <imgui_impl_glfw.h>
 #include "imgui_impl_opengl3.h"
-#include <UWUEngine/UI/UIManager.h>
-#include "UWUEngine/Debugs/TraceLogger.h"
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include <UWUEngine/UI/UISys.h>
+#include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Graphics/Texture/AtlasModule.h>
 
 namespace wc = WindowConstants;
 
@@ -37,19 +36,22 @@ namespace
 	void DrawMesh(std::tuple<GLenum, GLuint, GLuint>& mesh);
 }
 
-Render::Render()
+namespace UWUEngine
+{
+
+RenderSys::RenderSys(ISpace* p) : System(p)
 {
 #ifdef _RELEASE
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 #endif
 #ifdef _DEBUG
-  glClearColor(.2f, .2f, .2f, 1.f);
+	glClearColor(.2f, .2f, .2f, 1.f);
 #endif
 	glViewport(0, 0, wc::WINDOW_WIDTH, wc::WINDOW_HEIGHT);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.05);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.05);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_LINE_SMOOTH);
@@ -60,59 +62,59 @@ Render::Render()
 	//OPENGL_ERR;
 	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	//OPENGL_ERR;
-  TraceLogger::Log(TraceLogger::WARNING) << "APU IS HERE:\n" << apu << std::endl;
+	TraceLogger::Log(TraceLogger::WARNING) << "APU IS HERE:\n" << apu << std::endl;
 }
 
-void Render::Update()
+void RenderSys::Update()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    
-    std::vector<EntityID> ids = EntityManager::GetIDs();
-    // TODO: add a function to get size of ids
-    size = static_cast<GLuint>(ids.size());
-    //TODO: stop dreamming
-    const GLSLShader& shader = ShaderModule::GetEntityShader();
 
-    for (auto id : ids)
-    {
-      if (BehaviorComponentManager::IsActive(id))
-      {
-        BehaviorComponentManager::GetBaseBehavior(id)->Render();
-      }
-	    if (SpineSkeletonComponentManager::IsActive(id))
-	    {
+	std::vector<EntityID> ids = EntityManager::GetIDs();
+	// TODO: add a function to get size of ids
+	size = static_cast<GLuint>(ids.size());
+	//TODO: stop dreamming
+	const GLSLShader& shader = ShaderModule::GetEntityShader();
+
+	for (auto id : ids)
+	{
+		if (BehaviorComponentManager::IsActive(id))
+		{
+			BehaviorComponentManager::GetBaseBehavior(id)->Render();
+		}
+		if (SpineSkeletonComponentManager::IsActive(id))
+		{
 			SpineSkeletonComponentManager::Render(id);
-	    }
-    }
-    
-    VaoKey vao_key = Instances::GetEntityVAOKey();
-    GLuint vao = Instances::GetVAOid(vao_key);
-    Instances::UpdateInstances(vao_key);
-    
-    glBindVertexArray(vao); // bind vao 1
-    shader.Use();
+		}
+	}
 
-    // bind to proper texture unit 0
-    glBindTextureUnit(0, TextureAtlaser::GetTextureID());
+	VaoKey vao_key = Instances::GetEntityVAOKey();
+	GLuint vao = Instances::GetVAOid(vao_key);
+	Instances::UpdateInstances(vao_key);
 
-    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, NULL, static_cast<GLsizei>(EntityVectorManager::GetVectorSize()));
-    shader.UnUse();
-    glBindVertexArray(0);
-	
+	glBindVertexArray(vao); // bind vao 1
+	shader.Use();
 
-    DebugManager::Render();
-    UIManager::Render();
+	// bind to proper texture unit 0
+	glBindTextureUnit(0, AtlasModule::GetTextureID());
+
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, NULL, static_cast<GLsizei>(EntityVectorManager::GetVectorSize()));
+	shader.UnUse();
+	glBindVertexArray(0);
 
 
-    if (Editor::IsActive())
-    {
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    }
+	DebugManager::Render();
+	Get<UISys>().Render();
+
+
+	if (Editor::IsActive())
+	{
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 }
 
-void Render::DrawObject(EntityID ID)
+void RenderSys::DrawObject(EntityID ID)
 {
 	const GLuint& textureID = TextureComponentManager::GetTextureID(ID);
 	// activate texture unit 0
@@ -121,23 +123,25 @@ void Render::DrawObject(EntityID ID)
 	// binding texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-    // sending data to Transformation uniform buffer
-    //Engine::shaderManager.ShootDataToUniformBuffer("Transformation", ID);
-    
-    // sending data to UVCoordClr uniform buffer
-    //Engine::shaderManager.ShootDataToUniformBuffer("UVCoordClr", ID);
+	// sending data to Transformation uniform buffer
+	//Engine::shaderManager.ShootDataToUniformBuffer("Transformation", ID);
 
 	// sending data to UVCoordClr uniform buffer
-	//ShaderModule::ShootDataToUniformBuffer("UVCoordClr", ID);
+	//Engine::shaderManager.ShootDataToUniformBuffer("UVCoordClr", ID);
 
-	/*const GLSLShader& shader = ShaderModule::GetEntityShader();
-	auto mesh = MeshComponentManager::GetMesh(ID);
-	glBindVertexArray(std::get<1>(mesh));
-	shader.Use();
-	//glDrawElementsInstanced(GL_TRIANGLES, std::get<2>(mesh), GL_UNSIGNED_SHORT, NULL, size);
-	DrawMesh(mesh);
-	shader.UnUse();
-	glBindVertexArray(0);*/
+// sending data to UVCoordClr uniform buffer
+//ShaderModule::ShootDataToUniformBuffer("UVCoordClr", ID);
+
+/*const GLSLShader& shader = ShaderModule::GetEntityShader();
+auto mesh = MeshComponentManager::GetMesh(ID);
+glBindVertexArray(std::get<1>(mesh));
+shader.Use();
+//glDrawElementsInstanced(GL_TRIANGLES, std::get<2>(mesh), GL_UNSIGNED_SHORT, NULL, size);
+DrawMesh(mesh);
+shader.UnUse();
+glBindVertexArray(0);*/
+}
+
 }
 
 namespace {

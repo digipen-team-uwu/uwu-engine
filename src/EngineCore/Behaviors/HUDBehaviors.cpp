@@ -16,7 +16,7 @@
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/UI/UIManager.h>
 #include <UWUEngine/Entity/EntityCacher.h>
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include "UWUEngine/Graphics/Texture/AtlasModule.h"
 
 void Behavior<EntityManager::Type::HUDHealth>::Render()
 {

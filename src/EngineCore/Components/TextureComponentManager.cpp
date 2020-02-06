@@ -16,7 +16,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <fstream>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Serialization.h>
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include "UWUEngine/Graphics/Texture/AtlasModule.h"
 
 namespace goc = GameObjectConstants;
 using namespace UWUEngine;
@@ -128,18 +128,18 @@ void TextureComp::SetFilePath(EntityID ID, const char *filePath, unsigned access
 {
   Texture texture = getTexture(ID);
   texture.SetFilePath(std::string(filePath), accessID);
-  TextureAtlaser::SetAtlasData(ID);
+  AtlasModule::SetAtlasData(ID);
 }
 
 void TextureComp::SetCurrentTexture(EntityID ID, unsigned accessID)
 {
-  TextureAtlaser::SetAtlasData(ID, accessID);
+  AtlasModule::SetAtlasData(ID, accessID);
 }
 
 void TextureComp::SetFilePaths(EntityID ID, const std::array<std::string, goc::MAX_SPRITES>& filePaths)
 {
   filePaths_[ID] = filePaths;
-  TextureAtlaser::SetAtlasData(ID);
+  AtlasModule::SetAtlasData(ID);
 }
 
 void TextureComp::Serialize(std::ofstream& stream, EntityID id)

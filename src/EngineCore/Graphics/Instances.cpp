@@ -15,7 +15,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/Component/MeshComponentManager.h>
 #include <UWUEngine/Component/LightingComponentManager.h>
-#include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
+#include "UWUEngine/Graphics/Texture/AtlasModule.h"
 
 std::vector<GLuint> Instances::vaos;
 std::unordered_map<VaoKey, std::array<GLuint, Instances::InstanceData::Total>> Instances::vbos;
