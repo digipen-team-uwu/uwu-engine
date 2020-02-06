@@ -30,7 +30,7 @@ void Behavior<EntityManager::Type::Perception>::Enter_Idle()
 {
     // Set the idle animation
     SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("Idle", true);
-    ColliderComponentManager::SetCollider(GetID(), idleCollider);
+    ColliderComp::SetCollider(GetID(), idleCollider);
 }
 
 void Behavior<EntityManager::Type::Perception>::Load_Idle()

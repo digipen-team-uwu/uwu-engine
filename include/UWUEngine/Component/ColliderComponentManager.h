@@ -13,36 +13,40 @@ Copyright 2019 DigiPen, All rights reserved.
 #pragma once
 #include <unordered_map>
 
-#include <UWUEngine/Component/BaseComponent.h>
+#include <UWUEngine/Component/Component.h>
 #include <UWUEngine/Physics/Colliders/Collider.h>
 
-class ColliderComponentManager final : public BaseComponent<ColliderComponentManager>
+namespace UWUEngine
 {
-public:
-	ColliderComponentManager();
-	~ColliderComponentManager() override;
-	
-	void Update() override;
-	void InitObject(EntityID ID) override;
-	void ShutdownObject(EntityID ID) override;
+  class ColliderComp final : public Component
+  {
+  public:
+    ColliderComp();
+    ~ColliderComp() override;
 
-  static void SetCollider(EntityID ID, Collider const * collider);
+    void Update() override;
+    void InitObject(EntityID ID) override;
+    void ShutdownObject(EntityID ID) override;
 
-	static void SetPointCollider(EntityID ID, glm::vec2 position);
-	static void SetLineCollider(EntityID ID, glm::vec2 p1, glm::vec2 p2);
-	static void SetCircularCollider(EntityID ID, glm::vec2 center, float radius);
-	static void SetRectangleCollider(EntityID ID);
-	static void SetPolygonCollider(EntityID ID);
+    void SetCollider(EntityID ID, Collider const* collider);
 
-	static Collider const* GetCollider(EntityID ID);
+    void SetPointCollider(EntityID ID, glm::vec2 position);
+    void SetLineCollider(EntityID ID, glm::vec2 p1, glm::vec2 p2);
+    void SetCircularCollider(EntityID ID, glm::vec2 center, float radius);
+    void SetRectangleCollider(EntityID ID);
+    void SetPolygonCollider(EntityID ID);
 
-  static void Serialize(std::ofstream& stream, EntityID id);
+    Collider const* GetCollider(EntityID ID);
 
-  static std::unordered_map<EntityID, Collider*>::const_iterator begin();
-  static std::unordered_map<EntityID, Collider*>::const_iterator end();
+    void Serialize(std::ofstream& stream, EntityID id);
 
-private:
-	static void ResolveCollision(const Event<EventType::Collision>& info);
-	static EventListener<EventType::Collision> listener_;
-	static std::unordered_map<EntityID, Collider*> _collider;
-};
+    std::unordered_map<EntityID, Collider*>::const_iterator begin();
+    std::unordered_map<EntityID, Collider*>::const_iterator end();
+
+  private:
+    //TODO: part of event collision sys
+    //void ResolveCollision(const Event<EventType::Collision>& info);
+    //EventListener<EventType::Collision> listener_;
+    std::unordered_map<EntityID, Collider*> _collider;
+  };
+}

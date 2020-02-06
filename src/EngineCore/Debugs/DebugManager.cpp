@@ -109,7 +109,7 @@ void DebugManager::Render()
 
     if (drawHitboxes)
     {
-      for (auto i = ColliderComponentManager::begin(); i != ColliderComponentManager::end(); ++i)
+      for (auto i = ColliderComp::begin(); i != ColliderComp::end(); ++i)
       {
         i->second->Render();
       }

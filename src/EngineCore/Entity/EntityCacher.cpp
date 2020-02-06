@@ -317,8 +317,8 @@ EntityID EntityCacher::CreateCachedEntity(const CachedEntity& entity)
 
   if (entity.collider.active)
   {
-    ColliderComponentManager::Activate(object);
-    ColliderComponentManager::SetCollider(object, entity.collider.collider);
+    ColliderComp::Activate(object);
+    ColliderComp::SetCollider(object, entity.collider.collider);
   }
 
   if (entity.texture.active)

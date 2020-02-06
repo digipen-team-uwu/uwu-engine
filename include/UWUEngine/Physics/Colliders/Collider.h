@@ -20,7 +20,7 @@ Copyright 2019 DigiPen, All rights reserved.
 
 using EntityID = unsigned;
 using Axis = glm::vec2;
-class ColliderComponentManager;
+class ColliderComp;
 
 /**
  * \brief Project the point onto an axis
@@ -74,7 +74,7 @@ public:
 	[[nodiscard]] ShapeType GetType() const;
 	void SetType(ShapeType type);
 
-  friend ColliderComponentManager;
+  friend ColliderComp;
 
 protected:
 

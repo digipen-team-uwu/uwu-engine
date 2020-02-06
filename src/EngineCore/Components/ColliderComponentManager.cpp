@@ -28,167 +28,167 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Debugs/TraceLogger.h>
 
-EventListener<EventType::Collision> ColliderComponentManager::listener_{ ColliderComponentManager::ResolveCollision };
-std::unordered_map<EntityID, Collider*> ColliderComponentManager::_collider;
-
 void DispatchCollisionEvent(Event<EventType::Collision> const&);
 
-ColliderComponentManager::ColliderComponentManager()
+namespace UWUEngine
 {
-  EventSystem::Register(listener_);
-}
-
-ColliderComponentManager::~ColliderComponentManager()
-{
-  for (auto& i : _collider)
+  ColliderComp::ColliderComp()
   {
-    delete i.second;
+    //EventSystem::Register(listener_);
   }
-  _collider.clear();
-  EventSystem::UnRegister(listener_);
-}
 
-void ColliderComponentManager::Update()
-{
-  //Detection and Resolution
-  for (auto i = _collider.begin(); i != _collider.end(); ++i)
+  ColliderComp::~ColliderComp()
   {
-    PhysicsComponentManager::BodyType type1 = PhysicsComponentManager::GetBodyType(i->first);
-    for (auto j = std::next(i); j != _collider.end(); ++j)
+    for (auto& i : _collider)
     {
-      //Ignore STATIC - STATIC collision
-      PhysicsComponentManager::BodyType type2 = PhysicsComponentManager::GetBodyType(j->first);
-      if (type1 == PhysicsComponentManager::BodyType::STATIC && type2 == PhysicsComponentManager::BodyType::STATIC)
+      delete i.second;
+    }
+    _collider.clear();
+    //EventSystem::UnRegister(listener_);
+  }
+
+  void ColliderComp::Update()
+  {
+    //Detection and Resolution
+    for (auto i = _collider.begin(); i != _collider.end(); ++i)
+    {
+      PhysicsComponentManager::BodyType type1 = PhysicsComponentManager::GetBodyType(i->first);
+      for (auto j = std::next(i); j != _collider.end(); ++j)
       {
-        continue;
-      }
+        //Ignore STATIC - STATIC collision
+        PhysicsComponentManager::BodyType type2 = PhysicsComponentManager::GetBodyType(j->first);
+        if (type1 == PhysicsComponentManager::BodyType::STATIC && type2 == PhysicsComponentManager::BodyType::STATIC)
+        {
+          continue;
+        }
 
-      //Collision Detection
-      const Event<EventType::Collision> event = i->second->IsColliding(*j->second);
+        //Collision Detection
+        const Event<EventType::Collision> event = i->second->IsColliding(*j->second);
 
-      //TODO: event system
+        //TODO: event system
 
-      if (event.depth != 0)
-      {
-        #ifdef EventSystemEnabled
-        EventSystem::Push(event);
-        #else
-        DispatchCollisionEvent(info);
-        ResolveCollision(info);
-        #endif
+        if (event.depth != 0)
+        {
+#ifdef EventSystemEnabled
+          EventSystem::Push(event);
+#else
+          DispatchCollisionEvent(info);
+          ResolveCollision(info);
+#endif
+        }
       }
     }
   }
-}
 
-void ColliderComponentManager::InitObject(EntityID ID)
-{
-  PhysicsComponentManager::Activate(ID);
-}
-
-void ColliderComponentManager::ShutdownObject(EntityID ID)
-{
-  delete GetCollider(ID);
-  _collider.erase(ID);
-}
-
-void ColliderComponentManager::SetCollider(EntityID ID, Collider const* collider)
-{
-  auto currCollider = _collider.find(ID);
-  if (currCollider != _collider.end())
+  void ColliderComp::InitObject(EntityID ID)
   {
-    delete currCollider->second;
+    PhysicsComponentManager::Activate(ID);
+  }
+
+  void ColliderComp::ShutdownObject(EntityID ID)
+  {
+    delete GetCollider(ID);
     _collider.erase(ID);
   }
-  Collider* newCollider = collider->Clone();
-  newCollider->ID = ID;
-  _collider.insert({ ID, newCollider });
-}
 
-void ColliderComponentManager::SetPointCollider(EntityID ID, glm::vec2 position)
-{
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderPoint(ID, position)) });
-}
-
-void ColliderComponentManager::SetLineCollider(EntityID ID, glm::vec2 p1, glm::vec2 p2)
-{
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderLine(ID, p1, p2)) });
-}
-
-void ColliderComponentManager::SetCircularCollider(EntityID ID, glm::vec2 center, float radius)
-{
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderCircle(ID, center, radius)) });
-}
-
-void ColliderComponentManager::SetRectangleCollider(EntityID ID)
-{
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderPolygon(ID)) });
-}
-
-void ColliderComponentManager::SetPolygonCollider(EntityID ID)
-{
-  //insert a polygon collider with default center (0, 0)
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderPolygon(ID, {0,0})) });
-}
-
-Collider const* ColliderComponentManager::GetCollider(EntityID ID)
-{
-  return _collider.find(ID)->second;
-}
-
-void ColliderComponentManager::Serialize(std::ofstream& stream, EntityID id)
-{
-  if (IsActive(id))
+  void ColliderComp::SetCollider(EntityID ID, Collider const* collider)
   {
-    //TODO:serialize collider
-    GetCollider(id)->Serialize(stream);
+    auto currCollider = _collider.find(ID);
+    if (currCollider != _collider.end())
+    {
+      delete currCollider->second;
+      _collider.erase(ID);
+    }
+    Collider* newCollider = collider->Clone();
+    newCollider->ID = ID;
+    _collider.insert({ ID, newCollider });
   }
-}
 
-std::unordered_map<EntityID, Collider*>::const_iterator ColliderComponentManager::begin()
-{
-  return _collider.cbegin();
-}
+  void ColliderComp::SetPointCollider(EntityID ID, glm::vec2 position)
+  {
+    _collider.insert({ ID, static_cast<Collider*>(new ColliderPoint(ID, position)) });
+  }
 
-std::unordered_map<EntityID, Collider*>::const_iterator ColliderComponentManager::end()
-{
-  return _collider.cend();
-}
+  void ColliderComp::SetLineCollider(EntityID ID, glm::vec2 p1, glm::vec2 p2)
+  {
+    _collider.insert({ ID, static_cast<Collider*>(new ColliderLine(ID, p1, p2)) });
+  }
 
-void ColliderComponentManager::ResolveCollision(Event<EventType::Collision> const& info)
-{
-  // 1.Snap Them off
-  glm::vec4 obj1trans = TransformComponentManager::GetTranslation(info.obj1);
-  glm::vec4 obj2trans = TransformComponentManager::GetTranslation(info.obj2);
+  void ColliderComp::SetCircularCollider(EntityID ID, glm::vec2 center, float radius)
+  {
+    _collider.insert({ ID, static_cast<Collider*>(new ColliderCircle(ID, center, radius)) });
+  }
 
-  const float proj1 = ProjectPoint(obj1trans.xy(), info.direction);
-  const float proj2 = ProjectPoint(obj2trans.xy(), info.direction);
+  void ColliderComp::SetRectangleCollider(EntityID ID)
+  {
+    _collider.insert({ ID, static_cast<Collider*>(new ColliderPolygon(ID)) });
+  }
 
-  glm::vec2 direction = info.direction * std::abs(info.depth);
-  direction = proj1 > proj2 ? direction : -direction;
+  void ColliderComp::SetPolygonCollider(EntityID ID)
+  {
+    //insert a polygon collider with default center (0, 0)
+    _collider.insert({ ID, static_cast<Collider*>(new ColliderPolygon(ID, {0,0})) });
+  }
 
-  const float mass1 = PhysicsComponentManager::GetInverseMass(info.obj1);
-  const float mass2 = PhysicsComponentManager::GetInverseMass(info.obj2);
-  const float massRat = mass1 / (mass1 + mass2);
+  Collider const* ColliderComp::GetCollider(EntityID ID)
+  {
+    return _collider.find(ID)->second;
+  }
 
-  const glm::vec2 dirObject1 = direction * massRat;
-  const glm::vec2 dirObject2 = direction - dirObject1;
+  void ColliderComp::Serialize(std::ofstream& stream, EntityID id)
+  {
+    if (IsActive(id))
+    {
+      //TODO:serialize collider
+      GetCollider(id)->Serialize(stream);
+    }
+  }
 
-  obj1trans.x += dirObject1.x;
-  obj1trans.y += dirObject1.y;
-  obj2trans.x -= dirObject2.x;
-  obj2trans.y -= dirObject2.y;
+  std::unordered_map<EntityID, Collider*>::const_iterator ColliderComp::begin()
+  {
+    return _collider.cbegin();
+  }
 
-  TransformComponentManager::SetTranslation(obj1trans, info.obj1);
-  TransformComponentManager::SetTranslation(obj2trans, info.obj2);
+  std::unordered_map<EntityID, Collider*>::const_iterator ColliderComp::end()
+  {
+    return _collider.cend();
+  }
 
-  // 2. Resolve velocity
-  glm::vec2 vel1 = PhysicsComponentManager::GetVelocity(info.obj1);
-  glm::vec2 vel2 = PhysicsComponentManager::GetVelocity(info.obj2);
+  void ColliderComp::ResolveCollision(Event<EventType::Collision> const& info)
+  {
+    // 1.Snap Them off
+    glm::vec4 obj1trans = TransformComponentManager::GetTranslation(info.obj1);
+    glm::vec4 obj2trans = TransformComponentManager::GetTranslation(info.obj2);
 
-  vel1 -= info.direction * glm::dot(vel1, info.direction);
-  vel2 -= info.direction * glm::dot(vel2, info.direction);
+    const float proj1 = ProjectPoint(obj1trans.xy(), info.direction);
+    const float proj2 = ProjectPoint(obj2trans.xy(), info.direction);
 
-  PhysicsComponentManager::SetVelocity(glm::vec4(vel1, 0, 0), info.obj1);
-  PhysicsComponentManager::SetVelocity(glm::vec4(vel2, 0, 0), info.obj2);
+    glm::vec2 direction = info.direction * std::abs(info.depth);
+    direction = proj1 > proj2 ? direction : -direction;
+
+    const float mass1 = PhysicsComponentManager::GetInverseMass(info.obj1);
+    const float mass2 = PhysicsComponentManager::GetInverseMass(info.obj2);
+    const float massRat = mass1 / (mass1 + mass2);
+
+    const glm::vec2 dirObject1 = direction * massRat;
+    const glm::vec2 dirObject2 = direction - dirObject1;
+
+    obj1trans.x += dirObject1.x;
+    obj1trans.y += dirObject1.y;
+    obj2trans.x -= dirObject2.x;
+    obj2trans.y -= dirObject2.y;
+
+    TransformComponentManager::SetTranslation(obj1trans, info.obj1);
+    TransformComponentManager::SetTranslation(obj2trans, info.obj2);
+
+    // 2. Resolve velocity
+    glm::vec2 vel1 = PhysicsComponentManager::GetVelocity(info.obj1);
+    glm::vec2 vel2 = PhysicsComponentManager::GetVelocity(info.obj2);
+
+    vel1 -= info.direction * glm::dot(vel1, info.direction);
+    vel2 -= info.direction * glm::dot(vel2, info.direction);
+
+    PhysicsComponentManager::SetVelocity(glm::vec4(vel1, 0, 0), info.obj1);
+    PhysicsComponentManager::SetVelocity(glm::vec4(vel2, 0, 0), info.obj2);
+  }
 }

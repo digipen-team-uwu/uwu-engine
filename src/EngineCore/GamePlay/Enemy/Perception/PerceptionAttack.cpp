@@ -80,7 +80,7 @@ void Behavior<EntityManager::Type::Perception>::Update_Attack(float dt)
     }
     if (attackTimeRemaining <= 0.5)
     {
-      ColliderComponentManager::SetCollider(GetID(), attackCollider);
+      ColliderComp::SetCollider(GetID(), attackCollider);
     }
 }
 

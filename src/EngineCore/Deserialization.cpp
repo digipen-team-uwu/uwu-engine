@@ -378,7 +378,7 @@ void CheckCollider(rapidjson::Value& object, EntityID ID, const char* filePath)
   if (object.HasMember("collider"))
   {
     assert(object["collider"].IsObject());
-    ColliderComponentManager::Activate(ID);
+    ColliderComp::Activate(ID);
 
     //Extract collider type
     std::string typeString(object["collider"]["type"].GetString());
@@ -398,10 +398,10 @@ void CheckCollider(rapidjson::Value& object, EntityID ID, const char* filePath)
     case Collider::ShapeType::CIRCLE:
       break;
     case Collider::ShapeType::POLYGON:
-      ColliderComponentManager::SetPolygonCollider(ID);
+      ColliderComp::SetPolygonCollider(ID);
       break;
     case Collider::ShapeType::RECTANGLE:
-      ColliderComponentManager::SetRectangleCollider(ID);
+      ColliderComp::SetRectangleCollider(ID);
       break;
     case Collider::ShapeType::COUNT: break;
     default:;

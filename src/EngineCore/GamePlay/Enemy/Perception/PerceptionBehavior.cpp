@@ -40,8 +40,8 @@ BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Perception>
     attack_->InsertVertex({-0.3, -0.5});
     attackCollider = attack_;
   }
-  ColliderComponentManager::Activate(ID);
-  ColliderComponentManager::SetCollider(ID, idleCollider);
+  ColliderComp::Activate(ID);
+  ColliderComp::SetCollider(ID, idleCollider);
 
   EventSystem::Register(listener);
 }
