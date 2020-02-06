@@ -11,7 +11,7 @@
 */
 /******************************************************************************/
 #include <UWUEngine/Component/BehaviorComponentManager.h>
-#include <UWUEngine/Graphics/Render.h>
+#include <UWUEngine/Graphics/RenderSys.h>
 #include <UWUEngine/Entity/EntityManager.h>
 
 namespace UWUEngine
@@ -46,13 +46,9 @@ namespace UWUEngine
 
   void BehaviorComp::Update()
   {
-    auto ids = EntityManager::GetIDs();
-    auto it = ids.begin();
-    while (it != ids.end())
+    for (auto& it : behaviors)
     {
-      if (IsActive(*it))
-        behaviors[EntityIDManager::GetPos(*it)]->Update();
-      it++;
+      it.second->Update();
     }
   }
 

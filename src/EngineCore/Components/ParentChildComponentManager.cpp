@@ -28,6 +28,13 @@ void UWUEngine::ParentChild::AddChild(EntityID child)
   children_.push_back(child);
 }
 
+void UWUEngine::ParentChild::SetParent(EntityID parent)
+{
+  parent_ = parent;
+}
+
+
+
 ParentChild UWUEngine::ParentChildComp::operator[](EntityID ID)
 {
   return ParentChild(parents_[ID], children_[ID]);
@@ -52,6 +59,12 @@ void ParentChildComp::AddChild(EntityID parent, EntityID child)
   //children[parent].push_back(child);
   //parents[child] = parent; ??????? -> dont understand
 }
+
+void ParentChildComp::SetParent(EntityID parent, EntityID child)
+{
+  this[child].SetParent(parent);
+}
+
 
 void ParentChildComp::EraseChild(EntityID parent, EntityID child)
 {
