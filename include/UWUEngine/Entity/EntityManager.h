@@ -12,7 +12,7 @@
 
 #pragma once
 #include <UWUEngine/constants.h>
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 #include "EntityVector.h"
 #include <vector>
 
@@ -22,7 +22,10 @@ class IBaseComponent;
 //TODO: factory construction of different GameObjects (Maybe?)
 namespace goc = GameObjectConstants;
 
-class EntityManager : public BaseSystem<EntityManager>
+namespace UWUEngine
+{
+
+class EntitySys : public System
 {
 public:
 
@@ -31,10 +34,10 @@ public:
 		Empty,
 		Player,
 		Cyclone,
-        Crystal,
+		Crystal,
 		Logo_,
 		Solid,
-        Torch,
+		Torch,
 		Background,
 		Light,
 		ParticleEmitter,
@@ -45,23 +48,23 @@ public:
 		Fang_,
 		Perception,
 		Text_,
-        Rock_,
-        CameraBounds,
-        Wall_,
-        Lantern,
+		Rock_,
+		CameraBounds,
+		Wall_,
+		Lantern,
 		TypeCount,
-        Prop_,
-        Black,
-        BrokenPillars,
-        RockBG,
-        CliffFace,
-        Dropped,
-        HUDHealth,
-        HUDEnergy,
-        HUDProp,
+		Prop_,
+		Black,
+		BrokenPillars,
+		RockBG,
+		CliffFace,
+		Dropped,
+		HUDHealth,
+		HUDEnergy,
+		HUDProp,
 		ColliderTest,
-        Hazard,
-        LevelEnd,
+		Hazard,
+		LevelEnd,
 		End,
 	};
 
@@ -218,3 +221,5 @@ private:
 
 	friend class Editor;
 };
+
+} // namespace UWUEngine

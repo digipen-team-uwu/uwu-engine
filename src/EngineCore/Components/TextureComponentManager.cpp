@@ -18,24 +18,27 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Serialization.h>
 #include "UWUEngine/Graphics/Texture/TextureAtlaser.h"
 
-template<>
-size_t RegisterComponentHelper<TextureComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<TextureComponentManager>(ComponentUpdateOrder::LAST);
-
 namespace goc = GameObjectConstants;
+using namespace UWUEngine;
 
-EntityVector<glm::uvec2>     TextureComponentManager::dimensions_(goc::INITIAL_OBJECT_COUNT);
-EntityVector<glm::vec2>      TextureComponentManager::uvs_(goc::INITIAL_OBJECT_COUNT, { -1, -1 });
-EntityVector<glm::vec4>      TextureComponentManager::colors_(goc::INITIAL_OBJECT_COUNT);
-EntityVector<GLuint>         TextureComponentManager::textureID_(goc::INITIAL_OBJECT_COUNT);
-std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>> TextureComponentManager::filePaths_;
-
-
-TextureComponentManager::TextureComponentManager()
+Texture TextureComp::operator[](EntityID ID)
 {
-    
+  return Texture(dimensions_[ID], uvs_[ID], colors_[ID], textureID_[ID], filePaths_[ID]);
 }
 
-TextureComponentManager::~TextureComponentManager()
+UWUEngine::Texture TextureComp::getTexture(EntityID ID)
+{
+  return Texture(dimensions_[ID], uvs_[ID], colors_[ID], textureID_[ID], filePaths_[ID]);
+}
+
+void TextureComp::InitObject(EntityID ID)
+{
+  dimensions_[ID] = { 1, 1 };
+  uvs_[ID] = { 0, 0 };
+  colors_[ID] = { 1, 1, 1, 1 };
+}
+
+TextureComp::~TextureComp()
 {
   for (auto i : EntityManager::GetIDs())
   {
@@ -43,99 +46,110 @@ TextureComponentManager::~TextureComponentManager()
   }
 }
 
-void  TextureComponentManager::SetDimensions(const glm::uvec2& dimensions, EntityID id)
+void TextureComp::RemoveColor(EntityID ID)
 {
-    dimensions_[id] = dimensions;
+  Texture texture = getTexture(ID);
+  texture.SetColors(glm::vec4(1.0f));
 }
 
-void TextureComponentManager::SetTextureID(EntityID ID, GLuint textureID)
+void TextureComp::ShutdownObject(EntityID ID)
 {
-    textureID_[ID] = textureID;
+  uvs_[ID] = { -1,-1 };
 }
 
-glm::uvec2& TextureComponentManager::GetDimensions(EntityID ID)
-{
-    return dimensions_[ID];
-}
-
-GLuint TextureComponentManager::GetTextureID(EntityID ID)
-{
-    return textureID_[ID];
-}
-
-void TextureComponentManager::InitObject(EntityID ID)
-{
-    dimensions_[ID] = { 1, 1 };
-    uvs_[ID] = { 0, 0 };
-    colors_[ID] = { 1, 1, 1, 1 };
-}
-
-void TextureComponentManager::SetColor(EntityID ID, const glm::vec4& newColor)
-{
-    colors_[ID] = newColor;
-}
-
- glm::vec4& TextureComponentManager::GetColor(EntityID ID)
-{
-    return colors_[ID];
-}
-
- void TextureComponentManager::RemoveColor(EntityID ID)
- {
-     colors_[ID] = glm::vec4(1.0f);
- }
-
-void TextureComponentManager::ShutdownObject(EntityID ID)
-{
-    uvs_[ID] = { -1,-1 };
-}
-
-
-void TextureComponentManager::SetUV(EntityID ID, const glm::vec2& uv)
-{
-    uvs_[ID] = uv;
-}
-
-glm::vec2& TextureComponentManager::GetUV(EntityID ID)
-{
-    return uvs_[ID];
-}
-
-bool TextureComponentManager::HasFilepath(EntityID ID)
+bool TextureComp::HasFilepath(EntityID ID)
 {
   return filePaths_.find(ID) != filePaths_.end();
 }
 
-const std::string& TextureComponentManager::getFilePath(EntityID ID, unsigned int accessID)
+#pragma region Setter
+void Texture::SetDimension(const glm::uvec2& dimension)
 {
-    return filePaths_[ID][accessID];
+    dimensions_ = dimension;
 }
 
-void TextureComponentManager::SetFilePath(EntityID ID, const char *filePath, unsigned int accessID)
+void Texture::SetTextureID(GLuint textureID)
 {
-    filePaths_[ID][accessID] = std::string(filePath);
-    TextureAtlaser::SetAtlasData(ID);
+    textureID_ = textureID;
 }
 
-void TextureComponentManager::SetCurrentTexture(EntityID ID, unsigned accessID)
+void Texture::SetColors(const glm::vec4& colors)
+{
+  colors_ = colors;
+}
+
+void Texture::SetUVS(const glm::vec2& uvs)
+{
+  uvs_ = uvs;
+}
+
+void Texture::SetFilePath(const std::string& filePath, unsigned accessID)
+{
+  filePaths_[accessID] = filePath;
+}
+
+#pragma endregion 
+
+#pragma region Getter
+const glm::uvec2& Texture::GetDimension() const
+{
+    return dimensions_;
+}
+
+const GLuint& Texture::GetTextureID() const
+{
+    return textureID_;
+}
+
+ const glm::vec4& Texture::GetColors() const
+{
+    return colors_;
+}
+
+const glm::vec2& Texture::GetUVS() const
+{
+  return uvs_;
+}
+
+const std::string& Texture::GetFilePaths(unsigned accessID) const
+{
+  return filePaths_[accessID];
+}
+
+#pragma endregion 
+
+const std::string& TextureComp::getFilePath(EntityID ID, unsigned accessID)
+{
+  Texture texture = getTexture(ID);
+  return texture.GetFilePaths(accessID);
+}
+
+void TextureComp::SetFilePath(EntityID ID, const char *filePath, unsigned accessID)
+{
+  Texture texture = getTexture(ID);
+  texture.SetFilePath(std::string(filePath), accessID);
+  TextureAtlaser::SetAtlasData(ID);
+}
+
+void TextureComp::SetCurrentTexture(EntityID ID, unsigned accessID)
 {
   TextureAtlaser::SetAtlasData(ID, accessID);
 }
 
-void TextureComponentManager::SetFilePaths(EntityID ID, const std::array<std::string, goc::MAX_SPRITES>& filePaths)
+void TextureComp::SetFilePaths(EntityID ID, const std::array<std::string, goc::MAX_SPRITES>& filePaths)
 {
   filePaths_[ID] = filePaths;
   TextureAtlaser::SetAtlasData(ID);
 }
 
-void TextureComponentManager::Serialize(std::ofstream& stream, EntityID id)
+void TextureComp::Serialize(std::ofstream& stream, EntityID id)
 {
   stream << "\"texture\" :\n";
   stream << Tabs::TWO << "{\n";
 
-  if (TextureComponentManager::HasFilepath(id))
+  if (TextureComp::HasFilepath(id))
   {
-    stream << Tabs::THREE << R"("filepath" : ")" << TextureComponentManager::getFilePath(id) << '"';
+    stream << Tabs::THREE << R"("filepath" : ")" << TextureComp::getFilePath(id) << '"';
     stream << ",\n";
   }
 
@@ -147,22 +161,24 @@ void TextureComponentManager::Serialize(std::ofstream& stream, EntityID id)
   stream << Tabs::THREE << "}";
 }
 
-const std::vector<glm::uvec2>& TextureComponentManager::GetArrayDimensions()
+#pragma region Array Getter
+const EntityVector<glm::uvec2>& TextureComp::GetArrayDimensions() const
 {
     return dimensions_;
 }
 
-const std::vector<glm::vec2>& TextureComponentManager::GetArrayUVS()
+const EntityVector<glm::vec2>& TextureComp::GetArrayUVS() const
 {
     return uvs_;
 }
 
-const std::vector<glm::vec4>& TextureComponentManager::GetArrayColors()
+const EntityVector<glm::vec4>& TextureComp::GetArrayColors() const
 {
     return colors_;
 }
 
-const std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>>& TextureComponentManager::GetArrayFilePath()
+const std::unordered_map<EntityID, std::array<std::string, goc::MAX_SPRITES>>& TextureComp::GetArrayFilePaths() const
 {
     return filePaths_;
 }
+#pragma endregion 

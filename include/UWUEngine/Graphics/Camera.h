@@ -17,6 +17,23 @@ Copyright 2019 DigiPen, All rights reserved.
 class Camera : public BaseSystem<Camera>
 {
 public:
+
+    enum class state
+    {
+      ENABLE_FPS,
+      DISABLE_FPS,
+
+      Total
+    };
+
+    enum class lock
+    {
+      LOCKED,
+      UNLOCKED,
+
+      Total
+    };
+    
     Camera();
     void Update() override;
     ~Camera() = default;
@@ -27,7 +44,7 @@ public:
     static void SetCameraPosition(const glm::vec2& new_position);
     static const glm::vec3& GetCameraPosition();
     //void SetCameraFront(const glm::vec3& front);
-    static const glm::vec3& GetCameraFront();
+    static const glm::vec3& GetLookAtVector();
     //void SetCameraUp(const glm::vec3& Up);
     static const glm::vec3& GetCameraUp();
     //void SetCameraRight(const glm::vec3& right);
@@ -39,13 +56,35 @@ public:
     static void zoomIn(float amount);
     static void zoomOut(float amount);
     static void moveCamera(float speed);
+    static float getFOV();
+    static float getNearDistance();
+    static float getFarDistance();
+    static float getAspectRatio();
+    static void mouseMovement(float xOffSet, float yOffSet);
+    static void setFirstFlag(bool flag);
+    static bool getFirstFlag();
+    static state getCameraState();
 private:
-    static void calculate_camera_vector();
+    static void Print_Debug_Value();
+    static void calculate_camera_data();
+    static glm::vec3 relative_up;
+    static glm::vec3 lookAtVector;
     static glm::vec3 cameraPos;
-    static glm::vec3 cameraFront;
-    static glm::vec3 cameraUp;
-    static glm::vec3 cameraRight;
+    static glm::vec3 BackVector;
+    static glm::vec3 UpVector;
+    static glm::vec3 RightVector;
     static glm::vec3 cameraTarget;
     static glm::mat4 projection;
     static glm::mat4 view;
+    static float FOV;
+    static float nearDistance;
+    static float farDistance;
+    static float aspectRatio;
+    static bool isFirst;
+    static float Yaw;
+    static float Pitch;
+    static state state_;
+    static bool switch_;
+    static lock lock_;
+    static bool switch_lock_;
 };

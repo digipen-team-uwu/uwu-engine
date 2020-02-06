@@ -55,5 +55,6 @@ private:
   static glm::vec2 mousePos;
   static glm::vec2 scrollVec;
   static glm::vec2 deadzones; // {x, y}
+  static glm::vec2 prevMousePos;
 };
 

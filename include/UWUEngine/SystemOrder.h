@@ -5,6 +5,7 @@ enum class SystemUpdateOrder
   FIRST        = 0,
   FrameRate    = 9250,
   StateMachine = 9300,
+  SceneManager = 9325,
   Editor       = 9350,
   Entity       = 9600,
   TexLoad      = 9603,
@@ -19,6 +20,7 @@ enum class SystemUpdateOrder
   Event        = 9825,
   Render       = 9850,
   Action       = 9860,
+  Picker       = 9865,
   Input        = 9870,
   Window       = 9900,
   LAST         = 10000,
@@ -43,6 +45,7 @@ enum class SystemInitOrder
   HUD           = 9775,
   Light         = 9800,
   Debug         = 9850,
+  SceneManager  = 9875,
   Render        = 9900,
   LAST          = 10000,
   StateMachine  = -2, // IT IS NOT AN ERROR THAT STATE MACHINE COMES AFTER THE LAST SYSTEM

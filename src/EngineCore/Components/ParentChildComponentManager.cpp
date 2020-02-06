@@ -11,51 +11,71 @@
 /******************************************************************************/
 #include <UWUEngine/Component/ParentChildComponentManager.h>
 
-template<>
-size_t RegisterComponentHelper<ParentChildComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<ParentChildComponentManager>(ComponentUpdateOrder::LAST);
+using namespace UWUEngine;
 
-std::unordered_map<EntityID, std::vector<EntityID>> ParentChildComponentManager::children;
-
-EntityVector<EntityID> ParentChildComponentManager::parents(goc::INITIAL_OBJECT_COUNT);
-
-const std::vector<EntityID>& ParentChildComponentManager::GetChildren(EntityID id)
+EntityID ParentChild::GetParent() const
 {
-  return children[id];
+  return parent_;
 }
 
-EntityID ParentChildComponentManager::GetParent(EntityID id)
+std::vector<EntityID>& ParentChild::GetChild() const
 {
-  return parents[id];
+  return children_;
 }
 
-void ParentChildComponentManager::AddChild(EntityID parent, EntityID child)
+void UWUEngine::ParentChild::AddChild(EntityID child)
 {
- children[parent].push_back(child);
-  ParentChildComponentManager::Activate(child);
-  parents[child] = parent;
+  children_.push_back(child);
 }
 
-void ParentChildComponentManager::EraseChild(EntityID parent, EntityID child)
+ParentChild UWUEngine::ParentChildComp::operator[](EntityID ID)
 {
-  for (auto it = children[parent].begin(); it != children[parent].end(); ++it)
+  return ParentChild(parents_[ID], children_[ID]);
+}
+
+const std::vector<EntityID>& ParentChildComp::GetChildren(EntityID id)
+{
+  ParentChild parentChild = this->operator[](id);
+  return parentChild.GetChild();
+}
+
+EntityID ParentChildComp::GetParent(EntityID id)
+{
+  ParentChild parentChild = this->operator[](id);
+  return parentChild.GetParent();
+}
+
+void ParentChildComp::AddChild(EntityID parent, EntityID child)
+{
+  ParentChild parentChild = this->operator[](parent);
+  parentChild.AddChild(child);
+  //children[parent].push_back(child);
+  //parents[child] = parent; ??????? -> dont understand
+}
+
+void ParentChildComp::EraseChild(EntityID parent, EntityID child)
+{
+  ParentChild parentChild = this->operator[](parent);
+  for (auto it = parentChild.GetChild().begin(); it != parentChild.GetChild().end(); ++it)
   {
     if (*it == child)
     {
-      children[parent].erase(it);
+      parentChild.GetChild().erase(it);
       return;
     }
   }
 }
 
-void ParentChildComponentManager::EraseChild(EntityID parent, std::vector<EntityID>::iterator child)
+void ParentChildComp::EraseChild(EntityID parent, std::vector<EntityID>::iterator child)
 {
-  children[parent].erase(child);
+  ParentChild parentChild = this->operator[](parent);
+  parentChild.GetChild().erase(child);
 }
 
-
-void ParentChildComponentManager::ShutdownObject(EntityID id)
+void ParentChildComp::ShutdownObject(EntityID id)
 {
-  parents[id] = 0;
-  children.erase(id);
-  EraseChild(parents[id], id);
+  parents_[id] = 0;
+  children_.erase(id);
+  EraseChild(parents_[id], id);
 }
+

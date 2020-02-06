@@ -10,44 +10,18 @@ Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #include <UWUEngine/Component/MeshComponentManager.h>
-#include <UWUEngine/Engine.h>
 #include <array>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 
-template<>
-size_t RegisterComponentHelper<MeshComponentManager>::RegisterComponentHelper_ID = EntityManager::AddComponent<MeshComponentManager>(ComponentUpdateOrder::LAST);
-
-namespace goc = GameObjectConstants;
-
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::primitive_type_vaoid_idx_cnt_entityMesh;
-
-MeshComponentManager::MeshComponentManager()
+const std::tuple<GLenum, GLuint, GLuint>& UWUEngine::Mesh::GetEntityMesh()
 {
-  primitive_type_vaoid_idx_cnt_entityMesh = getSquareMesh();
+  return getSquareMesh();
 }
-
-void MeshComponentManager::SetMesh(EntityID ID, std::tuple<GLenum, GLuint, GLuint> newMesh)
-{
-    return;
-}
-
-
-const std::tuple<GLenum, GLuint, GLuint>& MeshComponentManager::GetEntityMesh()
-{
-  return primitive_type_vaoid_idx_cnt_entityMesh;
-}
-
-const std::tuple<GLenum, GLuint, GLuint>& MeshComponentManager::GetMesh(EntityID ID)
-{
-    return primitive_type_vaoid_idx_cnt_entityMesh;
-}
-
 
 // square mesh 1x1 by default unless specify
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::getSquareMesh()
+std::tuple<GLenum, GLuint, GLuint> UWUEngine::Mesh::getSquareMesh()
 {
-
     // positions
     std::vector<glm::vec3> pos_vtx(4);
     pos_vtx[0] = { -0.5f,  -0.5f, 0.0f };    // bottom left
@@ -85,10 +59,10 @@ std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::getSquareMesh()
     idx_vtx[4] = 1;
     idx_vtx[5] = 3;
 
-    return setup_vao_rect(pos_vtx, clr_vtx, uv_vtx, idx_vtx);
+    return UWUEngine::Mesh::setup_vao_rect(pos_vtx, clr_vtx, uv_vtx, idx_vtx);
 }
 
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::setup_vao_rect(
+std::tuple<GLenum, GLuint, GLuint> UWUEngine::Mesh::setup_vao_rect(
     const std::vector<glm::vec3>& pos_vtx,
     const std::vector<glm::vec4>& clr_vtx,
     const std::vector<glm::vec2>& uv_vtx,
@@ -168,7 +142,7 @@ std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::setup_vao_rect(
     return std::make_tuple(GL_TRIANGLES, vaoid, idx_cnt);
 }
 
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::getLineMesh()
+std::tuple<GLenum, GLuint, GLuint> UWUEngine::Mesh::getLineMesh()
 {
     static bool lineMade;
     static std::tuple<GLenum, GLuint, GLuint> primitiveType_vaoid_idxcnt;
@@ -189,22 +163,22 @@ std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::getLineMesh()
         tex_vtx[0] = { 0, 0 };
         tex_vtx[1] = { 0, 1 };
 
-        primitiveType_vaoid_idxcnt = setup_vao_line(pos_vtx, idx_vtx, tex_vtx);
+        primitiveType_vaoid_idxcnt = UWUEngine::Mesh::setup_vao_line(pos_vtx, idx_vtx, tex_vtx);
         lineMade = true;
     }
 
     return primitiveType_vaoid_idxcnt;
 }
 
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::getCustomMesh(const std::vector<glm::vec3>& pos_vtx,
+std::tuple<GLenum, GLuint, GLuint> UWUEngine::Mesh::getCustomMesh(const std::vector<glm::vec3>& pos_vtx,
 	const std::vector<glm::vec4>& clr_vtx, const std::vector<glm::vec2>& uv_vtx,
     std::vector<GLshort>& idx_vtx)
 {
-	std::tuple<GLenum, GLuint, GLuint> mesh = setup_vao_rect(pos_vtx, clr_vtx, uv_vtx, idx_vtx);
+	std::tuple<GLenum, GLuint, GLuint> mesh = UWUEngine::Mesh::setup_vao_rect(pos_vtx, clr_vtx, uv_vtx, idx_vtx);
 	return mesh;
 }
 
-void MeshComponentManager::FreeMesh(std::tuple<GLenum, GLuint, GLuint> mesh)
+void FreeMesh(std::tuple<GLenum, GLuint, GLuint> mesh)
 {
 	//Lost track of VBO and EBO after generation
 	//Can't delete buffer
@@ -214,7 +188,7 @@ void MeshComponentManager::FreeMesh(std::tuple<GLenum, GLuint, GLuint> mesh)
 	glDeleteVertexArrays(1, &std::get<1>(mesh));
 }
 
-std::tuple<GLenum, GLuint, GLuint> MeshComponentManager::setup_vao_line(
+std::tuple<GLenum, GLuint, GLuint> UWUEngine::Mesh::setup_vao_line(
     const std::array<glm::vec3, 2>& pos_vtx,
     std::array <GLshort, 2>& idx_vtx, const std::array<glm::vec2, 2>& tex_vtx)
 {

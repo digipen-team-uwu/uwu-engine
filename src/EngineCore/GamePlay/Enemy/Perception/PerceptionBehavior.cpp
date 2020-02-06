@@ -19,7 +19,7 @@ Collider* Behavior<EntityManager::Type::Perception>::idleCollider;
 Collider* Behavior<EntityManager::Type::Perception>::attackCollider;
 
 Behavior<EntityManager::Type::Perception>::Behavior(EntityID ID):
-BaseBehavior(ID)
+BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Perception>::OnCollide), ID)
 {
   if (!idleCollider)
   {

@@ -6,7 +6,12 @@
 #include <string>
 
 #ifdef _WIN64
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <Shlobj_core.h>
+namespace WindowsSpecific {}
+using namespace WindowsSpecific;
 #elif defined(__unix__)
 #include <unistd.h>
 #endif

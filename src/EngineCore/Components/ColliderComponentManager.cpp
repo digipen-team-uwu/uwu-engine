@@ -28,6 +28,7 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Debugs/TraceLogger.h>
 
+EventListener<EventType::Collision> ColliderComponentManager::listener_{ ColliderComponentManager::ResolveCollision };
 std::unordered_map<EntityID, Collider*> ColliderComponentManager::_collider;
 
 void DispatchCollisionEvent(Event<EventType::Collision> const&);

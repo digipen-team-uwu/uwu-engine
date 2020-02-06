@@ -17,6 +17,7 @@ Copyright ? 2019 DigiPen, All rights reserved.
 //Forward Declarations
 template <EventType type>
 class Event;
+using EntityID = unsigned;
 
 class IEventListener
 {
@@ -34,37 +35,21 @@ template <EventType type>
 class EventListener : public IEventListener
 {
 public:
-  EventListener(std::function<void(const Event<type> &)> func_ = nullptr) :
-  IEventListener(type), func(func_)
-  {
-    static size_t listenerIDs = 0;
-    id = listenerIDs;
-    ++listenerIDs;
-  }
+  EventListener(std::function<void(const Event<type> &)> func_ = nullptr, EntityID id = 0);
   ~EventListener() override = default;
 
-  void SetFunc(std::function<void(const Event<type>&)> func_)
-  {
-    func = func_;
-  }
+  void SetFunc(std::function<void(const Event<type>&)> func_);
+  void SetID(EntityID id);
+  void OnNotify(const Event<type>& event) const;
 
-  void OnNotify(const Event<type>& event) const
-  {
-    func(event);
-  }
-
-  size_t GetID() const
-  {
-    return id;
-  }
+  EntityID GetID() const;
 
 private:
   std::function<void(const Event<type>&)> func;
-  size_t id{0};
+  EntityID id{0};
 };
 
-#define RegisterMemberListener(type, memberFunc, name) \
-  EventListener<EventType::type> name{std::bind(&memberFunc, this, std::placeholders::_1)};
+#include "EventListener.inl"
 
-#define RegisterListener(type, func, name) \
-  EventListener<EventType::type> name{func};
+#define MemberFunc(func) \
+  std::bind(func, this, std::placeholders::_1)

@@ -19,6 +19,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <UWUEngine/GamePlay/PlayerController.h>
+#include <UWUEngine/Component/LightingComponentManager.h>
 
 Lighting::LightData Lighting::light_;
 Lighting::MaterialData Lighting::material_;
@@ -154,6 +155,19 @@ void Lighting::Update()
     //auto specular = Lighting::GetLightSpecular();
     //specular += 0.05f * (float)(!!InputManager::KeyHeld('z') - !!InputManager::KeyHeld('c'));
     //Lighting::SetLightSpecular(specular);
+
+    //TODO::Serialized shininess
+    if (!lightOn_)
+    {
+      return;
+    }
+    for (auto& i : EntityManager::GetIDs())
+    {
+      if (EntityManager::GetType(i) != EntityManager::Dropped)
+      {
+        LightingComponentManager::SetShininess(i, 16.0f);
+      }
+    }
 }
 
 void Lighting::LightToggle()

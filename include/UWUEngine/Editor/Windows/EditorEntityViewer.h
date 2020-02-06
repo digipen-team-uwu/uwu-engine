@@ -28,6 +28,7 @@ namespace Editors
     ~EntityViewer() override;
 
     static EntityID GetSelectedEntity();
+    static void SetSelectedEntity(EntityID ID);
 
     //TODO::Entity names should not be managed by editor
     static void SetName(EntityID ID, std::string name);

@@ -20,112 +20,149 @@ Copyright ☺ 2019 DigiPen, All rights reserved.
 #include <UWUEngine/FrameRateController.h>
 #include <magic_enum.hpp>
 
-
+using namespace UWUEngine;
 namespace goc = GameObjectConstants;
 
-EntityVector<PhysicsComponentManager::BodyType> PhysicsComponentManager::type_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<glm::vec4> PhysicsComponentManager::oldTranslation_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<glm::vec4> PhysicsComponentManager::acceleration_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<glm::vec4> PhysicsComponentManager::velocity_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<float> PhysicsComponentManager::rotationalVelocity_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<glm::vec4> PhysicsComponentManager::drag_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<float> PhysicsComponentManager::inverseMass_(goc::INITIAL_OBJECT_COUNT);
-
-EntityVector<float> PhysicsComponentManager::restitution_(goc::INITIAL_OBJECT_COUNT);
-
-void PhysicsComponentManager::SetAcceleration(const glm::vec4& acceleration, EntityID ID)
+#pragma region Setter
+void Physics::SetAcceleration(const glm::vec4& acceleration)
 {
-  acceleration_[ID] = acceleration;
+  acceleration_ = acceleration;
 }
 
-void PhysicsComponentManager::SetVelocity(const glm::vec4& velocity, EntityID ID)
+void Physics::SetVelocity(const glm::vec4& velocity)
 {
-  velocity_[ID] = velocity;
+  velocity_ = velocity;
 }
 
-void PhysicsComponentManager::SetRotationalVelocity(const float rotationalVelocity, EntityID ID)
+void Physics::SetRotationalVelocity(const float& rotationalVelocity)
 {
-  rotationalVelocity_[ID] = rotationalVelocity;
+  rotationalVelocity_ = rotationalVelocity;
 }
 
-void PhysicsComponentManager::SetBodyType(BodyType type, EntityID ID)
+void Physics::SetBodyType(const BodyType& type)
 {
-  type_[ID] = type;
+  type_ = type;
 }
 
-void PhysicsComponentManager::SetOldTranslation(const glm::vec4& oldTranslation, EntityID ID)
+void Physics::SetOldTranslation(const glm::vec4& oldTranslation)
 {
-  oldTranslation_[ID] = oldTranslation;
+  oldTranslation_ = oldTranslation;
 }
 
-void PhysicsComponentManager::SetDrag(const glm::vec4& drag, EntityID ID)
+void Physics::SetDrag(const glm::vec4& drag)
 {
-  drag_[ID] = drag;
+  drag_ = drag;
 }
 
-void PhysicsComponentManager::SetRestitution(float restitution, EntityID ID)
+void Physics::SetRestitution(const float& restitution)
 {
-  restitution_[ID] = restitution;
+  restitution_ = restitution;
 }
 
-void PhysicsComponentManager::SetInverseMass(const float inverseMass, EntityID ID)
+void Physics::SetInverseMass(const float& inverseMass)
 {
-  inverseMass_[ID] = inverseMass;
+  inverseMass_ = inverseMass;
+}
+#pragma endregion
+
+#pragma region Getter
+const BodyType& Physics::GetBodyType() const
+{
+  return type_;
 }
 
-PhysicsComponentManager::BodyType PhysicsComponentManager::GetBodyType(EntityID ID)
+const glm::vec4& Physics::GetAcceleration() const
 {
-  return type_[ID];
+  return acceleration_;
 }
 
-const glm::vec4& PhysicsComponentManager::GetAcceleration(EntityID ID)
-{
-  return acceleration_[ID];
-}
-
-const glm::vec4& PhysicsComponentManager::GetVelocity(EntityID ID)
-{
-  return velocity_[ID];
-}
-
-const glm::vec4& PhysicsComponentManager::GetOldTranslation(EntityID ID)
-{
-  return oldTranslation_[ID];
-}
-
-float PhysicsComponentManager::GetRotationalVelocity(EntityID ID)
-{
-  return rotationalVelocity_[ID];
-}
-
-
-const glm::vec4& PhysicsComponentManager::GetDrag(EntityID ID)
-{
-  return drag_[ID];
-}
-
-float PhysicsComponentManager::GetInverseMass(EntityID ID)
-{
-  return inverseMass_[ID];
-}
-
-float PhysicsComponentManager::GetRestitution(EntityID ID)
-{
-  return restitution_[ID];
-}
-
-std::vector<glm::vec4>& PhysicsComponentManager::GetDebugVelocities()
+const glm::vec4& Physics::GetVelocity() const
 {
   return velocity_;
 }
 
-void PhysicsComponentManager::InitObject(EntityID ID)
+const glm::vec4& Physics::GetOldTranslation() const
+{
+  return oldTranslation_;
+}
+
+const float& Physics::GetRotationalVelocity() const
+{
+  return rotationalVelocity_;
+}
+
+const glm::vec4& Physics::GetDrag() const
+{
+  return drag_;
+}
+
+const float& Physics::GetInverseMass() const
+{
+  return inverseMass_;
+}
+
+const float& Physics::GetRestitution() const
+{
+  return restitution_;
+}
+#pragma endregion
+
+#pragma region Array Getter
+const EntityVector<BodyType>& PhysicsComp::GetArrayBodyType() const
+{
+  return type_;
+}
+
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayOldTranslation() const
+{
+  return oldTranslation_;
+}
+
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayAcceleration() const
+{
+  return acceleration_;
+}
+
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayDrag() const
+{
+  return drag_;
+}
+
+const EntityVector<glm::vec4>& PhysicsComp::GetArrayVelocity() const
+{
+  return velocity_;
+}
+
+const EntityVector<float>& PhysicsComp::GetArrayRotationalVelocity() const
+{
+  return rotationalVelocity_;
+}
+
+const EntityVector<float>& PhysicsComp::GetArrayInverseMass() const
+{
+  return inverseMass_;
+}
+
+const EntityVector<float>& PhysicsComp::GetArrayRestitution() const
+{
+  return restitution_;
+}
+#pragma endregion 
+
+Physics PhysicsComp::operator[](EntityID ID)
+{
+  return Physics(type_[ID], oldTranslation_[ID], acceleration_[ID], velocity_[ID], drag_[ID],
+    rotationalVelocity_[ID], inverseMass_[ID], restitution_[ID]);
+}
+
+Physics PhysicsComp::getPhysics(EntityID ID)
+{
+  return Physics(type_[ID], oldTranslation_[ID], acceleration_[ID], velocity_[ID], drag_[ID], 
+    rotationalVelocity_[ID], inverseMass_[ID], restitution_[ID]);
+}
+
+
+void PhysicsComp::InitObject(EntityID ID)
 {
   type_[ID] = BodyType::STATIC;
   rotationalVelocity_[ID] = 0.0f;
@@ -136,8 +173,9 @@ void PhysicsComponentManager::InitObject(EntityID ID)
   restitution_[ID] = 1.0f;
 }
 
-void PhysicsComponentManager::Update()
+void PhysicsComp::Update()
 {
+  //TODO: Need a way to access transform manager to update physics correctly
   std::vector<EntityID> ids = EntityManager::GetIDs();
   auto it = ids.begin();
 
@@ -148,7 +186,7 @@ void PhysicsComponentManager::Update()
     if (TransformComponentManager::IsActive(*it) && IsActive(*it))
     {
       float dt = FrameRateController::GetDeltaTime<float>();
-      const glm::vec4 pos = GetOldTranslation(*it);
+      const glm::vec4 pos = oldTranslation_[*it];
       const glm::vec4 vel = velocity_[*it];
       const glm::vec4 acl = acceleration_[*it];
       float invMass = inverseMass_[*it];
@@ -176,42 +214,11 @@ void PhysicsComponentManager::Update()
   }*/
 }
 
-
-// deprecated
-/*void PhysicsComponentManager::addPhysics(EntityID ID)
-{
-    glm::vec4 empty_vec = glm::vec4(0.0f);
-    glm::vec4 empty_pos = { 0,0,0,1 };
-    glm::mat4 empty_mat = glm::mat4(0.0f);
-
-
-    if (ID >= isActive_.size())
-    {
-        oldTranslation_.push_back(empty_pos);
-        acceleration_.push_back(empty_vec);
-        velocity_.push_back(empty_vec);
-        rotationalVelocity_.push_back(0.0f);
-        drag_.push_back(0.0f);
-        inverseMass_.push_back(0.0f);
-        isActive_.push_back(true);
-    }
-    else
-    {
-        oldTranslation_[ID] = empty_pos;
-        acceleration_[ID] = empty_vec;
-        velocity_[ID] = empty_vec;
-        rotationalVelocity_[ID] = 0.0f;
-        drag_[ID] = 0.0f;
-        inverseMass_[ID] = 0.0f;
-        isActive_[ID] = true;
-    }
-}*/
-
 // Below code written by Michael Rollosson Halbhuber
-void PhysicsComponentManager::Serialize(std::ofstream& stream, EntityID id, bool partial)
+void PhysicsComp::Serialize(std::ofstream& stream, EntityID id, bool partial)
 {
   // Check if the given ID has an active physics component
-  if (PhysicsComponentManager::IsActive(id))
+  if (PhysicsComp::IsActive(id))
   {
     // Open a "physics" JSON object
     stream << "\"physics\" :\n";

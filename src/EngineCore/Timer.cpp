@@ -12,55 +12,60 @@
 #include <UWUEngine/Timer.h>
 #include <UWUEngine/FrameRateController.h>
 
+namespace UWUEngine
+{
+  TimerSys::TimerSys(ISpace* p) : System(p) {}
 
-
-std::list<Timer*> TimerManager::timers;
-
-void TimerManager::Update()
+void TimerSys::Update()
 {
   for (auto& timer : timers)
     timer->Update();
 }
 
-void Timer::Update()
+void TimerSys::Timer::Update()
 {
   if (running)
-    time -= FrameRateController::GetDeltaTime<float>();
+    time -= Get<FrameRateController>().GetDeltaTime<float>();
 }
 
-void Timer::Start() 
-{ 
-  time = duration;  
-  running = true; 
+void TimerSys::Timer::Start()
+{
+  time = duration;
+  running = true;
 }
 
-void Timer::Stop() 
-{ 
-  time = duration; 
-  running = false; 
+void TimerSys::Timer::Stop()
+{
+  time = duration;
+  running = false;
 }
 
-void Timer::SetDuration(float newDuration)
+void TimerSys::AddTimer(Timer* t)
+{
+  timers.push_front(t);
+}
+
+void TimerSys::RemoveTimer(Timer* t)
+{
+  timers.remove(t);
+}
+
+void TimerSys::Timer::SetDuration(float newDuration)
 {
   duration = newDuration;
   time = newDuration;
 }
-Timer::Timer(float duration) : duration(duration), time(duration), running(true) 
-{ 
-  TimerManager::timers.push_front(this); 
+TimerSys::Timer::Timer(TimerSys& p, float duration) : duration(duration), time(duration), running(true), parent(p)
+{
+  parent.AddTimer(this);
 }
 
-Timer::Timer() : duration(0), time(0), running(false) 
-{ 
-  TimerManager::timers.push_front(this);
+TimerSys::Timer::~Timer()
+{
+  parent.RemoveTimer(this);
 }
 
-Timer::~Timer()
-{ 
-  TimerManager::timers.remove(this); 
-}
-
-bool Timer::Finished()
+bool TimerSys::Timer::Finished()
 {
   if (time <= 0 && running)
   {
@@ -70,7 +75,9 @@ bool Timer::Finished()
   return false;
 }
 
-bool Timer::Running()
+bool TimerSys::Timer::Running() const
 {
-    return running;
+  return running;
 }
+
+} //namespace UWUEngine

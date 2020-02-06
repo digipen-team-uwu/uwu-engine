@@ -104,9 +104,11 @@ namespace WindowConstants
 
 namespace CameraConstants
 {
-    constexpr float ASPECT_RATIO = static_cast<float>(WindowConstants::WINDOW_WIDTH) / static_cast<float>(WindowConstants::WINDOW_HEIGHT);
-    constexpr float ZOOM_FACTOR = 50.f;
+    constexpr float MOUSE_SENSITIVITY = 0.25f;
+    constexpr float ZOOM_FACTOR = 25.f;
     constexpr float CAMERA_POSITION = 2074.f;//static_cast<float>(WindowConstants::WINDOW_HEIGHT) * 2.5f;
+    constexpr float FOV_MAX = 90.f;
+    constexpr float FOV_MIN = 30.f;
 }
 
 namespace GameObjectConstants

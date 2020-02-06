@@ -16,6 +16,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Timer.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Audio/SoundInterface.h>
+#include <UWUEngine/Scene/SceneManager.h>
 
 static Timer DeathTimer;
 // Don't implement
@@ -38,13 +39,7 @@ void PlayerStateMachine::Update_Death(float dt)
 {
   if (DeathTimer.Finished())
   {
-    for (auto& machine: StateMachineUpdater::GetMachines())
-    {
-      if (dynamic_cast<GameStateMachine*>(machine))
-      {
-        machine->RestartState();
-      }
-    }
+    SceneManager::Reload();
   }
 }
 

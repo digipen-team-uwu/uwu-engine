@@ -102,7 +102,7 @@ public:
       curr = log(curr);
       break;
     }
-    return intpow(curr, exponent) * coefficient + ((next != NULL) ? next->Evaluate(pos) : 0);
+    return intpow(curr, exponent) * coefficient + ((next != nullptr) ? next->Evaluate(pos) : 0);
   }
   ~Polynomial()
   {

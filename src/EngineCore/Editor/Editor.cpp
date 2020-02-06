@@ -11,7 +11,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #include <UWUEngine/Editor.h>
-#include <UWUEngine/WindowManager.h>
+#include <UWUEngine/WindowSys.h>
 #include <UWUEngine/Input/InputManager.h>
 //This include can be removed in the future
 #include <UWUEngine/Editor/EditorWindowManager.h>
@@ -21,15 +21,14 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/Editor/EditorMainMenu.h>
 
+namespace UWUEngine
+{
 
-
-bool Editor::isActive = false;
-
-Editor::Editor()
+EditorSys::EditorSys(ISpace* p) : System(p), isActive(false)
 {
   // Establishes ImGui context for the editor window
   ImGui::CreateContext();
-  ImGui_ImplGlfw_InitForOpenGL(WindowManager::getWindowHandle(), true);
+  ImGui_ImplGlfw_InitForOpenGL(Get<WindowSys>().getWindowHandle(), true);
   ImGui_ImplOpenGL3_Init("#version 450");
 
   //Enable ImGui features/flags
@@ -39,7 +38,7 @@ Editor::Editor()
   Editors::WindowManager::StartUp();
 }
 
-Editor::~Editor()
+EditorSys::~EditorSys()
 {
   // Destroys ImGui Window Context
   ImGui_ImplOpenGL3_Shutdown();
@@ -47,10 +46,10 @@ Editor::~Editor()
   ImGui::DestroyContext();
 }
 
-void Editor::Update()
+void EditorSys::Update()
 {
   ToggleActivate();
-  if (!isActive)
+  if (!IsActive())
   {
     return;
   }
@@ -68,15 +67,17 @@ void Editor::Update()
   ImGui::ShowDemoWindow();
 }
 
-bool Editor::IsActive()
+bool EditorSys::IsActive() const
 {
   return isActive;
 }
 
-void Editor::ToggleActivate()
+void EditorSys::ToggleActivate()
 {
   if (InputManager::KeyPressed(GLFW_KEY_GRAVE_ACCENT))
   {
     isActive = !isActive;
   }
 }
+
+} // namespace UWUEngine

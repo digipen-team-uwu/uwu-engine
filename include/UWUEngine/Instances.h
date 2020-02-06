@@ -14,7 +14,6 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Entity/EntityManager.h>
 #include <unordered_map>
 #include <UWUEngine/Entity/EntityVector.h>
-#include <UWUEngine/BaseSystem.h>
 
 using VaoKey = size_t;
 
