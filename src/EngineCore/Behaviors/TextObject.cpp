@@ -20,7 +20,10 @@
 #include "UWUEngine/Graphics/Texture/AtlasModule.h"
 typedef EntityManager::Type type;
 
-
+void Behavior<type::Text_>::Update()
+{
+  Render();
+}
 void Behavior<type::Text_>::Render()
 {
   std::string s = formattedText.str();

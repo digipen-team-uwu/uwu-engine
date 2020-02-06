@@ -36,6 +36,10 @@ void Behavior<EntityManager::Type::HUDHealth>::Render()
       offset.x += 70.f;
   }
 }
+void Behavior<EntityManager::Type::HUDHealth>::Update()
+{
+  Render();
+}
 
 void Behavior<EntityManager::Type::HUDEnergy>::Update()
 {
@@ -57,6 +61,7 @@ void Behavior<EntityManager::Type::HUDEnergy>::Update()
   {
     event.particlesPerEmission = 0;
   }
+  Render();
 }
 Behavior<EntityManager::Type::HUDEnergy>::Behavior(EntityID id) : BaseBehavior(id), energy(0)
 {

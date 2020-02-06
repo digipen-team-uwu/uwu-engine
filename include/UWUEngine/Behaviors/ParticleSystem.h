@@ -104,6 +104,16 @@ private:
 };
 
 template<>
+class Behavior<EntityManager::Type::Trail> : public BaseBehavior
+{
+public:
+  Behavior(EntityID id) : BaseBehavior(id) {}
+  void Update();
+  void CreateTrail(EntityID id);
+private:
+};
+
+template<>
 class Behavior<EntityManager::Type::ParticleEmitter> : public BaseBehavior
 {
 public:

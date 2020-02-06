@@ -8,7 +8,7 @@
 
   Copyright � 2019 DigiPen, All rights reserved.
   */
-/******************************************************************************/
+  /******************************************************************************/
 
 #include <UWUEngine/Audio/SoundInterface.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
@@ -21,31 +21,31 @@
 
 using namespace ColoredOutput;
 
-FMOD::System* SoundInterface::system_;
+FMOD::Studio::System* SoundInterface::system_;
+FMOD::System* SoundInterface::core_;
 std::map<std::string, FMOD::Sound*> SoundInterface::sounds_;
-FMOD::ChannelGroup* SoundInterface::default_channel_;
+std::map<int, FMOD::Channel*> SoundInterface::channels_;
+std::map<std::string, FMOD::Studio::EventInstance*> SoundInterface::events_;
+std::map<std::string, FMOD::Studio::Bank*> SoundInterface::banks_;
+int SoundInterface::channelID;
+
+void SoundInterface::FmodError(FMOD_RESULT result)
+{
+  if (result != FMOD_OK)
+  {
+    TraceLogger::Log(TraceLogger::FAILURE) << "FMOD error! (" << result << ")" << FMOD_ErrorString(result);
+  }
+}
 
 SoundInterface::SoundInterface()
 {
   // Create the main system object.
-  FMOD_RESULT result = FMOD::System_Create(&system_);
-  if (result != FMOD_OK)
-  {
-    TraceLogger::Log(TraceLogger::FAILURE) << "FMOD error! (" << result << ")" << FMOD_ErrorString(result);
-  }
+  FmodError(FMOD::Studio::System::create(&system_));
 
   // Initialize FMOD.
-  result = system_->init(512, FMOD_INIT_NORMAL, 0);
-  if (result != FMOD_OK)
-  {
-    TraceLogger::Log(TraceLogger::FAILURE) << "FMOD error! (" << result << ")" << FMOD_ErrorString(result);
-  }
+  FmodError(system_->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_PROFILE_ENABLE, NULL));
 
-  result = system_->createChannelGroup("default", &default_channel_);
-  if (result != FMOD_OK)
-  {
-    TraceLogger::Log(TraceLogger::FAILURE) << "FMOD error! (" << result << ")" << FMOD_ErrorString(result);
-  }
+  FmodError(system_->getCoreSystem(&core_));
 
   std::ifstream sounds_file("./data/sounds.json");
   rapidjson::IStreamWrapper wrapper(sounds_file);
@@ -70,27 +70,40 @@ SoundInterface::SoundInterface()
 
 void SoundInterface::Update()
 {
-  system_->update();
+  for (auto it = channels_.begin(); it != channels_.end(); ++it)
+  {
+    bool isPlaying;
+    FmodError(it->second->isPlaying(&isPlaying));
+    if (!isPlaying)
+    {
+      channels_.erase(it);
+    }
+  }
+  FmodError(system_->update());
 }
 
 SoundInterface::~SoundInterface()
 {
-  system_->release();
-  system_ = nullptr;
+
 }
 
-void SoundInterface::playSound(std::string const& name, bool loop)
+void SoundInterface::playSound(std::string const& name, const glm::vec3& pos, float volume)
 {
   //TODO: play sounds on different channels
   TraceLogger::Log(TraceLogger::DEBUG) << "Playing sound " << Set(Cyan) << name << Set() << "\n";
-  if (loop) [[unlikely]]
+  FMOD::Channel* channel;
+  auto sound = sounds_.at(name);
+  FmodError(core_->playSound(sound, nullptr, true, &channel));
+  FMOD_MODE mode;
+  FmodError(sound->getMode(&mode));
+  if (mode & FMOD_3D)
   {
-    unsigned int length;
-    sounds_.at(name)->getLength(&length, FMOD_TIMEUNIT_MS);
-    sounds_.at(name)->setLoopPoints(0, FMOD_TIMEUNIT_MS, length, FMOD_TIMEUNIT_MS);
-    sounds_.at(name)->setLoopCount(loop ? -1 : 1);
+    FMOD_VECTOR fpos{ pos.x, pos.y, pos.z };
+    channel->set3DAttributes(&fpos, nullptr);
   }
-  system_->playSound(sounds_.at(name), default_channel_, false, nullptr);
+  FmodError(channel->setVolume(volume));
+  FmodError(channel->setPaused(false));
+  channels_.emplace(std::make_pair(channelID++, channel));
 }
 
 void SoundInterface::playSound(char const* name, bool loop)
@@ -103,22 +116,30 @@ void SoundInterface::loadSound(char const* name, char const* filepath)
   loadSound(std::string(name), std::string(filepath));
 }
 
-void SoundInterface::loadSound(std::string const& name, std::string const& filepath)
+void SoundInterface::loadSound(std::string const& name, std::string const& filepath, bool looping, bool spacial)
 {
   FMOD::Sound* sound;
-  if (name.find("music") != std::string::npos)
-  {
-    system_->createSound(filepath.c_str(), FMOD_LOOP_NORMAL, nullptr, &sound);
-  }
-  else
-  {
-    system_->createSound(filepath.c_str(), FMOD_DEFAULT, nullptr, &sound);
-  }
-  
+  core_->createSound(filepath.c_str(), FMOD_DEFAULT | looping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF | spacial ? FMOD_3D : FMOD_2D, nullptr, &sound);
   sounds_.emplace(std::make_pair(name, sound));
 }
 
 void SoundInterface::stopAllSounds()
 {
-  default_channel_->stop();
+
+}
+
+void SoundInterface::loadBank(const std::string& filepath)
+{
+  FMOD::Studio::Bank* bank;
+  FmodError(system_->loadBankFile(filepath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank));
+  banks_.emplace(std::make_pair(filepath, bank));
+}
+
+void SoundInterface::loadEvent(const std::string& filepath)
+{
+  FMOD::Studio::EventDescription* eventDes;
+  FMOD::Studio::EventInstance* event;
+  FmodError(system_->getEvent(filepath.c_str(), &eventDes));
+  FmodError(eventDes->createInstance(&event));
+  events_.emplace(std::make_pair(filepath, event));
 }

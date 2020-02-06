@@ -12,7 +12,8 @@
 
 #pragma once
 
-#include <fmod.hpp>	/* FMOD pointers */
+#include <fmod_studio.hpp>	/* FMOD pointers */
+#include <fmod.hpp>
 #include <string>	/* std::string	 */
 #include <map>		/* std::map		 */
 #include <UWUEngine/BaseSystem.h>
@@ -71,11 +72,17 @@ public:
   static void loadSound(std::string const& name, std::string const& filepath);
 
   static void stopAllSounds();
-
+  static void loadBank(const std::string &filepath);
+  static void loadEvent(const std::string& filepath);
 private:
   //! FMOD's sound system
-  static FMOD::System* system_;
+  static FMOD::Studio::System* system_;
+  static FMOD::System* core_;
   //! Map containing pointers to the internal FMOD sounds
   static std::map<std::string, FMOD::Sound*> sounds_;
-  static FMOD::ChannelGroup* default_channel_;
+  static std::map<int, FMOD::Channel*> channels_;
+  static std::map<std::string, FMOD::Studio::EventInstance*> events_;
+  static std::map<std::string, FMOD::Studio::Bank*> banks_;
+  static void FmodError(FMOD_RESULT result);
+  static int channelID;
 };

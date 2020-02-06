@@ -33,6 +33,7 @@ namespace UWUEngine
 
     const std::vector<EntityID>& GetChildren(EntityID id);
     EntityID GetParent(EntityID id);
+    void AddParent(EntityID parent, EntityID child);
     void AddChild(EntityID parent, EntityID child);
     void EraseChild(EntityID parent, EntityID child);
     void EraseChild(EntityID parent, std::vector<EntityID>::iterator child);

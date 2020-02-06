@@ -61,11 +61,35 @@ void Behavior<type::ParticleEmitter>::Update()
     {
       EntityID id = EntityManager::New(type::Particle);
       BehaviorComponentManager::Activate(id);
-      ParentChildComponentManager::AddChild(GetID(), id);
+      ParentChildComponentManager::Activate(id);
+      ParentChildComponentManager::AddParent(GetID(), id);
       BehaviorComponentManager::GetBehavior<type::Particle>(id)->InitData(partEvent);
     }
     emissionTimer.SetDuration(partEvent.emissionRate.Get());
   }
+}
+
+void Behavior<type::Trail>::Update()
+{
+  glm::vec4 color = TextureComponentManager::GetColor(GetID());
+  color.a -= FrameRateController::GetDeltaTime<float>();
+  if (color.a <= 0)
+    EntityManager::Destroy(GetID());
+  else
+  {
+    TextureComponentManager::SetColor(GetID(), color);
+  }
+}
+
+void Behavior<type::Trail>::CreateTrail(EntityID id)
+{
+  TextureComponentManager::SetFilePath(GetID(), TextureComponentManager::getFilePath(id).c_str());
+  TextureComponentManager::SetColor(GetID(), TextureComponentManager::GetColor(id));
+  TextureComponentManager::SetDimensions(TextureComponentManager::GetDimensions(id), GetID());
+  TextureAtlaser::SetAtlasData(GetID());
+  TransformComponentManager::SetTranslation(TransformComponentManager::GetTranslation(id), GetID());
+  TransformComponentManager::SetScale(TransformComponentManager::GetScale(id), GetID());
+  TransformComponentManager::SetRotation(TransformComponentManager::GetRotation(id), GetID());
 }
 
 /* int Behavior<type::ParticleEmitter>::GetCurrentEvent()
@@ -135,6 +159,8 @@ void Behavior<type::Particle>::InitData(ParticleEvent& partEvent)
     {
       vectorfieldy = (*(partEvent.vectorfieldy))[ranfield];
     }
+    /*trailTimer.SetDuration(0.05f);
+    trailTimer.Start();*/
   }
 
   endColor = partEvent.color.endColor.Get();
@@ -182,6 +208,14 @@ void Behavior<type::Particle>::Update()
       vel.y = vectorfieldy->Evaluate(pos - parpos);
     }
     PhysicsComponentManager::SetVelocity(vel, GetID());
+    /*if (trailTimer.Finished())
+    {
+      EntityID trail = EntityManager::New(Type::Trail);
+      BehaviorComponentManager::Activate(trail);
+      BehaviorComponentManager::GetBehavior<Type::Trail>(trail)->CreateTrail(GetID());
+      trailTimer.SetDuration(0.05f);
+      trailTimer.Start();
+    }*/
   }
 
   if (UIParticle)
