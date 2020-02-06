@@ -24,8 +24,6 @@ void PlayerStateMachine::Load_Grounded()
 
 void PlayerStateMachine::Enter_Grounded()
 {
-  SoundInterface::playSound("player_land");
-	
 	SpineAnimationComponentManager::GetAnimation(PlayerData::GetPlayerID()).ChangeAnimation("idle", true);
   
     // Start the dash cooldown
@@ -36,6 +34,7 @@ void PlayerStateMachine::Enter_Grounded()
   if (ActionManager::GetActionHeld(ActionManager::Run)/*InputManager::KeyHeld('d') || InputManager::KeyHeld('a')*/)
   {
     SpineAnimationComponentManager::GetAnimation(PlayerData::GetPlayerID()).ChangeAnimation("run", true);
+    SoundInterface::playSound("player_step", true);
   }
 
     PlayerData::currState = Grounded;
@@ -58,11 +57,13 @@ void PlayerStateMachine::Update_Grounded(float dt)
 	if (movement.x != 0 && walking_anim == false)
 	{
 		walking_anim = true;
+    SoundInterface::playSound("player_step", true);
 		SpineAnimationComponentManager::GetAnimation(sight).ChangeAnimation("run", true);
 	}
 	else if (movement.x == 0 && walking_anim == true)
 	{
 		SpineAnimationComponentManager::GetAnimation(sight).ChangeAnimation("idle", true);
+    SoundInterface::stopSound("player_step");
 		walking_anim = false;
 	}
 	glm::vec4 vel = PhysicsComponentManager::GetVelocity(sight);
@@ -111,6 +112,7 @@ void PlayerStateMachine::Update_Grounded(float dt)
 
 void PlayerStateMachine::Exit_Grounded()
 {
+  SoundInterface::stopSound("player_step");
 }
 
 void PlayerStateMachine::Unload_Grounded()

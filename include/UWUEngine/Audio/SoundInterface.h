@@ -71,11 +71,12 @@ public:
   static void loadSound(std::string const& name, std::string const& filepath);
 
   static void stopAllSounds();
+  static void stopSound(char const* name);
 
 private:
   //! FMOD's sound system
   static FMOD::System* system_;
   //! Map containing pointers to the internal FMOD sounds
   static std::map<std::string, FMOD::Sound*> sounds_;
-  static FMOD::ChannelGroup* default_channel_;
+  static std::map<std::string, FMOD::ChannelGroup*> channels_;
 };
