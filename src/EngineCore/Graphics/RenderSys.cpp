@@ -78,9 +78,9 @@ void RenderSys::Update()
 
 	for (auto id : ids)
 	{
-		if (BehaviorComponentManager::IsActive(id))
+		if (BehaviorComp::IsActive(id))
 		{
-			BehaviorComponentManager::GetBaseBehavior(id)->Render();
+			BehaviorComp::GetBaseBehavior(id)->Render();
 		}
 		if (SpineSkeletonComponentManager::IsActive(id))
 		{

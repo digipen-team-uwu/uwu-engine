@@ -37,7 +37,7 @@ void HUDSys::DisplayFPS()
   {
     fps = EntityManager::New(EntityManager::Type::Text_);
     TextureComponentManager::Activate(fps);
-    BehaviorComponentManager::Activate(fps);
+    BehaviorComp::Activate(fps);
     TransformComponentManager::Activate(fps);
     TransformComponentManager::SetTranslation({ -250.f + wc::WINDOW_WIDTH / 2.f, wc::WINDOW_HEIGHT / 2.f - 89.f, 0, 1 }, fps);
     TransformComponentManager::SetScale({ 30.f, 30.f, 1.f }, fps);
@@ -56,7 +56,7 @@ void HUDSys::DisplayHealth()
   {
     healthBar = EntityManager::New(EntityManager::Type::HUDHealth);
     TextureComponentManager::Activate(healthBar);
-    BehaviorComponentManager::Activate(healthBar);
+    BehaviorComp::Activate(healthBar);
     TransformComponentManager::Activate(healthBar);
     TransformComponentManager::SetTranslation({ 160.f - wc::WINDOW_WIDTH / 2.f, -89.f + wc::WINDOW_HEIGHT / 2.f, 0, 1 }, healthBar);
     TransformComponentManager::SetScale({ 50.f, 43.f, 1.f }, healthBar);
@@ -74,7 +74,7 @@ void HUDSys::DisplayEnergy()
   {
     energyBar = EntityManager::New(EntityManager::Type::HUDEnergy);
     TextureComponentManager::Activate(energyBar);
-    BehaviorComponentManager::Activate(energyBar);
+    BehaviorComp::Activate(energyBar);
     TransformComponentManager::Activate(energyBar);
     TransformComponentManager::SetTranslation({ -wc::WINDOW_WIDTH / 2 + 80, wc::WINDOW_HEIGHT / 2 - 100, 0, 1 }, energyBar);
     TransformComponentManager::SetScale({ 273.f / 3, 487.f / 3, 1.f }, energyBar);
@@ -92,15 +92,15 @@ void HUDSys::Update()
     double frames = Get<FrameLimiterSys>().GetFPS();
     int pres;
     pres = (frames > 99) ? 3 : 2;
-    BehaviorComponentManager::GetBehavior<EntityManager::Type::Text_>(fps)->SetText() << "FPS: " << std::setprecision(pres) << frames;
+    BehaviorComp::GetBehavior<EntityManager::Type::Text_>(fps)->SetText() << "FPS: " << std::setprecision(pres) << frames;
   }
   if (healthBar != goc::INVALID_ID)
   {
-    BehaviorComponentManager::GetBehavior<EntityManager::Type::HUDHealth>(healthBar)->SetHealth(PlayerData::GetHealth());
+    BehaviorComp::GetBehavior<EntityManager::Type::HUDHealth>(healthBar)->SetHealth(PlayerData::GetHealth());
   }
   if (energyBar != goc::INVALID_ID)
   {
-    BehaviorComponentManager::GetBehavior<EntityManager::Type::HUDEnergy>(energyBar)->SetEnergy(PlayerData::GetEnergy());
+    BehaviorComp::GetBehavior<EntityManager::Type::HUDEnergy>(energyBar)->SetEnergy(PlayerData::GetEnergy());
   }
 }
 
