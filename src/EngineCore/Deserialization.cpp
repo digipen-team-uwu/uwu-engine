@@ -218,8 +218,7 @@ void CheckPhysics(rapidjson::Value& object, EntityID ID, const char* filePath, b
       PhysicsComponentManager::SetAcceleration(acceleration, ID);
     }
 
-    // Check for and obtain the rotational velocity
-    //TODO: rotational velocity?
+      // Check for and obtain the rotational velocity
     if (mandate || object["physics"].HasMember("acceleration"))
     {
       float rotVel = CheckFloat(object, filePath, "physics", "rotational velocity");

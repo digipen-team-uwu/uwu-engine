@@ -121,13 +121,21 @@ template<typename T>
 class FlatOrRange
 {
 public:
-  FlatOrRange(T min, T max) : min(min), max(max), ranged(true) {}
-  FlatOrRange(T flat) : flat(flat), ranged(false) {}
+  FlatOrRange(T min, T max) : min(min), max(max), flat(0), ranged(true) {}
+  FlatOrRange(T flat) : min(0), max(0), flat(flat), ranged(false) {}
   FlatOrRange() = default;
 
+  T GetFlat() { return flat; }
+  T GetMin() { return min; }
+  T GetMax() { return max; }
+  bool GetRanged() { return ranged; }
+
   void SetFlat(T flat_) { flat = flat_; ranged = false; }
+  void SetFlatDirect(T flat_) { flat = flat_; }
   void SetRange(T min_, T max_) { min = min_; max = max_; ranged = true; }
-  
+  void SetMin(T min_) { min = min_; }
+  void SetMax(T max_) { max = max_; }
+  void SetFlatOrRanged(bool ranged_) { ranged = ranged_; }
   void SetToRads()
   {
     if (ranged)
@@ -154,6 +162,13 @@ private:
   T max;
   bool ranged;
 };
+template<typename T>
+void RegisterFlatOrRange()
+{
+  rttr::registration::class_<FlatOrRange<T>>((std::string("FlatOrRange") + typeid(T).name()).c_str()).property("flat", &FlatOrRange<T>::GetFlat, &FlatOrRange<T>::SetFlatDirect)
+    .property("min", &FlatOrRange<T>::GetMin, &FlatOrRange<T>::SetMin).property("max", &FlatOrRange<T>::GetMax, &FlatOrRange<T>::SetMax)
+    .property("ranged", &FlatOrRange<T>::GetRanged, &FlatOrRange<T>::SetFlatOrRanged);
+}
 
 inline float RotationFromVec(const glm::vec4& vec)
 {
