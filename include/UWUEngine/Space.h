@@ -20,10 +20,15 @@ public:
   T& Get();
   Space();
   ~Space();
+
 private:
   void* GetObject(unsigned i) override;
   std::map<unsigned, Base*> objects;
   static_assert((std::is_base_of_v<Base, Derived> && ...), "All objects in a space need to be of the same base type.");
+
+public:
+  auto begin() -> decltype(objects.begin());
+  auto end() -> decltype(objects.end());
 };
 
 } // namespace UWUEngine

@@ -28,4 +28,16 @@ void* Space<Base, Derived...>::GetObject(unsigned i)
   return objects[i];
 }
 
+template <class Base, class ... Derived>
+auto Space<Base, Derived...>::begin() -> decltype(objects.begin())
+{
+  return objects.begin();
+}
+
+template <class Base, class ... Derived>
+auto Space<Base, Derived...>::end() -> decltype(objects.end())
+{
+  return objects.end();
+}
+
 } // namespace UWUEngine
