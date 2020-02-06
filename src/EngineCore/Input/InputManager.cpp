@@ -66,6 +66,10 @@ void InputManager::PushInput(std::map<int, ic::InputResult> &map, int key, int a
 void InputManager::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mod)
 {
   ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
+  if (ImGui::GetIO().WantCaptureKeyboard)
+  {
+    return;
+  }
   if (action != GLFW_REPEAT)
     PushInput(keys, key, action);
 }
@@ -73,6 +77,10 @@ void InputManager::KeyCallback(GLFWwindow *window, int key, int scancode, int ac
 void InputManager::MouseCallback(GLFWwindow* window, int button, int action, int mods)
 {
   ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+  if (ImGui::GetIO().WantCaptureMouse)
+  {
+    return;
+  }
   PushInput(mouse, button, action);
 }
 
