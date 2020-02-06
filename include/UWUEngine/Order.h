@@ -53,7 +53,7 @@ constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<System, T
 }
 
 template <class T>
-constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<Component, T>, ComponentOrder>::type
+constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<IComponent, T>, ComponentOrder>::type
 {
   return GetComponentOrder<T>();
 }

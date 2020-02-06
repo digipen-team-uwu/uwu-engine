@@ -69,6 +69,7 @@ void Behavior<type::ParticleEmitter>::Update()
   }
 }
 
+/*
 void Behavior<type::Trail>::Update()
 {
   glm::vec4 color = TextureComponentManager::GetColor(GetID());
@@ -90,7 +91,7 @@ void Behavior<type::Trail>::CreateTrail(EntityID id)
   TransformComponentManager::SetTranslation(TransformComponentManager::GetTranslation(id), GetID());
   TransformComponentManager::SetScale(TransformComponentManager::GetScale(id), GetID());
   TransformComponentManager::SetRotation(TransformComponentManager::GetRotation(id), GetID());
-}
+}*/
 
 /* int Behavior<type::ParticleEmitter>::GetCurrentEvent()
 {

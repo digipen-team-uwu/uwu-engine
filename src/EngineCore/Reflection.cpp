@@ -7,8 +7,8 @@
 
 namespace UWUEngine
 {
-using anim = AnimationComponentManager::AnimationData;
-Reflection::Reflection()
+using anim = AnimationComp::AnimationData;
+ReflectionModule::ReflectionModule()
 {
   rttr::registration::class_<anim::Frame>("Frame")
     .property("index", &anim::Frame::index)
@@ -66,16 +66,9 @@ Reflection::Reflection()
   file << str;
   file.close();
 }
-void Reflection::ReflectObject(EntityID id)
-{
-  //for ( auto it : iterate over components )
-    ParticleEvent event;
-    rttr::instance eve(event);
-    data[id].push_back(eve);
-    //std::string str = io::to_json(eve);
-}
 
-std::vector<rttr::instance>& Reflection::getInstances(EntityID id)
+
+std::vector<rttr::instance>& ReflectionModule::getInstances(EntityID id)
 {
   return data[id];
 }
