@@ -15,7 +15,7 @@ glm::mat3 Picker::ndc_to_vf;
 glm::vec3 Picker::mouse_world;
 EntityID Picker::saved_ID;
 float Picker::saved_d;
-std::unordered_map<EntityID, float> Picker::ID_and_distance;
+std::unordered_map<EntityID, std::pair<float, glm::vec2>> Picker::ID_and_distance;
 bool Picker::switch_;
 Picker::state Picker::state_;
 
@@ -45,8 +45,9 @@ void Picker::Update()
 
     if (saved_ID != goc::INVALID_ID)
     {
-      switch_ = !switch_;
-      state_ = switch_ ? state::PICKED : state::RELEASE;
+      state_ = state::PICKED;
+      //switch_ = !switch_;
+      //state_ = switch_ ? state::PICKED : state::RELEASE;
       Editors::EntityViewer::SetSelectedEntity(saved_ID);
       TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
       Reset();
@@ -56,7 +57,19 @@ void Picker::Update()
     TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
       " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
   }
-
+  if (InputManager::MouseReleased(InputConstants::Mouse::LEFT_CLICK))
+  {
+    state_ = state::RELEASE;
+  }
+  if (state_ == state::PICKED)
+  {
+    auto chosen_ID = Editors::EntityViewer::GetSelectedEntity();
+    auto mouse_offset = Camera::getMouseOffset();
+    auto chosen_obj_pos = TransformComponentManager::GetTranslation(chosen_ID);
+    chosen_obj_pos.x += mouse_offset.x * 6.f;
+    chosen_obj_pos.y += mouse_offset.y * 6.f;
+    TransformComponentManager::SetTranslation(chosen_obj_pos, chosen_ID);
+  }
 }
 
 void Picker::CalculateMouseWorld(glm::vec2 Pos)
@@ -161,7 +174,7 @@ void Picker::Pick()
       baryPosition, intersection_dist) || glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_right, top_left, bottom_right,
         baryPosition, intersection_dist))
     {
-      ID_and_distance[*it] = intersection_dist;
+      ID_and_distance[*it] = std::make_pair(intersection_dist, baryPosition);
     }
   }
   PickID();
@@ -171,9 +184,9 @@ void Picker::PickID()
 {
   for (auto it = ID_and_distance.begin(); it != ID_and_distance.end(); ++it)
   {
-    if (it->second < saved_d)
+    if (it->second.first < saved_d)
     {
-      saved_d = it->second;
+      saved_d = it->second.first;
       saved_ID = it->first;
     }
   }

@@ -32,7 +32,7 @@ private:
   static glm::vec3 mouse_world;
   static EntityID saved_ID;
   static float saved_d;
-  static std::unordered_map<EntityID, float> ID_and_distance;
+  static std::unordered_map<EntityID, std::pair<float,glm::vec2>> ID_and_distance;
   static bool switch_;
   static state state_;
 };
