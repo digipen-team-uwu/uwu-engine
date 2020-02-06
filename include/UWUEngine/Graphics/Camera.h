@@ -64,6 +64,7 @@ public:
     static void setFirstFlag(bool flag);
     static bool getFirstFlag();
     static state getCameraState();
+    static glm::vec2 getMouseOffset();
 private:
     static void Print_Debug_Value();
     static void calculate_camera_data();
@@ -87,4 +88,5 @@ private:
     static bool switch_;
     static lock lock_;
     static bool switch_lock_;
+    static glm::vec2 mouse_Offset_;
 };

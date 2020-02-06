@@ -16,31 +16,37 @@ glm::vec3 Picker::mouse_world;
 EntityID Picker::saved_ID;
 float Picker::saved_d;
 std::unordered_map<EntityID, float> Picker::ID_and_distance;
+bool Picker::switch_;
+Picker::state Picker::state_;
 
 Picker::Picker()
 {
+  switch_ = false;
+  state_ = state::RELEASE;
   saved_d = std::numeric_limits<float>::max();
   saved_ID = static_cast<unsigned>(-1);
 }
 
 void Picker::Update()
 {
+  glm::vec2 mousePos = InputManager::GetMousePos();
+  CalculateMouseWorld(mousePos);
+
   if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
   {
-    glm::vec2 mousePos = InputManager::GetMousePos();
     TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
       mousePos.y << std::endl;
-  
-    CalculateMouseWorld(mousePos);
+    
     TraceLogger::Log(TraceLogger::DEBUG) << "Mouse World x: " << mouse_world.x << " y: " <<
       mouse_world.y << " z: " << mouse_world.z << std::endl;
   
     Pick();
-    PickID();
     TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
 
-    if (saved_ID != static_cast<unsigned>(-1))
+    if (saved_ID != goc::INVALID_ID)
     {
+      switch_ = !switch_;
+      state_ = switch_ ? state::PICKED : state::RELEASE;
       Editors::EntityViewer::SetSelectedEntity(saved_ID);
       TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
       Reset();
@@ -50,6 +56,7 @@ void Picker::Update()
     TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
       " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
   }
+
 }
 
 void Picker::CalculateMouseWorld(glm::vec2 Pos)
@@ -113,7 +120,7 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
 void Picker::Reset()
 {
   saved_d = std::numeric_limits<float>::max();
-  saved_ID = static_cast<unsigned>(-1);
+  saved_ID = goc::INVALID_ID;
   ID_and_distance.clear();
 }
 
@@ -157,6 +164,7 @@ void Picker::Pick()
       ID_and_distance[*it] = intersection_dist;
     }
   }
+  PickID();
 }
 
 void Picker::PickID()

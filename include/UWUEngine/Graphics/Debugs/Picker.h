@@ -3,23 +3,13 @@
 #include <UWUEngine/Entity/EntityManager.h>
 #include <UWUEngine/BaseSystem.h>
 
-using Point = glm::vec2;
-
 class Picker : public BaseSystem<Picker>
 {
 public:
 
-  struct AABB
-  {
-    AABB(float w_, float h_, Point bot_left) : w(w_), h(h_), bottom_left(bot_left) {}
-    float w;
-    float h;
-    Point bottom_left;
-  };
-
   enum class state
   {
-    PICK,
+    PICKED,
     RELEASE,
 
     Total
@@ -36,7 +26,6 @@ public:
   static void Detaching();
 private:
   static void Reset();
-  static bool IsPointInAABB(AABB aabb, Point p);
   static glm::mat3 GLFW_to_vp;
   static glm::mat3 ndc_to_vp;
   static glm::mat3 ndc_to_vf;
@@ -44,4 +33,6 @@ private:
   static EntityID saved_ID;
   static float saved_d;
   static std::unordered_map<EntityID, float> ID_and_distance;
+  static bool switch_;
+  static state state_;
 };
