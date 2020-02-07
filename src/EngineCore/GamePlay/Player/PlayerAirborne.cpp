@@ -23,7 +23,6 @@ Copyright 2019 DigiPen, All rights reserved.
 
 static Timer VariableJumpTimer;
 
-
 //Don't implement
 void PlayerStateMachine::Load_Airborne()
 {
