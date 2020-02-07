@@ -40,6 +40,10 @@ public:
   static size_t GetEnergy();
   static PlayerStateMachine::_PlayerStateMachinestate GetCurrentState();
   static bool FacingRight();
+  static float GetTopXSpeed();
+  static float GetTopYSpeed();
+  static float GetGravity();
+  static float GetJumpLaunchSpeed();
 
   friend Behavior<EntityManager::Type::Player>;
   friend PlayerStateMachine;
@@ -59,6 +63,11 @@ private:
 
   static Timer DashCooldown;
   static PlayerStateMachine::_PlayerStateMachinestate currState;
+
+  static float TopXSpeed;
+  static float TopYSpeed;
+  static float JumpLaunchSpeed;
+  static float Gravity;
 
   // Last safe position for hazard damage reset
   static glm::vec4 lastSafePos;

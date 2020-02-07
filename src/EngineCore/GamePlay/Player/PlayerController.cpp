@@ -36,6 +36,11 @@ float PlayerData::HurtTime = .25;
 float PlayerData::HurtDir = 0.3;
 Timer PlayerData::HurtTimer;
 
+float PlayerData::TopXSpeed = 1800.0f;
+float PlayerData::TopYSpeed = 950.0f;
+float PlayerData::JumpLaunchSpeed = 1050.0f;
+float PlayerData::Gravity = -1800.0f;
+
 Timer PlayerData::DashCooldown;
 PlayerStateMachine::_PlayerStateMachinestate PlayerData::currState = PlayerStateMachine::_PlayerStateMachinestate::Grounded;
 
@@ -244,4 +249,24 @@ glm::vec4 const& PlayerData::GetLastSafePos()
 void PlayerData::ResetPlayerPos()
 {
   TransformComponentManager::SetTranslation(GetLastSafePos(), GetPlayerID());
+}
+
+float PlayerData::GetTopXSpeed()
+{
+    return TopXSpeed;
+}
+
+float PlayerData::GetTopYSpeed()
+{
+    return TopYSpeed;
+}
+
+float PlayerData::GetGravity()
+{
+    return Gravity;
+}
+
+float PlayerData::GetJumpLaunchSpeed()
+{
+    return JumpLaunchSpeed;
 }
