@@ -30,6 +30,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
+#include <UWUEngine/Audio/SoundInterface.h>
 
 #ifdef _MSVC
 #include <Shlobj_core.h>
@@ -229,6 +230,8 @@ std::vector<EntityID> DeserializeLevel(const char* level)
 #endif
   }
 
+  
+  SoundInterface::playSound("music_calm1", true);
   return resVec;
 }
 

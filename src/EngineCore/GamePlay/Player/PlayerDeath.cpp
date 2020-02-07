@@ -39,6 +39,7 @@ void PlayerStateMachine::Update_Death(float dt)
 {
   if (DeathTimer.Finished())
   {
+    SoundInterface::stopAllSounds();
     SceneManager::Reload();
   }
 }
