@@ -104,7 +104,7 @@ void Camera::Update()
   //Print_Debug_Value();
   // sending data to Camera uniform buffer
   UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Camera);
-  moveCamera(1000.0f);
+  moveCamera(1500.0f);
   zoomIn(InputManager::GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (InputManager::KeyPressed('M'))
   {
@@ -224,8 +224,9 @@ void Camera::SetCameraTarget(const glm::vec3& target)
 void Camera::zoomIn(float amount)
 {
   float dt = FrameRateController::GetConstantDeltaTime<float>();
-  FOV = FOV >= 0.f && FOV <= 180.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
-  projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+  //FOV = FOV >= 0.f && FOV <= 180.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
+  //projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
+  cameraPos.z += amount * 20.f * dt;
 }
 
 void Camera::zoomOut(float amount)

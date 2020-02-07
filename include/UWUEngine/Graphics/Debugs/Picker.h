@@ -6,7 +6,7 @@
 class Picker : public BaseSystem<Picker>
 {
 public:
-
+  struct PickerData;
   enum class state
   {
     PICKED,
@@ -21,9 +21,14 @@ public:
   static void Pick();
   static glm::vec2 GetMouseWorld();
   static void CalculateMouseWorld(glm::vec2 Pos);
-  static void Attaching(EntityID ID);
-  static void Detaching();
 private:
+  struct PickerData
+  {
+    EntityID ID;
+    glm::vec2 baryPosition;
+    glm::vec2 uv;
+  };
+  static bool CheckPixelData(float distance);
   static void DragObject(EntityID chosen_ID);
   static void Reset();
   static void PickID();
@@ -33,7 +38,7 @@ private:
   static glm::vec3 mouse_world;
   static EntityID saved_ID;
   static float saved_d;
-  static std::unordered_map<EntityID, std::pair<float,glm::vec2>> ID_and_distance;
+  static std::map<float, PickerData> Data_;
   static bool switch_;
   static state state_;
 };

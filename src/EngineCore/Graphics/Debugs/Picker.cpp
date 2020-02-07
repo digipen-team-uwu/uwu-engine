@@ -1,14 +1,16 @@
-#include "..\..\..\..\include\UWUEngine\Graphics\Debugs\Picker.h"
 #include <UWUEngine/Graphics/Debugs/Picker.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Graphics/Camera.h>
 #include <UWUEngine/constants.h>
 #include <UWUEngine/WindowManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
-#include "UWUEngine/Editor/Windows/EditorEntityViewer.h"
-#include "UWUEngine/Debugs/TraceLogger.h"
-#include "UWUEngine/Component/TextureComponentManager.h"
+#include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
+#include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Component/TextureComponentManager.h>
 #include <glm/gtx/intersect.hpp>
+#include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
+#include <glm/gtx/transform.hpp>
+
 
 glm::mat3 Picker::GLFW_to_vp;
 glm::mat3 Picker::ndc_to_vp;
@@ -16,7 +18,7 @@ glm::mat3 Picker::ndc_to_vf;
 glm::vec3 Picker::mouse_world;
 EntityID Picker::saved_ID;
 float Picker::saved_d;
-std::unordered_map<EntityID, std::pair<float, glm::vec2>> Picker::ID_and_distance;
+std::map<float, Picker::PickerData> Picker::Data_;
 bool Picker::switch_;
 Picker::state Picker::state_;
 
@@ -140,7 +142,7 @@ void Picker::Reset()
 {
   saved_d = std::numeric_limits<float>::max();
   saved_ID = goc::INVALID_ID;
-  ID_and_distance.clear();
+  Data_.clear();
 }
 
 void Picker::Pick()
@@ -159,28 +161,52 @@ void Picker::Pick()
     // get object current position in world coord
     glm::vec3 objectPos = glm::vec3(TransformComponentManager::GetTranslation(*it));
 
-    if (objectPos.z > 0)
-    {
-      continue;
-    }
+    //if (objectPos.z > 0)
+    //{
+    //  continue;
+    //}
 
     // scale factors of object
     glm::vec3 scale = TransformComponentManager::GetScale(*it);
 
-    glm::vec3 bottom_left = { objectPos.x - scale.x / 2, objectPos.y - scale.y / 2 , objectPos.z};
+    float rotation = TransformComponentManager::GetRotation(*it);
+
+    glm::vec3 bottom_left = { objectPos.x - scale.x / 2, objectPos.y - scale.y / 2 , objectPos.z };
     glm::vec3 top_left = { objectPos.x - scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
     glm::vec3 bottom_right = { objectPos.x + scale.x / 2, objectPos.y - scale.y / 2, objectPos.z };
     glm::vec3 top_right = { objectPos.x + scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
+
+    if (rotation != 0.f)
+    {
+      glm::mat4 translate = glm::mat4(1.0f);
+      translate[3] = glm::vec4(objectPos, 1.0f);
+      glm::mat4 inverse_translate = glm::inverse(translate);
+      auto rotate_matrix = glm::rotate(rotation, glm::vec3(0, 0, 1));
+      bottom_left = glm::vec3(translate * rotate_matrix * inverse_translate * glm::vec4(bottom_left,1.0f));
+      top_left = glm::vec3(translate * rotate_matrix * inverse_translate * glm::vec4(top_left, 1.0f));
+      bottom_right = glm::vec3(translate * rotate_matrix * inverse_translate * glm::vec4(bottom_right, 1.0f));
+      top_right = glm::vec3(translate * rotate_matrix * inverse_translate * glm::vec4(top_right, 1.0f));
+    }
 
     float intersection_dist;
 
     glm::vec2 baryPosition;
 
     if (glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_left, bottom_left, bottom_right,
-      baryPosition, intersection_dist) || glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_right, top_left, bottom_right,
-        baryPosition, intersection_dist))
+      baryPosition, intersection_dist))
     {
-      ID_and_distance[*it] = std::make_pair(intersection_dist, baryPosition);
+      glm::vec2 point_of_intersection = glm::vec2({0,1}) * (1 - baryPosition.x - baryPosition.y) + glm::vec2({0,0}) * baryPosition.x + glm::vec2({1,0}) * baryPosition.y;
+      Data_[intersection_dist].ID = *it;
+      Data_[intersection_dist].baryPosition = baryPosition;
+      Data_[intersection_dist].uv = point_of_intersection;
+    }
+    else if (glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_right, top_left, bottom_right,
+          baryPosition, intersection_dist))
+    {
+      glm::vec2 point_of_intersection = glm::vec2({1,1}) * (1 - baryPosition.x - baryPosition.y) + glm::vec2({0,1}) * baryPosition.x + glm::vec2({1,0}) * baryPosition.y;
+      Data_[intersection_dist].ID = *it;
+      Data_[intersection_dist].baryPosition = baryPosition;
+      Data_[intersection_dist].uv = point_of_intersection;
     }
   }
   PickID();
@@ -188,12 +214,13 @@ void Picker::Pick()
 
 void Picker::PickID()
 {
-  for (auto it = ID_and_distance.begin(); it != ID_and_distance.end(); ++it)
+  for (auto it = Data_.begin(); it != Data_.end(); ++it)
   {
-    if (it->second.first < saved_d)
+    if (CheckPixelData(it->first))
     {
-      saved_d = it->second.first;
-      saved_ID = it->first;
+      saved_d = it->first;
+      saved_ID = it->second.ID;
+      break;
     }
   }
 }
@@ -203,4 +230,40 @@ glm::vec2 Picker::GetMouseWorld()
   return mouse_world;
 }
 
+bool Picker::CheckPixelData(float distance)
+{
+  //const AtlasLayer layer = TextureAtlaser::GetAtlasLayers(chosen_ID);
+  //const glm::vec2 uv = TextureAtlaser::GetAtlasUV(chosen_ID);
+  //const glm::vec2 scale = TextureAtlaser::GetAtlasScale(chosen_ID);
+  //const GLuint textureID = TextureAtlaser::GetTextureID();
 
+  EntityID chosen_ID = Data_[distance].ID;
+  
+  std::string filePath = TextureComponentManager::getFilePath(chosen_ID);
+
+  if (filePath.empty())
+  {
+    return true;
+  }
+
+  auto raw_data = TextureAtlaser::GetRawData(filePath);
+  
+  unsigned char* image = raw_data.image;
+
+  //int w, h, c;
+  //unsigned char* comp = stbi_load(filePath.c_str(), &w, &h, &c, 0);
+
+  auto bary_y = Data_[distance].uv.y;
+  auto bary_x = Data_[distance].uv.x;
+  int height = bary_y * raw_data.height;
+  int width = bary_x * raw_data.width;
+
+  int offset = (height * raw_data.width + width) * raw_data.channels;
+  auto alpha = static_cast<unsigned char>(image[offset + 3]);
+  if (alpha > 254)
+  {
+    return true;
+  }
+
+  return false;
+}

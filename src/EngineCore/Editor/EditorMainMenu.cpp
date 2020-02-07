@@ -141,7 +141,7 @@ void Editors::MainMenu()
 
     if (ImGui::Button("Pause"))
     {
-      static bool isPaused = true;
+      static bool isPaused = false;
       isPaused = !isPaused;
       FrameRateController::SetPaused(isPaused);
     }
