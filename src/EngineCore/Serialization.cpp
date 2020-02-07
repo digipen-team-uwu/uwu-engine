@@ -29,6 +29,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Graphics/Texture/TextureAtlaser.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 
 #ifdef _MSVC
 #include <Shlobj_core.h>

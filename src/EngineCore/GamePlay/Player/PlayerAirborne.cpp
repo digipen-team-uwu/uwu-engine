@@ -17,6 +17,11 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Input/ActionManager.h>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Audio/SoundInterface.h>
+#include <UWUEngine/Timer.h>
+
+#define VARIABLE_JUMP_TIME 0.25f
+
+static Timer VariableJumpTimer;
 
 //Don't implement
 void PlayerStateMachine::Load_Airborne()
@@ -28,17 +33,28 @@ void PlayerStateMachine::Enter_Airborne()
 	//std::cout << "Entering Airborne state" << std::endl;
     PlayerData::currState = Airborne;
     SpineAnimationComponentManager::GetAnimation(PlayerData::GetPlayerID()).ChangeAnimation("jumpLaunch", false);
-
+    VariableJumpTimer.SetDuration(VARIABLE_JUMP_TIME);
+    VariableJumpTimer.Start();
 }
 
 void PlayerStateMachine::Update_Airborne(float dt)
 {
 	EntityID sight = PlayerData::GetPlayerID();
 
-	glm::vec4 gravity = { 0, -800.f, 0, 0 };
+    glm::vec4 gravity;
+
+    if (VariableJumpTimer.Running() && !VariableJumpTimer.Finished() && ActionManager::GetActionHeld(ActionManager::Jump))
+    {
+        gravity = { 0, PlayerData::GetGravity() / 2.0f, 0, 0 };
+    }
+    else
+    {
+        gravity = { 0, PlayerData::GetGravity(), 0, 0 };
+        VariableJumpTimer.Stop();
+    }
 	glm::vec4 movement = {};
 
-  movement.x += 1000.f * (ActionManager::GetActionHeld(ActionManager::Right) - ActionManager::GetActionHeld(ActionManager::Left));//(!!InputManager::KeyHeld('d') - !!InputManager::KeyHeld('a'));
+  movement.x += PlayerData::GetTopXSpeed() * (ActionManager::GetActionHeld(ActionManager::Right) - ActionManager::GetActionHeld(ActionManager::Left));//(!!InputManager::KeyHeld('d') - !!InputManager::KeyHeld('a'));
 
     if (ActionManager::GetActionPressed(ActionManager::Dash))//InputManager::KeyPressed(' '))
     {
@@ -54,9 +70,26 @@ void PlayerStateMachine::Update_Airborne(float dt)
 
 	TransformComponentManager::SetScale({ direction * 200.f, 200.f, 1 }, sight);
 
-	PhysicsComponentManager::SetDrag({ 2.f, 0.f, 0.f, 0.f }, sight);
+	PhysicsComponentManager::SetDrag({ 2.0f, 0.f, 0.f, 0.f }, sight);
 
 	PhysicsComponentManager::SetAcceleration(movement + gravity, sight);
+
+    // Get the velocity
+    glm::vec4 veloc = PhysicsComponentManager::GetVelocity(sight);
+
+
+    // If the downward velocity is 0 or less, but not faster than a certain amount, bump it downward (so the player falls faster)
+    if (veloc.y <= 0.0f && veloc.y > -300.0f)
+    {
+        veloc.y = -300.0f;
+        PhysicsComponentManager::SetVelocity(veloc, sight);
+    }
+
+    // If the downward velocity is too high, set it to a maximum
+    if (veloc.y < (PlayerData::TopYSpeed * -1.0f))
+    {
+        veloc.y = PlayerData::TopYSpeed * -1.0f;
+    }
 }
 
 void PlayerStateMachine::Exit_Airborne()

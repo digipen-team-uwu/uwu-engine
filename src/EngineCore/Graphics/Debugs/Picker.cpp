@@ -1,3 +1,4 @@
+#include "..\..\..\..\include\UWUEngine\Graphics\Debugs\Picker.h"
 #include <UWUEngine/Graphics/Debugs/Picker.h>
 #include <UWUEngine/Input/InputManager.h>
 #include <UWUEngine/Graphics/Camera.h>
@@ -15,39 +16,57 @@ glm::mat3 Picker::ndc_to_vf;
 glm::vec3 Picker::mouse_world;
 EntityID Picker::saved_ID;
 float Picker::saved_d;
-std::unordered_map<EntityID, float> Picker::ID_and_distance;
+std::unordered_map<EntityID, std::pair<float, glm::vec2>> Picker::ID_and_distance;
+bool Picker::switch_;
+Picker::state Picker::state_;
 
 Picker::Picker()
 {
+  switch_ = false;
+  state_ = state::RELEASE;
   saved_d = std::numeric_limits<float>::max();
   saved_ID = static_cast<unsigned>(-1);
 }
 
 void Picker::Update()
 {
-  //if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
-  //{
-  //  glm::vec2 mousePos = InputManager::GetMousePos();
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
-  //    mousePos.y << std::endl;
-  //
-  //  CalculateMouseWorld(mousePos);
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "Ray World x: " << mouse_world.x << " y: " <<
-  //    mouse_world.y << " z: " << mouse_world.z << std::endl;
-  //
-  //  Pick();
-  //  PickID();
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
-  //
-  //  Editors::EntityViewer::SetSelectedEntity(saved_ID);
-  //
-  //  TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
-  //  Reset();
-  //  
-  //  auto cameraPos = Camera::GetCameraPosition();
-  //  TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
-  //    " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
-  //}
+  glm::vec2 mousePos = InputManager::GetMousePos();
+  CalculateMouseWorld(mousePos);
+
+  if (InputManager::MousePressed(InputConstants::Mouse::LEFT_CLICK))
+  {
+    TraceLogger::Log(TraceLogger::DEBUG) << "Mouse GLFW: x: " << mousePos.x << " y: " <<
+      mousePos.y << std::endl;
+    
+    TraceLogger::Log(TraceLogger::DEBUG) << "Mouse World x: " << mouse_world.x << " y: " <<
+      mouse_world.y << " z: " << mouse_world.z << std::endl;
+  
+    Pick();
+    TraceLogger::Log(TraceLogger::DEBUG) << "chosen ID: " << saved_ID << std::endl;
+
+    if (saved_ID != goc::INVALID_ID)
+    {
+      state_ = state::PICKED;
+      //switch_ = !switch_;
+      //state_ = switch_ ? state::PICKED : state::RELEASE;
+      Editors::EntityViewer::SetSelectedEntity(saved_ID);
+      TextureComponentManager::SetColor(saved_ID, { 1.0f,0.0f,0.0f,1.0f });
+      Reset();
+    }
+    
+    auto cameraPos = Camera::GetCameraPosition();
+    TraceLogger::Log(TraceLogger::DEBUG) << "camera pos: x: " << cameraPos.x <<
+      " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl << std::endl;
+  }
+  if (InputManager::MouseReleased(InputConstants::Mouse::LEFT_CLICK))
+  {
+    state_ = state::RELEASE;
+  }
+  if (state_ == state::PICKED)
+  {
+    auto chosen_ID = Editors::EntityViewer::GetSelectedEntity();
+    DragObject(chosen_ID);
+  }
 }
 
 void Picker::CalculateMouseWorld(glm::vec2 Pos)
@@ -93,7 +112,7 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
   ndc_to_vf[2].y = 0.0f;
   ndc_to_vf[2].z = 1.0f;
 
-  glm::vec3 mouse_vf = glm::mat3(glm::inverse(Camera::GetProjectionMatrix())) * mouse_ndc;
+  glm::vec3 mouse_vf = ndc_to_vf * mouse_ndc;
 #pragma endregion 
 
 #pragma region convert view finder to view frame
@@ -108,22 +127,29 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
 #pragma endregion 
 }
 
+void Picker::DragObject(EntityID chosen_ID)
+{
+  auto mouse_offset = Camera::getMouseOffset();
+  auto chosen_obj_pos = TransformComponentManager::GetTranslation(chosen_ID);
+  chosen_obj_pos.x += mouse_offset.x * 5.f;
+  chosen_obj_pos.y += mouse_offset.y * 5.f;
+  TransformComponentManager::SetTranslation(chosen_obj_pos, chosen_ID);
+}
+
 void Picker::Reset()
 {
   saved_d = std::numeric_limits<float>::max();
-  saved_ID = static_cast<unsigned>(-1);
-}
-
-bool Picker::IsPointInAABB(AABB aabb, Point p)
-{
-  return p.x >= aabb.bottom_left.x &&
-         p.y >= aabb.bottom_left.y &&
-         p.x <= aabb.bottom_left.x + aabb.w &&
-         p.y <= aabb.bottom_left.y + aabb.h;
+  saved_ID = goc::INVALID_ID;
+  ID_and_distance.clear();
 }
 
 void Picker::Pick()
 {
+  if (Editors::EntityViewer::GetSelectedEntity() != goc::INVALID_ID)
+  {
+    TextureComponentManager::SetColor(Editors::EntityViewer::GetSelectedEntity(), { 1.0f,1.0f,1.0f,1.0f });
+  }
+  
   // get a list of current active objects
   auto ids = EntityManager::GetIDs();
   auto cameraPos = Camera::GetCameraPosition();
@@ -141,23 +167,32 @@ void Picker::Pick()
     // scale factors of object
     glm::vec3 scale = TransformComponentManager::GetScale(*it);
 
+    glm::vec3 bottom_left = { objectPos.x - scale.x / 2, objectPos.y - scale.y / 2 , objectPos.z};
+    glm::vec3 top_left = { objectPos.x - scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
+    glm::vec3 bottom_right = { objectPos.x + scale.x / 2, objectPos.y - scale.y / 2, objectPos.z };
+    glm::vec3 top_right = { objectPos.x + scale.x / 2, objectPos.y + scale.y / 2, objectPos.z };
+
     float intersection_dist;
 
-    if (glm::intersectRayPlane(cameraPos, glm::normalize(mouse_world - cameraPos), 
-      objectPos, {0.f,0.f,1.f}, intersection_dist))
+    glm::vec2 baryPosition;
+
+    if (glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_left, bottom_left, bottom_right,
+      baryPosition, intersection_dist) || glm::intersectRayTriangle(cameraPos, glm::normalize(mouse_world - cameraPos), top_right, top_left, bottom_right,
+        baryPosition, intersection_dist))
     {
-      ID_and_distance[*it] = intersection_dist;
+      ID_and_distance[*it] = std::make_pair(intersection_dist, baryPosition);
     }
   }
+  PickID();
 }
 
 void Picker::PickID()
 {
   for (auto it = ID_and_distance.begin(); it != ID_and_distance.end(); ++it)
   {
-    if (it->second < saved_d)
+    if (it->second.first < saved_d)
     {
-      saved_d = it->second;
+      saved_d = it->second.first;
       saved_ID = it->first;
     }
   }

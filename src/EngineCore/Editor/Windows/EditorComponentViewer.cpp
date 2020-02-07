@@ -17,23 +17,26 @@ Copyright © 2019 DigiPen, All rights reserved.
 //All the components
 #include <UWUEngine/Editor/Components/EditorTransform.h>
 #include <UWUEngine/Editor/Components/EditorPhysics.h>
+#include <UWUEngine/Editor/Components/EditorTexture.h>
 
 #include <imgui.h>
 #include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Graphics/SpineAnimation/SpineCompatibility.h>
 #include <magic_enum.hpp>
 
 using namespace Editors;
 
 #define REGISTER_COMPONENT(name) \
   std::shared_ptr<name> name ## _ = std::make_shared<name>(#name); \
-  components.insert({ name ## _->GetName(), name ## _ }); \
+  components.insert({ name ## _->GetName(), name ## _ }) \
 
 ComponentViewer::ComponentViewer():
 Window("Component Viewer", true)
 {
   //Register all the components here
-  REGISTER_COMPONENT(Transform)
-  REGISTER_COMPONENT(Physics)
+  REGISTER_COMPONENT(Transform);
+  REGISTER_COMPONENT(Physics);
+  REGISTER_COMPONENT(Texture);
 }
 
 ComponentViewer::~ComponentViewer()

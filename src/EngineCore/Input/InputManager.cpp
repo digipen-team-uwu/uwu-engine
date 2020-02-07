@@ -66,6 +66,10 @@ void InputManager::PushInput(std::map<int, ic::InputResult> &map, int key, int a
 void InputManager::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mod)
 {
   ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
+  if (ImGui::GetIO().WantCaptureKeyboard)
+  {
+    return;
+  }
   if (action != GLFW_REPEAT)
     PushInput(keys, key, action);
 }
@@ -73,6 +77,10 @@ void InputManager::KeyCallback(GLFWwindow *window, int key, int scancode, int ac
 void InputManager::MouseCallback(GLFWwindow* window, int button, int action, int mods)
 {
   ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+  if (ImGui::GetIO().WantCaptureMouse)
+  {
+    return;
+  }
   PushInput(mouse, button, action);
 }
 
@@ -80,25 +88,27 @@ void InputManager::MousePosCallback(GLFWwindow* window, double xPos, double yPos
 {
   mousePos.x = static_cast<float>(xPos);
   mousePos.y = static_cast<float>(yPos);
-  if (Camera::getCameraState() == Camera::state::ENABLE_FPS)
+
+  if (Camera::getFirstFlag())
   {
-    if (Camera::getFirstFlag())
-    {
-      prevMousePos = mousePos;
-      Camera::setFirstFlag(false);
-    }
-    float xOffset = static_cast<float>(xPos) - prevMousePos.x;
-    float yOffset = prevMousePos.y - static_cast<float>(yPos); // y go from bottom to top
-
-    prevMousePos = { static_cast<float>(xPos), static_cast<float>(yPos) };
-
-    Camera::mouseMovement(xOffset, yOffset);
+    prevMousePos = mousePos;
+    Camera::setFirstFlag(false);
   }
+  float xOffset = static_cast<float>(xPos) - prevMousePos.x;
+  float yOffset = prevMousePos.y - static_cast<float>(yPos); // y go from bottom to top
+
+  prevMousePos = { static_cast<float>(xPos), static_cast<float>(yPos) };
+
+  Camera::mouseMovement(xOffset, yOffset);
 }
 
 void InputManager::ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
   ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+  if (ImGui::GetIO().WantCaptureMouse)
+  {
+    return;
+  }
   scrollVec.x = static_cast<float>(xOffset);
   if(scrollVec.y < ic::MAX_SCROLL && scrollVec.y > -ic::MAX_SCROLL)
     scrollVec.y += static_cast<float>(yOffset) * ic::SCROLL_RATE;
@@ -226,13 +236,13 @@ void InputManager::Update()
   UpdateGamepads();
   if (InputManager::scrollVec.y > 0)
   {
-    InputManager::scrollVec.y -= FrameRateController::GetDeltaTime<float>() * ic::SCROLL_FRICTION;
+    InputManager::scrollVec.y -= FrameRateController::GetConstantDeltaTime<float>() * ic::SCROLL_FRICTION;
     if (InputManager::scrollVec.y < 0)
       InputManager::scrollVec.y = 0;
   }
   else if(InputManager::scrollVec.y < 0)
   {
-    InputManager::scrollVec.y += FrameRateController::GetDeltaTime<float>() * ic::SCROLL_FRICTION;
+    InputManager::scrollVec.y += FrameRateController::GetConstantDeltaTime<float>() * ic::SCROLL_FRICTION;
     if (InputManager::scrollVec.y > 0)
       InputManager::scrollVec.y = 0;
   }
@@ -357,74 +367,3 @@ glm::vec2 InputManager::GetScrollWheelVec()
   return scrollVec;
 }
 
-//DEPRECATED
-/* 
-int InputManager::Update()
-{
-    int count = 0;
-    SDL_Event event;
-    prevKeys = keys;
-    
-    while (SDL_PollEvent(&event))
-    {
-        ++count;
-        switch (event.type)
-        {
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym >= SDLK_RIGHT)
-            {
-                keys[event.key.keysym.sym + ic::ARROW_OFFSET] = true;
-            }
-            keys[event.key.keysym.sym] = true;
-            break;
-        case SDL_KEYUP:
-            if (event.key.keysym.sym >= SDLK_RIGHT)
-            {
-                keys[event.key.keysym.sym + ic::ARROW_OFFSET] = false;
-            }
-            keys[event.key.keysym.sym] = false;
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            keys[event.button.button + ic::MOUSE_OFFSET] = true;
-            break;
-        case SDL_MOUSEBUTTONUP:
-            keys[event.button.button + ic::MOUSE_OFFSET] = false;
-            break;
-        case SDL_MOUSEMOTION:
-            mouse = { event.motion.xrel, -event.motion.yrel };
-            break;
-        case SDL_QUIT:
-            exit = true;
-            break;
-        }
-    }
-    return count;
-}
-
-ic::InputResult InputManager::InputKey(char key) const
-{
-    const auto prev = prevKeys.find(tolower(key));
-    const auto current = keys.find(tolower(key));    
-
-    if (current == keys.end())
-    {
-        return ic::InputResult::NONE;
-    }
-
-    if (current->second && (prev == prevKeys.end() || !(prev->second)))
-    {
-        return ic::InputResult::PRESSED;
-    }
-
-    if (!(current->second) && (prev != prevKeys.end() && prev->second))
-    {
-        return ic::InputResult::RELEASED;
-    }
-
-    if (current->second)
-    {
-        return ic::InputResult::HELD;
-    }
-    return ic::InputResult::NONE;
-}
-*/

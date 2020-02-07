@@ -13,8 +13,6 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/Components/EditorPhysics.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 
-#include <imgui.h>
-
 Editors::Physics::Physics(const std::string& name):
 Component(name)
 {

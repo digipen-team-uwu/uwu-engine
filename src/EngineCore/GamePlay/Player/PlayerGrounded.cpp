@@ -47,10 +47,10 @@ void PlayerStateMachine::Update_Grounded(float dt)
 
 	EntityID sight = PlayerData::GetPlayerID();
 	
-	glm::vec4 gravity = { 0, -800.f, 0, 0 };
+	glm::vec4 gravity = { 0, PlayerData::GetGravity(), 0, 0 };
 	glm::vec4 movement = {};
 
-  movement.x += 1000.f * (ActionManager::GetActionHeld(ActionManager::Right) - ActionManager::GetActionHeld(ActionManager::Left)); //(!!InputManager::KeyHeld('d') - !!InputManager::KeyHeld('a'));
+    movement.x += PlayerData::GetTopXSpeed() *(ActionManager::GetActionHeld(ActionManager::Right) - ActionManager::GetActionHeld(ActionManager::Left)); //(!!InputManager::KeyHeld('d') - !!InputManager::KeyHeld('a'));
 
 	static bool walking_anim = false;
 
@@ -76,7 +76,7 @@ void PlayerStateMachine::Update_Grounded(float dt)
 
 	if (ActionManager::GetActionPressed(ActionManager::Jump))//InputManager::KeyPressed('w'))
 	{
-		vel.y = 650.f;
+		vel.y = PlayerData::GetJumpLaunchSpeed();
 		glm::vec4 translation = TransformComponentManager::GetTranslation(sight);
 		translation.y += 5;
 		TransformComponentManager::SetTranslation(translation, sight);

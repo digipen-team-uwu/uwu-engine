@@ -44,9 +44,7 @@ Camera::state Camera::state_;
 bool Camera::switch_;
 Camera::lock Camera::lock_;
 bool Camera::switch_lock_;
-
-template<>
-int RegisterSystemHelper<Camera>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<Camera>(SystemInitOrder::FIRST, SystemUpdateOrder::Camera);
+glm::vec2 Camera::mouse_Offset_;
 
 void Camera::Print_Debug_Value()
 {
@@ -225,15 +223,14 @@ void Camera::SetCameraTarget(const glm::vec3& target)
 
 void Camera::zoomIn(float amount)
 {
-  float dt = FrameRateController::GetDeltaTime<float>();
-  FOV = FOV >= 30.f && FOV <= 90.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
+  float dt = FrameRateController::GetConstantDeltaTime<float>();
+  FOV = FOV >= 0.f && FOV <= 180.f ? FOV - amount * dt : FOV < 30.f ? FOV + std::abs(amount / 10) * dt : FOV - std::abs(amount / 10) * dt;
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
 void Camera::zoomOut(float amount)
 {
-  float dt = FrameRateController::GetDeltaTime<float>();
-  FOV += amount * dt;
+  FOV += amount * FrameRateController::GetConstantDeltaTime<float>();
   projection = glm::perspective(glm::radians(FOV), aspectRatio, nearDistance, farDistance);
 }
 
@@ -247,15 +244,17 @@ void Camera::moveCamera(float speed)
 
 void Camera::mouseMovement(float xOffSet, float yOffSet)
 {
+  float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
+  float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
+
+  mouse_Offset_ = { x_offset, y_offset };
+
   if (state_ == state::ENABLE_FPS)
   {
     if (lock_ == lock::UNLOCKED)
     {
-      float x_offset = xOffSet * cc::MOUSE_SENSITIVITY;
-      float y_offset = yOffSet * cc::MOUSE_SENSITIVITY;
-
-      Yaw += x_offset;
-      Pitch += y_offset;
+      Yaw += mouse_Offset_.x;
+      Pitch += mouse_Offset_.y;
 
       Pitch = Pitch > 89.0f ? 89.0f : Pitch;
       Pitch = Pitch < -89.0f ? -89.0f : Pitch;
@@ -278,4 +277,9 @@ bool Camera::getFirstFlag()
 Camera::state Camera::getCameraState()
 {
   return state_;
+}
+
+glm::vec2 Camera::getMouseOffset()
+{
+  return mouse_Offset_;
 }

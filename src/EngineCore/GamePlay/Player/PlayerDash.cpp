@@ -20,38 +20,36 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <glm/glm.hpp>
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Audio/SoundInterface.h>
+#include <glm/gtc/constants.hpp>
+
+// Pi Defines for Angle Returns - Michael
+#define PI                 (glm::pi<float>())
+#define RAD_UP             (PI / 2.0f)
+#define RAD_RIGHT          0
+#define RAD_LEFT           PI
+#define RAD_DOWN           ((-1.0f * PI) / 2.0f)
+#define RAD_UPRIGHT        (PI / 4.0f)
+#define RAD_UPLEFT         ((3.0f * PI) / 4.0f)
+#define RAD_DOWNRIGHT      ((-1.0f * PI) / 4.0f)
+#define RAD_DOWNLEFT       ((-3.0f * PI) / 4.0f)
+#define THIRTY_DEG_IN_RAD  (PI / 6.0f)
+#define FIFTEEN_DEG_IN_RAD (PI / 12.0f)
 
 // Magnitude of the dash acceleration stage
-#define DASH_MAGNITUDE 8000.0f
-
-//magnitude of the upwards burst at end of dash
-#define DASH_END_MAGNITUDE 4000.0f
-
-// Total drag during the end dash
-#define X_DRAG_MAGNITUDE 5.0f
-#define Y_DRAG_MAGNITUDE 5.0f
-
-// Hard angle for testing
-#define TEST_ANGLE glm::radians(0.0f)
+#define DASH_MAGNITUDE 1500.0f
 
 // The full length of the dash
-#define DASH_TIME 0.4f
+#define DASH_TIME 0.2f
 
-#define DASH_COOLDOWN 1.0f
+#define DASH_COOLDOWN 0.005f
 
-// Time defines for the timers
+// Exit velocity of the dash
+#define X_DRIFT_MULT 0.25f
+#define Y_DRIFT_MULT 0.55f
 
-#define ACCEL_TIME 0.15f
-#define DRAG_TIME  0.05f
-#define END_TIME  0.2f
-#define MAIN_TIME  DASH_TIME - ACCEL_TIME - DRAG_TIME - END_TIME
 
-static Timer DashAccelTimer; // Tracks the amount of time the opening burst of acceleration lasts for
-static Timer DashMainTimer;  // Tracks the amount of time the main body of the dash lasts for
-static Timer DashDragTimer;  // Tracks the amount of time the end drag of the dash lasts for
-static Timer DashEndTimer;
+static Timer DashTimer;  // Tracks the amount of time the main body of the dash lasts for
 
-static float angle;
 
 // Don't implement
 void PlayerStateMachine::Load_Dash()
@@ -67,135 +65,91 @@ void PlayerStateMachine::Enter_Dash()
     SpineAnimationComponentManager::GetAnimation(PlayerData::GetPlayerID()).ChangeAnimation("dash", false);
 
     // Set the timer durations
-    DashAccelTimer.SetDuration(ACCEL_TIME);
-    DashMainTimer.SetDuration(MAIN_TIME);
-    DashDragTimer.SetDuration(DRAG_TIME);
-    DashEndTimer.SetDuration(END_TIME);
+    DashTimer.SetDuration(DASH_TIME);
+    DashTimer.Start();
 
-    // Start the accel timer (stage one)
-    DashAccelTimer.Start();
+    // Get the angle
+    float angle = ActionManager::GetDashAngle();
 
-    // Set the angle (Just a test angle for now)
-    angle = TEST_ANGLE;
+    // Hard adjust the angle towards one of the eight directions
+    // Non-cardinal directions take precedence and have a wider range to make the controls feel better
+    if (angle <= RAD_UPRIGHT + THIRTY_DEG_IN_RAD && angle >= RAD_UPRIGHT - THIRTY_DEG_IN_RAD)
+    {
+        angle = RAD_UPRIGHT;
+    }
+    else if (angle <= RAD_UPLEFT + THIRTY_DEG_IN_RAD && angle >= RAD_UPLEFT - THIRTY_DEG_IN_RAD)
+    {
+        angle = RAD_UPLEFT;
+    }
+    else if (angle <= RAD_DOWNLEFT + THIRTY_DEG_IN_RAD && angle >= RAD_DOWNLEFT - THIRTY_DEG_IN_RAD)
+    {
+        angle = RAD_DOWNLEFT;
+    }
+    else if (angle <= RAD_DOWNRIGHT + THIRTY_DEG_IN_RAD && angle >= RAD_DOWNRIGHT - THIRTY_DEG_IN_RAD)
+    {
+        angle = RAD_DOWNRIGHT;
+    }
+    else if (angle <= RAD_RIGHT + FIFTEEN_DEG_IN_RAD && angle >= RAD_RIGHT - FIFTEEN_DEG_IN_RAD)
+    {
+        angle = RAD_RIGHT;
+    }
+    else if (angle <= RAD_UP + FIFTEEN_DEG_IN_RAD && angle >= RAD_UP - FIFTEEN_DEG_IN_RAD)
+    {
+        angle = RAD_UP;
+    }
+    else if (angle <= RAD_LEFT + FIFTEEN_DEG_IN_RAD && angle >= RAD_LEFT - FIFTEEN_DEG_IN_RAD
+            || angle <= (-1.0f * RAD_LEFT + FIFTEEN_DEG_IN_RAD) && angle >= (-1.0f * RAD_LEFT - FIFTEEN_DEG_IN_RAD))
+    {
+        angle = RAD_LEFT;
+    }
+    else
+    {
+        angle = RAD_DOWN;
+    }
+
+    glm::vec4 veloc = VectorFromAngle(angle);
+    veloc.x *= DASH_MAGNITUDE;
+    veloc.y *= DASH_MAGNITUDE;
+
+    PhysicsComponentManager::SetVelocity(veloc, PlayerData::playerID);
+
+    glm::vec4 zero = { 0.0f, 0.0f, 0.0f, 0.0f };
+    PhysicsComponentManager::SetDrag(zero, PlayerData::playerID);
+    PhysicsComponentManager::SetAcceleration(zero, PlayerData::playerID);
 
     PlayerData::currState = Dash;
+
+    
 }
 
 void PlayerStateMachine::Update_Dash(float dt)
 {
-    // Check if the accel timer has finished
-    if (DashAccelTimer.Running())
+
+    if (DashTimer.Finished())
     {
-        // Check if the accel timer has finished
-        if (!DashAccelTimer.Finished())
-        {
-            // Get a unit vector based on an angle
-          glm::vec4 accel = VectorFromAngle(ActionManager::GetDashAngle());//angle);
-
-            // Multiply the magnitude of the vector
-            accel.x *= DASH_MAGNITUDE;
-            accel.y *= DASH_MAGNITUDE;
-
-            // Check if the player is facing left
-            //if (!PlayerData::FacingRight())
-            //{
-            //    // Invert the x acceleration
-            //    accel.x *= -1.0f;
-            //}
-
-            // Set the acceleration of the player
-            PhysicsComponentManager::SetAcceleration(accel, PlayerData::playerID);
-        }
-        else
-        {
-            // Stop the accel timer
-            DashAccelTimer.Stop();
-
-            // Start the main timer
-            DashMainTimer.Start();
-        }
-    }
-    
-    // Check if the main timer is running
-    if (DashMainTimer.Running())
-    {
-        // Check if the main timer has finished
-        if (!DashMainTimer.Finished())
-        {
-            // Right now, does nothing, but it might in the future maybe depending
-        }
-        else
-        {
-            // Stop the main timer
-            DashMainTimer.Stop();
-
-            // Start the drag timer
-            DashDragTimer.Start();
-        }
-    }
-
-    // Check if the drag timer is running
-    if (DashDragTimer.Running())
-    {
-        // Check if the drag timer is finished
-        if (!DashDragTimer.Finished())
-        {
-            // Get a unit vector based on an angle (just a test angle right now)
-            glm::vec4 drag = { 0, 0, 0, 0 };
-
-            drag.x = X_DRAG_MAGNITUDE;
-            drag.y = Y_DRAG_MAGNITUDE;
-
-            // Set the acceleration of the player
-            PhysicsComponentManager::SetDrag(drag, PlayerData::playerID);
-        }
-        else
-        {
-          // Stop the accel timer
-          DashDragTimer.Stop();
-
-          // Start the main timer
-          DashEndTimer.Start();
-        }
-    }
-
-    if (DashEndTimer.Running())
-    {
-      // Check if the accel timer has finished
-      if (!DashEndTimer.Finished())
-      {
-        // Set the acceleration of the player
-        PhysicsComponentManager::SetAcceleration({ 0, DASH_END_MAGNITUDE, 0, 0 }, PlayerData::playerID);
-      }
-      else
-      {
         PlayerData::DashCooldown.Stop();
 
         // Exit the dash
         SetNextState(Airborne);
-      }
     }
-
-
-	//TODO: redo this later
-    //if (ColliderComponentManager::IsColliding(PlayerData::GetPlayerID(), EntityManager::Solid))
-    //{
-    //    SetNextState(Airborne);
-    //}
-
-	
 }
 
 void PlayerStateMachine::Exit_Dash()
 {
-    DashAccelTimer.Stop();
-    DashMainTimer.Stop();
-    DashDragTimer.Stop();
-    DashEndTimer.Stop();
+    DashTimer.Stop();
 
     // Set the Dash cooldown and stop it
     PlayerData::DashCooldown.SetDuration(DASH_COOLDOWN);
     PlayerData::DashCooldown.Stop();
+
+    glm::vec4 veloc = PhysicsComponentManager::GetVelocity(PlayerData::playerID);
+
+    veloc.y *= Y_DRIFT_MULT;
+    veloc.x *= X_DRIFT_MULT;
+
+    veloc.x += PlayerData::GetTopXSpeed() * (ActionManager::GetActionHeld(ActionManager::Right) - ActionManager::GetActionHeld(ActionManager::Left));
+
+    PhysicsComponentManager::SetVelocity(veloc, PlayerData::playerID);
 }
 
 // Don't implement
