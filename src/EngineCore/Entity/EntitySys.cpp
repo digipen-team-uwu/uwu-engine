@@ -1,7 +1,7 @@
 /******************************************************************************/
     /*!
     \par        Project Umbra
-    \file       EntityManager.cpp
+    \file       EntitySys.cpp
     \author     Brayan Lopez
     \date       2019/09/13
     \brief      Entity System Implementation
