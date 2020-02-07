@@ -72,7 +72,7 @@ public:
 
   static void stopAllSounds();
   static void stopSound(char const* name);
-
+  static void stopSound(const std::string & name);
 private:
   //! FMOD's sound system
   static FMOD::System* system_;

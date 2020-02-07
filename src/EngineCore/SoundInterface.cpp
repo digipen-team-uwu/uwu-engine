@@ -67,8 +67,6 @@ SoundInterface::SoundInterface()
     log_stream << " as " << Set(Cyan) << sound->name.GetString() << Set() << "\n";
     loadSound(sound->name.GetString(), sound->value.GetString());
   }
-
-  playSound("music_calm1", true);
 }
 
 void SoundInterface::Update()
@@ -84,7 +82,11 @@ SoundInterface::~SoundInterface()
 
 void SoundInterface::playSound(std::string const& name, bool loop)
 {
-  //TODO: play sounds on different channels
+  auto& chan = channels_.find(name);
+  if (chan != channels_.end() && chan->second)
+  {
+    stopSound(name);
+  }
   TraceLogger::Log(TraceLogger::DEBUG) << "Playing sound " << Set(Cyan) << name << Set() << "\n";
   if (loop) [[unlikely]]
   {
@@ -102,6 +104,11 @@ void SoundInterface::loadSound(char const* name, char const* filepath)
   FMOD::ChannelGroup* group;
   system_->createChannelGroup("default", &group);
   channels_[name] = group;
+}
+
+void SoundInterface::stopSound(const std::string &str)
+{
+  channels_[str]->stop();
 }
 
 void SoundInterface::stopSound(char const* name)
@@ -126,9 +133,8 @@ void SoundInterface::loadSound(std::string const& name, std::string const& filep
 
 void SoundInterface::stopAllSounds()
 {
-  //for (auto& it : channels_)
-  //{
-    //it.second->stop();
-  //}
-  channels_.clear();
+  for (auto& it : channels_)
+  {
+    it.second->stop();
+  }
 }
