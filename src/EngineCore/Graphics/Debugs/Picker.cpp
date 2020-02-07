@@ -168,6 +168,14 @@ void Picker::Pick()
 
     // scale factors of object
     glm::vec3 scale = TransformComponentManager::GetScale(*it);
+    //if (scale.x < 0)
+    //{
+    //  scale.x = -scale.x;
+    //}
+    //if (scale.y < 0)
+    //{
+    //  scale.y = -scale.y;
+    //}
 
     float rotation = TransformComponentManager::GetRotation(*it);
 
@@ -232,11 +240,6 @@ glm::vec2 Picker::GetMouseWorld()
 
 bool Picker::CheckPixelData(float distance)
 {
-  //const AtlasLayer layer = TextureAtlaser::GetAtlasLayers(chosen_ID);
-  //const glm::vec2 uv = TextureAtlaser::GetAtlasUV(chosen_ID);
-  //const glm::vec2 scale = TextureAtlaser::GetAtlasScale(chosen_ID);
-  //const GLuint textureID = TextureAtlaser::GetTextureID();
-
   EntityID chosen_ID = Data_[distance].ID;
   
   std::string filePath = TextureComponentManager::getFilePath(chosen_ID);
@@ -247,20 +250,26 @@ bool Picker::CheckPixelData(float distance)
   }
 
   auto raw_data = TextureAtlaser::GetRawData(filePath);
+  glm::vec2 scale = TransformComponentManager::GetScale(Data_[distance].ID);
   
   unsigned char* image = raw_data.image;
 
-  //int w, h, c;
-  //unsigned char* comp = stbi_load(filePath.c_str(), &w, &h, &c, 0);
-
   auto bary_y = Data_[distance].uv.y;
   auto bary_x = Data_[distance].uv.x;
+  //if(scale.x < 0)
+  //{
+  //  bary_x = 1 - bary_x;
+  //}
+  //if (scale.y < 0)
+  //{
+  //  bary_y = 1 - bary_y;
+  //}
   int height = bary_y * raw_data.height;
   int width = bary_x * raw_data.width;
 
   int offset = (height * raw_data.width + width) * raw_data.channels;
   auto alpha = static_cast<unsigned char>(image[offset + 3]);
-  if (alpha > 254)
+  if (alpha > 150)
   {
     return true;
   }
