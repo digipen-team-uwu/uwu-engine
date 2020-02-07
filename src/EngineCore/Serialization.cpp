@@ -103,7 +103,7 @@ void SerializeLevel(const char* level)
   stream.setf(std::ios::fixed);
 
   // EntityManager::Serialize(stream);
-  EntityManager::LevelSerialize(stream);
+  EntitySys::LevelSerialize(stream);
 }
 
 glm::vec3 CreateMemberVec3(rapidjson::Value& object, const char* filePath,

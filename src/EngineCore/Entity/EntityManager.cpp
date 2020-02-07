@@ -4,7 +4,7 @@
     \file       EntityManager.cpp
     \author     Brayan Lopez
     \date       2019/09/13
-    \brief      Game Object Manager implementation
+    \brief      Entity System Implementation
 
     Copyright � 2019 DigiPen, All rights reserved.
     */
@@ -26,39 +26,37 @@
 
 
 
-std::vector<EntityID> EntityManager::ids;
-std::vector<EntityID> EntityManager::freeIDs;
-EntityVector<EntityManager::Type> EntityManager::types(goc::INITIAL_OBJECT_COUNT);
-EntityVector<std::uint8_t> EntityManager::destroyeds(goc::INITIAL_OBJECT_COUNT);
-EntityVector<std::uint8_t> EntityManager::clearImmune(goc::INITIAL_OBJECT_COUNT);
-EntityVector<std::uint8_t> EntityManager::dontSerialize(goc::INITIAL_OBJECT_COUNT);
-bool EntityManager::destroyed = false;
-EntityID EntityManager::idCount = 0;
-
-size_t EntityManager::update_ = static_cast<size_t>(ComponentUpdateOrder::LAST);
-size_t EntityManager::behavior_ = static_cast<size_t>(ComponentUpdateOrder::Behavior);
+//std::vector<EntityID> EntitySys::ids;
+//std::vector<EntityID> EntitySys::freeIDs;
+//EntityVector<EntitySys::Type> EntitySys::types(goc::INITIAL_OBJECT_COUNT);
+//EntityVector<std::uint8_t> EntitySys::destroyeds(goc::INITIAL_OBJECT_COUNT);
+//EntityVector<std::uint8_t> EntitySys::clearImmune(goc::INITIAL_OBJECT_COUNT);
+//EntityVector<std::uint8_t> EntitySys::dontSerialize(goc::INITIAL_OBJECT_COUNT);
+//bool EntitySys::destroyed = false;
+//EntityID EntitySys::idCount = 0;
+//
+//size_t EntitySys::update_ = static_cast<size_t>(ComponentUpdateOrder::LAST);
+//size_t EntitySys::behavior_ = static_cast<size_t>(ComponentUpdateOrder::Behavior);
 
 #pragma region GETTERS
 
-namespace goc = GameObjectConstants;
-
-size_t EntityManager::EntityCount()
+size_t uwu::EntitySys::EntityCount()
 {
   return ids.size();
 }
 
-const std::vector<EntityID>& EntityManager::GetIDs()
+const std::vector<EntityID>& uwu::EntitySys::GetIDs()
 {
     return ids;
 }
 
-Type EntityManager::GetType(EntityID ID)
+uwu::EntitySys::Type uwu::EntitySys::GetType(EntityID ID)
 {
     return types[ID];
 }
 
 
-EntityID EntityManager::New(Type type)
+EntityID uwu::EntitySys::New(Type type)
 {
     if (!type) //if its Type.Empty
         return -1;//then dont waste time calling this function
@@ -82,7 +80,7 @@ EntityID EntityManager::New(Type type)
     if (id >= EntityVectorManager::GetVectorSize())
     {
       EntityVectorManager::ResizeVectors();
-      Instances::CreateInstances(MeshComponentManager::GetEntityMesh());
+      Instances::CreateInstances(MeshSys::GetEntityMesh());
     }
 
     types[id] = type;
@@ -100,7 +98,7 @@ EntityID EntityManager::New(Type type)
 
 #pragma region DOERS
 
-EntityManager::EntityManager()
+uwu::EntitySys::EntitySys()
 {
     ids.reserve(goc::INITIAL_OBJECT_COUNT);
     freeIDs.resize(goc::INITIAL_OBJECT_COUNT);
@@ -112,13 +110,13 @@ EntityManager::EntityManager()
     InitComponents();
 }
 
-EntityManager::~EntityManager()
+uwu::EntitySys::~EntitySys()
 {
     ids.clear();
     freeIDs.clear();
 }
 
-void EntityManager::Update( )
+void uwu::EntitySys::Update( )
 {
   if (destroyed)
   {
@@ -131,7 +129,7 @@ void EntityManager::Update( )
   }
 }
 
-void EntityManager::InitComponents()
+void uwu::EntitySys::InitComponents()
 {
   for (auto& comp : GetComponents())
   {
@@ -139,7 +137,7 @@ void EntityManager::InitComponents()
   }
 }
 
-void EntityManager::Destroy(EntityID id, int idsIndex)
+void uwu::EntitySys::Destroy(EntityID id, int idsIndex)
 {
   //Mark all the children as destroyed
   //for (auto child : ParentChildComponentManager::GetChildren(id))
@@ -168,7 +166,7 @@ void EntityManager::Destroy(EntityID id, int idsIndex)
 
 }
 
-void EntityManager::DestroyAll()
+void uwu::EntitySys::DestroyAll()
 {
   Editors::EntityViewer::RemoveAllNames();
   for (int i = static_cast<int>(ids.size()) - 1; i > -1; --i)
@@ -187,13 +185,13 @@ void EntityManager::DestroyAll()
   destroyed = false;
 }
 
-std::map<size_t, EntityManager::IComponentConstructorProxy*>& EntityManager::GetComponents()
+std::map<size_t, uwu::EntitySys::IComponentConstructorProxy*>& uwu::EntitySys::GetComponents()
 {
   static std::map<size_t, IComponentConstructorProxy*> components;
   return components;
 }
 
-void EntityManager::Destroy_()
+void uwu::EntitySys::Destroy_()
 {
   EntityID id = 0;
   for (int i = 0; i < ids.size(); ++i)
@@ -216,7 +214,7 @@ void EntityManager::Destroy_()
   destroyed = false;
 }
 
-void EntityManager::Deactivate(EntityID& id)
+void uwu::EntitySys::Deactivate(EntityID& id)
 {
   //deactivate transform
   for (auto& it : GetComponents())
@@ -231,12 +229,12 @@ void EntityManager::Deactivate(EntityID& id)
 
 #pragma region SETTERS
 
-void EntityManager::SetClearImmunity(EntityID id, bool clearImmunity)
+void uwu::EntitySys::SetClearImmunity(EntityID id, bool clearImmunity)
 {
   clearImmune[id] = clearImmunity;
 }
 
-void EntityManager::SetDontSerialize(EntityID id, bool serialize)
+void uwu::EntitySys::SetDontSerialize(EntityID id, bool serialize)
 {
   dontSerialize[id] = serialize;
 }
@@ -251,7 +249,7 @@ void EntityManager::SetDontSerialize(EntityID id, bool serialize)
 //    stream - The file stream that components will be written to
 //             (this should be opened and checked for validity ahead of time,
 //              but this function will double check just in case)
-void EntityManager::LevelSerialize(std::ofstream &stream)
+void uwu::EntitySys::LevelSerialize(std::ofstream &stream)
 {
     if (stream.is_open())
     {
@@ -279,11 +277,11 @@ void EntityManager::LevelSerialize(std::ofstream &stream)
                 }
                 bool partial = true;
               
-                if (types[id] != EntityManager::Cyclone
-                    && types[id] != EntityManager::Logo_
-                    && types[id] != EntityManager::Player
-                    && types[id] != EntityManager::Text_
-                    && types[id] != EntityManager::Solid)
+                if (types[id] != EntitySys::Cyclone
+                    && types[id] != EntitySys::Logo_
+                    && types[id] != EntitySys::Player
+                    && types[id] != EntitySys::Text_
+                    && types[id] != EntitySys::Solid)
                 {
                     partial = false;
                 }
@@ -298,18 +296,18 @@ void EntityManager::LevelSerialize(std::ofstream &stream)
                   stream << Tabs::TWO << R"("name" : ")" << Editors::EntityViewer::GetName(id) << "\",\n";
             
                 // Serialize the transform component
-                if (TransformComponentManager::IsActive(id))
+                if (TransformSys::IsActive(id))
                 {
                     stream << Tabs::TWO;
-                    TransformComponentManager::Serialize(stream, id);
+                    TransformSys::Serialize(stream, id);
                 }
                 
                 // Serialize the physics component
-                if (PhysicsComponentManager::IsActive(id))
+                if (PhysicsSys::IsActive(id))
                 {
                     stream << ",\n";
                     stream << Tabs::TWO;
-                    PhysicsComponentManager::Serialize(stream, id, partial);
+                    PhysicsSys::Serialize(stream, id, partial);
                 }
 
                 if (BehaviorComponentManager::IsActive(id))
@@ -337,10 +335,10 @@ void EntityManager::LevelSerialize(std::ofstream &stream)
                 {
                     stream << ",\n";
                     // Serialize the animation component
-                    if (AnimationComponentManager::IsActive(id))
+                    if (AnimationSys::IsActive(id))
                     {
                         stream << Tabs::TWO;
-                        AnimationComponentManager::Serialize(stream, id);
+                        AnimationSys::Serialize(stream, id);
                         stream << ",\n";
                     }
 
@@ -354,7 +352,7 @@ void EntityManager::LevelSerialize(std::ofstream &stream)
 
                     // Print the texture filePath
                     stream << Tabs::TWO;
-                      TextureComponentManager::Serialize(stream, id);
+                      TextureSys::Serialize(stream, id);
                 }
                 else
                 {

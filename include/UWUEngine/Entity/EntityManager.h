@@ -4,7 +4,7 @@
 	\file       EntityManager.h
 	\author     Brayan Lopez
 	\date       2019/09/13
-	\brief      Game Object Manager
+	\brief      Entity System
 
 	Copyright � 2019 DigiPen, All rights reserved.
 	*/
@@ -21,6 +21,7 @@ class IBaseComponent;
 
 //TODO: factory construction of different GameObjects (Maybe?)
 namespace goc = GameObjectConstants;
+namespace uwu = UWUEngine;
 
 namespace UWUEngine
 {
@@ -72,21 +73,21 @@ public:
 	//    Gets the number of active entities
 	//  \return
 	//     the number of active entities
-	static size_t EntityCount();
+	size_t EntityCount();
 
 	//! \brief
 	//    returns a const ref to a container of all the 
 	//    currently active entity IDs
 	//  \return
 	//    a const ref to container of ids
-	static const std::vector<EntityID>& GetIDs();
+	const std::vector<EntityID>& GetIDs();
 	//! \brief
 	//    gets an entity's type
 	//  \param ID
 	//    the entity's type 
 	//  \return
 	//    a const ref to container of ids
-	static Type GetType(EntityID ID);
+	Type GetType(EntityID ID);
 	//! \brief
 	//    starts up the EntityManager
 	//    call only once at the beginning of the game
@@ -112,14 +113,12 @@ public:
 	//    the new type of entity to create
 	//  \return
 	//    the ID of the new entity
-	static EntityID New(Type type);
+	EntityID New(Type type);
 	// Serializes all game components in JSON format, but only the pertinent data
 	// Input:
 	//    stream - The file stream that components will be written to
 	//             (this should be opened and checked for validity ahead of time)
-	static void LevelSerialize(std::ofstream& stream);
-	// Something I want to write for the editor later
-	static void EntitySerialize(EntityID ID);
+	void LevelSerialize(std::ofstream& stream);
 	//! \brief
 	//    set whether an entity is to pertain after a scene is cleared
 	//    of entities. Entities get cleared by default.
@@ -129,7 +128,7 @@ public:
 	//    whether the entity is to pertain after a scene is cleared
 	//  \return
 	//    nothing  
-	static void SetClearImmunity(EntityID id, bool clearImmunity);
+	void SetClearImmunity(EntityID id, bool clearImmunity);
 	//! \brief
 	//    set whether an entity is to be serialized or not. Entities
 	//    are serialized by default.
@@ -139,7 +138,7 @@ public:
 	//    whether the entity is to be serialized or not
 	//  \return
 	//    nothing  
-	static void SetDontSerialize(EntityID id, bool serialize);
+	void SetDontSerialize(EntityID id, bool serialize);
 	class IComponentConstructorProxy
 	{
 	public:
@@ -168,7 +167,7 @@ public:
 	};
 
 	template <typename T>
-	static size_t AddComponent(ComponentUpdateOrder order)
+	size_t AddComponent(ComponentUpdateOrder order)
 	{
 		assert(order != ComponentUpdateOrder::INVALID);
 		size_t pass_order = static_cast<size_t>(order);
@@ -184,7 +183,7 @@ public:
 		GetComponents().insert(std::make_pair(pass_order, static_cast<IComponentConstructorProxy*>(new_component)));
 		return pass_order;
 	}
-	static void InitComponents();
+	void InitComponents();
 	//! \brief
 	//    removes an entity from the scene
 	//  \param id
@@ -194,30 +193,30 @@ public:
 	//    this will be found if not given
 	//  \return
 	//    nothing  
-	static void Destroy(EntityID id, int idsIndex = -1);
+	void Destroy(EntityID id, int idsIndex = -1);
 	//! \brief
 	//    clears the scene by destroying all destroyable entities
 	//  \return
 	//    nothing  
-	static void DestroyAll();
+	void DestroyAll();
 
-	static std::map<size_t, IComponentConstructorProxy*>& GetComponents();
+	std::map<size_t, IComponentConstructorProxy*>& GetComponents();
 private:
-	static std::vector<EntityID> ids;
-	static std::vector<EntityID> freeIDs;
-	static EntityVector<Type> types;
-	static EntityVector<std::uint8_t> destroyeds;
-	static EntityVector<std::uint8_t> clearImmune;
-	static EntityVector<std::uint8_t> dontSerialize;
-	static bool destroyed; //was any destroyed flag set to true this frame
-	static void Destroy_();//destroys entities when safe to do so
-	static void Deactivate(EntityID& id);//deactivates components attached to entity
+	std::vector<EntityID> ids;
+	std::vector<EntityID> freeIDs;
+	EntityVector<Type> types;
+	EntityVector<std::uint8_t> destroyeds;
+	EntityVector<std::uint8_t> clearImmune;
+	EntityVector<std::uint8_t> dontSerialize;
+	bool destroyed; //was any destroyed flag set to true this frame
+	void Destroy_();//destroys entities when safe to do so
+	void Deactivate(EntityID& id);//deactivates components attached to entity
 	//std::vector<GameObject*> gameObjects{ goc::INITIAL_OBJECT_COUNT };
 	//std::vector<GameObject*> freeGameObjects;
-	static EntityID idCount;
+	EntityID idCount;
 
-	static size_t update_;
-	static size_t behavior_;
+	size_t update_;
+	size_t behavior_;
 
 	friend class Editor;
 };
