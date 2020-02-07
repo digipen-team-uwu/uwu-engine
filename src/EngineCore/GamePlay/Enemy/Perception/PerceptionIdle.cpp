@@ -88,6 +88,6 @@ void Behavior<EntityManager::Type::Perception>::Unload_Idle()
 
 void Behavior<EntityManager::Type::Perception>::Exit_Idle()
 {
-  SoundInterface::playSound("perception_idle", false);
+  SoundInterface::stopSound("perception_idle");
     // For now, exists to suppress compiler errors
 }

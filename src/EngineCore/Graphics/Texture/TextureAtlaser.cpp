@@ -293,7 +293,7 @@ void TextureAtlaser::LoadRawData(const std::vector<std::string>& files)
         }
         else
         {
-            TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load texture" << std::endl;
+            TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load texture " << *it << std::endl;
             std::exit(-1);
         }
     }
@@ -324,7 +324,7 @@ void TextureAtlaser::LoadRawData(int total...)
         }
         else
         {
-          TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load texture" << std::endl;
+          TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load texture " << filePath << std::endl;
             exit(-1);
         }
     }
@@ -437,7 +437,7 @@ glm::vec2 TextureAtlaser::GetBrayanTexture(const std::string& filePath)
     }
     else
     {
-      TraceLogger::Log(TraceLogger::ERROR) << "Failed to load texture" << std::endl;
+      TraceLogger::Log(TraceLogger::ERROR) << "Failed to load texture " << filePath << std::endl;
       std::exit(-1);
     }
 }

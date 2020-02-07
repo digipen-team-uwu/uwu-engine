@@ -18,6 +18,8 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/GameStatesManager.h>
 #include <UWUEngine/Audio/SoundInterface.h>
 
+static bool walking_anim = false;
+
 void PlayerStateMachine::Load_Grounded()
 {
 }
@@ -25,7 +27,7 @@ void PlayerStateMachine::Load_Grounded()
 void PlayerStateMachine::Enter_Grounded()
 {
 	SpineAnimationComponentManager::GetAnimation(PlayerData::GetPlayerID()).ChangeAnimation("idle", true);
-  
+  walking_anim = false;
     // Start the dash cooldown
     if (!PlayerData::DashCooldown.Running())
     {
@@ -52,7 +54,7 @@ void PlayerStateMachine::Update_Grounded(float dt)
 
     movement.x += PlayerData::GetTopXSpeed() *(ActionManager::GetActionHeld(ActionManager::Right) - ActionManager::GetActionHeld(ActionManager::Left)); //(!!InputManager::KeyHeld('d') - !!InputManager::KeyHeld('a'));
 
-	static bool walking_anim = false;
+	
 
 	if (movement.x != 0 && walking_anim == false)
 	{
