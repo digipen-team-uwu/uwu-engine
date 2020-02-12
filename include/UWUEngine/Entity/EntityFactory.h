@@ -11,12 +11,15 @@ Copyright © 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/System.h>
 #include <rapidjson/document.h>
 #include "EntitySys.h"
 
+namespace UWUEngine
+{
+
 //!class EntityFactory
-class EntityFactory : public BaseSystem<EntityFactory>
+class EntityFactory : public System
 {
 
 public:
@@ -37,22 +40,22 @@ public:
   */
   /******************************************************************************/
   ~EntityFactory() = default;
-	
-	
-	/******************************************************************************/
-	/*!
-		\brief
-			Creates an entity from a json file
 
-		\param filepath
-			The filepath of object to deserialize
 
-		\return
-			The ID of the created game object
-	*/
-	/******************************************************************************/
-	static EntityID CreateObject(std::string filepath, EntitySys::Type type = EntitySys::Empty);
-  
+  /******************************************************************************/
+  /*!
+    \brief
+      Creates an entity from a json file
+
+    \param filepath
+      The filepath of object to deserialize
+
+    \return
+      The ID of the created game object
+  */
+  /******************************************************************************/
+  EntityID CreateObject(std::string filepath, EntitySys::Type type = EntitySys::Empty);
+
   /******************************************************************************/
   /*!
     \brief
@@ -65,7 +68,7 @@ public:
       The ID of the created game object
   */
   /******************************************************************************/
-  static EntityID CreateObject(EntitySys::Type type);
+  EntityID CreateObject(EntitySys::Type type);
 
   /******************************************************************************/
   /*!
@@ -80,13 +83,15 @@ public:
       The file path of the source file of the json object
   */
   /******************************************************************************/
-  static EntityID CreateObject(rapidjson::Value& object, const char* filePath);
+  EntityID CreateObject(rapidjson::Value& object, const char* filePath);
 
   friend class EntityCacher;
 private:
 
   //! Buffer to read json files into
-  static char readBuffer[65536];
+  char readBuffer[65536];
 
   // This'll be useful for caches, probably
 };
+
+}

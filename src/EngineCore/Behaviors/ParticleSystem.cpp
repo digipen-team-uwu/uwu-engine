@@ -22,8 +22,8 @@
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/Deserialization.h>
 #include <UWUEngine/UI/UISys.h>
-#include "UWUEngine/Graphics/Texture/AtlasModule.h"
-#include<rttr/registration.h>
+#include <UWUEngine/Graphics/Texture/AtlasModule.h>
+#include <rttr/registration.h>
 
 using namespace UWUEngine;
 

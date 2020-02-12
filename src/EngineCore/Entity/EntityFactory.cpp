@@ -22,17 +22,12 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <magic_enum.hpp>
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Component/BehaviorComp.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Debugs/LogSys.h>
 #include <UWUEngine/Debugs/ColoredOutput.h>
-
-template<>
-int RegisterSystemHelper<EntityFactory>::RegisterSystemHelper_ID = SystemUpdater::AddSystem<EntityFactory>(SystemInitOrder::LAST, SystemUpdateOrder::LAST);
 
 using namespace ColoredOutput;
 
-
-char EntityFactory::readBuffer[65536];
-
+using namespace UWUEngine;
 
 EntityID EntityFactory::CreateObject(std::string filepath, EntitySys::Type type)
 {
@@ -78,7 +73,7 @@ EntityID EntityFactory::CreateObject(std::string filepath, EntitySys::Type type)
 	
 	
 	if(type != EntitySys::Empty) //if type was given
-		resultID = EntitySys::New(type);// Get the EntityID from the manager
+		resultID = Get<EntitySys>().New(type);// Get the EntityID from the manager
 	else
 	{
 	  //figure it out from file name
@@ -87,7 +82,7 @@ EntityID EntityFactory::CreateObject(std::string filepath, EntitySys::Type type)
             if (filepath.find(magic_enum::enum_name(i).data()) != std::string::npos)
             {
 		  	    type = i;
-                resultID = EntitySys::New(type);// Get the EntityID from the manager
+                resultID = Get<EntitySys>().New(type);// Get the EntityID from the manager
                 break;
             }
 		}
@@ -246,13 +241,13 @@ EntityID EntityFactory::CreateObject(EntitySys::Type type)
 EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * filePath)
 {
     // Check that the object is actually an object
-  TraceLogger::Assert(object.IsObject(), "object from %s%s%s is actually an object.", Set(Green).c_str(), filePath, Set().c_str());
+  Get<LogSys>().Assert(object.IsObject(), "object from %s%s%s is actually an object.", Set(Green).c_str(), filePath, Set().c_str());
 
     // Check that object has type
-  TraceLogger::Assert(object.HasMember("type"), "object in %s has a type.", filePath);
-  TraceLogger::Assert(object["type"].IsString(), "type is string.");
+  Get<LogSys>().Assert(object.HasMember("type"), "object in %s has a type.", filePath);
+  Get<LogSys>().Assert(object["type"].IsString(), "type is string.");
 
-  TraceLogger::Log(TraceLogger::SERIALIZATION) << "Checking that object type is legal\n";
+  Get<LogSys>().Log(LogSys::SERIALIZATION) << "Checking that object type is legal\n";
 
     //TODO::Something is wrong here after I add LevelEnd, that's why I changed this logic into magic enum cast but something needs to be fixed
     EntitySys::Type type = magic_enum::enum_cast<EntitySys::Type>(object["type"].GetString()).value();
@@ -269,7 +264,7 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
     
     // This assert should only trigger if the if check above never evaluated to true,
     // or if the object's type is set to Empty or TypeCount, which are illegal object types
-    TraceLogger::Assert(type != EntitySys::Empty && type != EntitySys::TypeCount, "type is legal.");
+    Get<LogSys>().Assert(type != EntitySys::Empty && type != EntitySys::TypeCount, "type is legal.");
 
     /*if (type == EntitySys::Background)
     {
@@ -279,16 +274,16 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
     EntityID resultID;
     bool partial;
     // Will edit as more types get templates until hopefully this can list the types that DON'T have templates (hopefully eventually just the debug ones)
-    if (!EntityCacher::EntityIsCached(type))
+    if (!Get<EntityCacher>().EntityIsCached(type))
     {
         // Type is currently untemplated, going to need to do a full construction
-        resultID = EntitySys::New(type);
+        resultID = Get<EntitySys>().New(type);
         partial = false;
     }
     else
     {
         // Construct the base object from a template
-      resultID = EntityCacher::CreateCachedEntity(EntityCacher::GetCachedEntity(type));
+      resultID = Get<EntityCacher>().CreateCachedEntity(Get<EntityCacher>().GetCachedEntity(type));
       partial = true;
     }
 
@@ -316,7 +311,7 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
       BehaviorComp::Activate(resultID);
       if (object["behavior"].IsString())
       {
-        EntityCacher::InstantiateCachedBehavior(resultID, object["behavior"].GetString());
+        Get<EntityCacher>().InstantiateCachedBehavior(resultID, object["behavior"].GetString());
       }
       else
       {
