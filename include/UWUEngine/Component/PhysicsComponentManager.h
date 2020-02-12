@@ -73,6 +73,50 @@ namespace UWUEngine
 
   class PhysicsComp : public Component<PhysicsComp, Physics>
   {
+    enum class BodyType
+  {
+    STATIC,
+    DYNAMIC
+  };
+
+  class Physics
+  {
+  public:
+    Physics(BodyType& type, glm::vec4& oldTranslation, glm::vec4& acceleration, glm::vec4& velocity, glm::vec4& drag, float& rotationalVelocity, float& inverseMass, float& restitution)
+      : type_(type), oldTranslation_(oldTranslation), acceleration_(acceleration), velocity_(velocity), drag_(drag), rotationalVelocity_(rotationalVelocity), inverseMass_(inverseMass), restitution_(restitution)
+    {}
+
+#pragma region Setter
+    void SetBodyType(const BodyType& type);
+    void SetOldTranslation(const glm::vec4& oldTranslation);
+    void SetAcceleration(const glm::vec4& acceleration);
+    void SetVelocity(const glm::vec4& velocity);
+    void SetDrag(const glm::vec4& drag);
+    void SetRotationalVelocity(const float& rotationalVelocity);
+    void SetInverseMass(const float& inverseMass);
+    void SetRestitution(const float& restitution);
+#pragma endregion
+
+#pragma region Getter
+    const BodyType& GetBodyType() const;
+    const glm::vec4& GetOldTranslation() const;
+    const glm::vec4& GetAcceleration() const;
+    const glm::vec4& GetVelocity() const;
+    const glm::vec4& GetDrag() const;
+    const float& GetRotationalVelocity() const;
+    const float& GetInverseMass() const;
+    const float& GetRestitution() const;
+#pragma endregion 
+  private:
+    BodyType& type_;
+    glm::vec4& oldTranslation_;
+    glm::vec4& acceleration_;
+    glm::vec4& velocity_;
+    glm::vec4& drag_;
+    float& rotationalVelocity_;
+    float& inverseMass_;
+    float& restitution_;
+  };
   public:
     PhysicsComp() = default;
     ~PhysicsComp() = default;

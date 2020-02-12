@@ -1,5 +1,5 @@
 #pragma once
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 
 template<>
 class Behavior<EntitySys::Type::DebugVector> : public BaseBehavior

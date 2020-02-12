@@ -14,7 +14,7 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/statemachine.hpp>
 #include <UWUEngine/Physics/Colliders/Collider.h>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 
 StateMachine(Fang, false, Grounded, Charge, Running, Hurt);
 

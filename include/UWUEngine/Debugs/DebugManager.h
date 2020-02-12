@@ -2,7 +2,7 @@
 #include <UWUEngine/BaseSystem.h>
 #include <vector>
 #include <glm/glm.hpp>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Instances.h>
 class DebugManager : public BaseSystem<DebugManager>
 {

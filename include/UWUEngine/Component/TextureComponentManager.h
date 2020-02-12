@@ -49,7 +49,7 @@ namespace UWUEngine
     std::array<std::string, goc::MAX_SPRITES>& filePaths_;
   };
 
-  class TextureComp : public Component
+  class TextureComp : public Component<TextureComp, Texture>
   {
   public:
     TextureComp() = default;

@@ -8,7 +8,7 @@
 #include <sstream>
 
 //TODO: templatize an entity cache object specialized by the behaviors entity type with all the entity cache data plus behavior data
-class BehaviorComponentManager;
+class BehaviorComp;
 
 namespace UWUEngine
 {
@@ -96,11 +96,11 @@ namespace UWUEngine
 
 
 
-  class BehaviorComponentManager : public Component<BehaviorComponentManager, BaseBehavior>
+  class BehaviorComp : public Component<BehaviorComp, BaseBehavior>
   {
   public:
-    BehaviorComponentManager() = default;
-    ~BehaviorComponentManager();
+    BehaviorComp() = default;
+    ~BehaviorComp();
 
     void InitObject(EntityID ID) override;
     void ShutdownObject(EntityID ID) override;

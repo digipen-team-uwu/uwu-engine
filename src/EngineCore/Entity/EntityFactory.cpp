@@ -21,7 +21,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Deserialization.h>
 #include <magic_enum.hpp>
 #include <UWUEngine/Helper.h>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Debugs/ColoredOutput.h>
 
@@ -122,8 +122,8 @@ EntityID EntityFactory::CreateObject(std::string filepath, EntitySys::Type type)
 	// TODO: activate behavior if listed in json (CheckBehavior)
 	if (doc.HasMember("behavior"))
 	{
-		BehaviorComponentManager::Activate(resultID);
-		BehaviorComponentManager::GetBaseBehavior(resultID)->Deserialize(doc, resultID, filepath.c_str());
+		BehaviorComp::Activate(resultID);
+		BehaviorComp::GetBaseBehavior(resultID)->Deserialize(doc, resultID, filepath.c_str());
 	}
 	
 	// Give the object a mesh (for now only square)
@@ -217,8 +217,8 @@ EntityID EntityFactory::CreateObject(EntitySys::Type type)
 	// TODO: activate behavior if listed in json (CheckBehavior)
     if (doc.HasMember("behavior"))
     {
-      BehaviorComponentManager::Activate(resultID);
-      BehaviorComponentManager::GetBaseBehavior(resultID)->Deserialize(doc, resultID, filePath.str().c_str());
+      BehaviorComp::Activate(resultID);
+      BehaviorComp::GetBaseBehavior(resultID)->Deserialize(doc, resultID, filePath.str().c_str());
     }
 
     // Give the object a mesh (for now only square)
@@ -313,14 +313,14 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
 
     if (object.HasMember("behavior"))
     {
-      BehaviorComponentManager::Activate(resultID);
+      BehaviorComp::Activate(resultID);
       if (object["behavior"].IsString())
       {
         EntityCacher::InstantiateCachedBehavior(resultID, object["behavior"].GetString());
       }
       else
       {
-        BehaviorComponentManager::GetBaseBehavior(resultID)->Deserialize(object, resultID, filePath);
+        BehaviorComp::GetBaseBehavior(resultID)->Deserialize(object, resultID, filePath);
       }
     }
 

@@ -17,7 +17,7 @@
 #include <magic_enum.hpp>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Component/ParentChildComponentManager.h>
 #include <UWUEngine/Engine.h>
 #include <fstream>
@@ -310,17 +310,17 @@ void uwu::EntitySys::LevelSerialize(std::ofstream &stream)
                     PhysicsSys::Serialize(stream, id, partial);
                 }
 
-                if (BehaviorComponentManager::IsActive(id))
+                if (BehaviorComp::IsActive(id))
                 {
-                  if (!BehaviorComponentManager::GetBaseBehavior(id)->GetKey().empty())
+                  if (!BehaviorComp::GetBaseBehavior(id)->GetKey().empty())
                   {
                     stream << ",\n";
                     stream << Tabs::TWO;
-                    stream << "\"behavior\" : \"" << BehaviorComponentManager::GetBaseBehavior(id)->GetKey() << "\"\n";
+                    stream << "\"behavior\" : \"" << BehaviorComp::GetBaseBehavior(id)->GetKey() << "\"\n";
                   }
                   else
                   {
-                    BehaviorComponentManager::GetBaseBehavior(id)->Serialize(stream);
+                    BehaviorComp::GetBaseBehavior(id)->Serialize(stream);
                   }
                 }
 

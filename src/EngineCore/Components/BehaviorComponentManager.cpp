@@ -1,7 +1,7 @@
 /******************************************************************************/
   /*!
   \par        Project Umbra
-  \file       BehaviorComponentManager.cpp
+  \file       BehaviorComp.cpp
   \author     Hadi Alhussieni
   \date       2019/10/06
   \brief      Implementation of object-specific behavior system for specialized
@@ -16,9 +16,9 @@
 
 namespace UWUEngine
 {
-  BehaviorComp::~BehaviorComponentManager()
+  BehaviorComp::~BehaviorComp()
   {
-    auto ids = EntitySys::GetIDs();
+    auto ids = Get<EntitySys>().GetIDs();
     auto it = ids.begin();
     while (it != ids.end())
     {
@@ -58,7 +58,7 @@ namespace UWUEngine
 
   void BehaviorComp::InitObject(EntityID ID)
   {
-    const auto funct = allBehaviors.find(EntitySys::GetType(ID));
+    const auto funct = allBehaviors.find(Get<EntitySys>().GetType(ID));
     if (funct != allBehaviors.end())
     {
       behaviors[ID] = funct->second(ID);
@@ -93,7 +93,7 @@ namespace UWUEngine
   void BaseCachedBehavior::Instantiate(EntityID ID)
   {
     //+2 because of the slash
-    std::string key = filepath.substr(strlen(SerializationConstants::JSON_PATH) + 2 + magic_enum::enum_name(EntitySys::GetType(ID)).size());
+    std::string key = filepath.substr(strlen(SerializationConstants::JSON_PATH) + 2 + magic_enum::enum_name(Get<EntitySys>().GetType(ID)).size());
     //strip .json
     key = key.substr(0, key.size() - 5);
     BehaviorComp::GetBaseBehavior(ID)->SetKey(key);

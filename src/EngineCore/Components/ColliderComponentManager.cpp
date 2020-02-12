@@ -16,7 +16,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Component/ColliderComponentManager.h>
 
 
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include <UWUEngine/Physics/Colliders/ColliderCircle.h>

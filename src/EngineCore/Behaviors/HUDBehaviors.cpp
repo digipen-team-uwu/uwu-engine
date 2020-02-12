@@ -50,7 +50,7 @@ void Behavior<EntitySys::Type::HUDEnergy>::Update()
     EntityCacher::InstantiateCachedBehavior(particles, "Energy");
   }*/
   TransformComponentManager::SetTranslation(TransformComponentManager::GetTranslation(GetID()) + glm::vec4{ 0, 20, 0, 0 }, particles);
-  auto& event = BehaviorComponentManager::GetBehavior<EntitySys::Type::ParticleEmitter>(particles)->GetEvent();
+  auto& event = BehaviorComp::GetBehavior<EntitySys::Type::ParticleEmitter>(particles)->GetEvent();
   event.scale.scaleRate = energy / 50.f;
   if (energy != 0)
   {

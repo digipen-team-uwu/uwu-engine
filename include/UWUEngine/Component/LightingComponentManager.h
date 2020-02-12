@@ -1,6 +1,6 @@
 #pragma once
 #include <UWUEngine/constants.h>
-#include <UWUEngine/Graphics/Lighting/Lighting.h>
+#include <UWUEngine/Graphics/Lighting/LightSys.h>
 #include <UWUEngine/Component/Component.h>
 #include <vector>
 
@@ -18,7 +18,7 @@ namespace UWUEngine
     float& shininess_;
   };
 
-  class LightingComp : public Component
+  class LightingComp : public Component<LightingComp, Light>
   {
   public:
     LightingComp() = default;

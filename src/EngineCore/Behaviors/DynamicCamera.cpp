@@ -111,7 +111,7 @@ bool DynamicCamera::InAnyBounds(glm::vec2 pos)
   }
   for (auto it : bounds)
   {
-    if (BehaviorComponentManager::GetBehavior<EntitySys::CameraBounds>(it)->InBounds(pos))
+    if (BehaviorComp::GetBehavior<EntitySys::CameraBounds>(it)->InBounds(pos))
       return true;
   }
   return false;
@@ -123,7 +123,7 @@ glm::vec2 DynamicCamera::GetClosestPointOnBounds(glm::vec2 pos, glm::vec2 direct
   glm::vec2 closest_point = psc::UNUSED_VEC2;
   for (auto it : bounds)
   {
-    glm::vec2 point = BehaviorComponentManager::GetBehavior<EntitySys::CameraBounds>(it)->GetClosestPoint(pos, direction);
+    glm::vec2 point = BehaviorComp::GetBehavior<EntitySys::CameraBounds>(it)->GetClosestPoint(pos, direction);
     if (point == psc::UNUSED_VEC2)
       continue;
     float distance = glm::distance(point, pos);
@@ -225,11 +225,11 @@ TransformComponentManager::SetTranslation(newPos + direction * min, debug);
 
 static EntityID debug2 = EntityFactory::CreateObject(EntitySys::Type::Cyclone);
     TransformComponentManager::SetScale({ 100, 100, 0 }, debug2);
-    TransformComponentManager::SetTranslation(glm::vec4(BehaviorComponentManager::GetBehavior<EntitySys::CameraBounds>(bounds[0])->GetClosestPoint(position, direction), 15, 1), debug2);
+    TransformComponentManager::SetTranslation(glm::vec4(BehaviorComp::GetBehavior<EntitySys::CameraBounds>(bounds[0])->GetClosestPoint(position, direction), 15, 1), debug2);
     static EntityID debug3 = EntityFactory::CreateObject(EntitySys::Type::Cyclone);
     TransformComponentManager::SetScale({ 100, 100, 0 }, debug3);
-    TransformComponentManager::SetTranslation(glm::vec4(BehaviorComponentManager::GetBehavior<EntitySys::CameraBounds>(bounds[1])->GetClosestPoint(position, direction), 15, 1), debug3);
+    TransformComponentManager::SetTranslation(glm::vec4(BehaviorComp::GetBehavior<EntitySys::CameraBounds>(bounds[1])->GetClosestPoint(position, direction), 15, 1), debug3);
     static EntityID debug4 = EntityFactory::CreateObject(EntitySys::Type::Cyclone);
     TransformComponentManager::SetScale({ 100, 100, 0 }, debug4);
-    TransformComponentManager::SetTranslation(glm::vec4(BehaviorComponentManager::GetBehavior<EntitySys::CameraBounds>(bounds[2])->GetClosestPoint(position, direction), 15, 1), debug4);
+    TransformComponentManager::SetTranslation(glm::vec4(BehaviorComp::GetBehavior<EntitySys::CameraBounds>(bounds[2])->GetClosestPoint(position, direction), 15, 1), debug4);
 */

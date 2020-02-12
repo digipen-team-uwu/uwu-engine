@@ -14,7 +14,7 @@
 #include <UWUEngine/Component/SpineAnimationComponentManager.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <magic_enum.hpp>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Debugs/TraceLogger.h>
 #include <UWUEngine/Component/ColliderComponentManager.h>
 
@@ -39,9 +39,9 @@ void EntityCacher::UpdateCachedBehavior(std::string filename)
 
 void EntityCacher::InstantiateCachedBehavior(EntityID id, std::string fileName)
 {
-  if (!BehaviorComponentManager::IsActive(id))
+  if (!BehaviorComp::IsActive(id))
   {
-    BehaviorComponentManager::Activate(id);
+    BehaviorComp::Activate(id);
   }
   behaviors[fileName]->Instantiate(id);
 }
@@ -68,7 +68,7 @@ EntityCacher::EntityCacher()
       {
         for (const auto& file : std::filesystem::directory_iterator(dir.path().string()))
         {
-          BaseCachedBehavior* cache = BehaviorComponentManager::CreateCachedBehavior(i);
+          BaseCachedBehavior* cache = BehaviorComp::CreateCachedBehavior(i);
           cache->filepath = file.path().string();
           rapidjson::Document obj;
           MakeJsonObject(cache->filepath.c_str(), obj);

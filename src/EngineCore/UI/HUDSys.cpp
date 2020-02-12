@@ -12,7 +12,7 @@
 #include <UWUEngine/UI/HUDSys.h>
 #include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Entity/EntitySys.h>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/GamePlay/PlayerController.h>

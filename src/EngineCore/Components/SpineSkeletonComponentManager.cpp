@@ -13,13 +13,13 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <glm/gtx/transform.hpp>
 #include "GL/glew.h"
 
-#include <UWUEngine/Graphics/Camera.h>
+#include <UWUEngine/Graphics/CameraSys.h>
 #include <UWUEngine/Component/SpineSkeletonComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Graphics/SpineAnimation/SpineCompatibility.h>
 #include <spine/extension.h>
-#include <UWUEngine/Graphics/Shader/UniformBufferSystem.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Graphics/Shader/UBOModule.h>
+#include <UWUEngine/Debugs/LogSys.h>
 
 
 namespace UWUEngine
@@ -50,13 +50,13 @@ namespace UWUEngine
     {
       if (!shader_.CompileShaderFromFile(GL_VERTEX_SHADER, "./data/shaders/spineShader.vert"))
       {
-        TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/spineShader.vert\"" << std::endl;
+        Get<LogSys>().Log(LogSys::FAILURE) << "Failed to load shader: \"./data/shaders/spineShader.vert\"" << std::endl;
         exit(-1);
       }
 
       if (!shader_.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./data/shaders/spineShader.frag"))
       {
-        TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/spineShader.frag\"" << std::endl;
+        Get<LogSys>().Log(LogSys::FAILURE) << "Failed to load shader: \"./data/shaders/spineShader.frag\"" << std::endl;
         exit(-1);
       }
       shader_.Link();
@@ -65,13 +65,13 @@ namespace UWUEngine
     //If the shader is invalid, quit
     if (!shader_.Validate())
     {
-      TraceLogger::Log(TraceLogger::ERROR) << "Error::Spine shader invalid" << std::endl;
+      Get<LogSys>().Log(LogSys::ERROR) << "Error::Spine shader invalid" << std::endl;
       return;
     }
 
     //Send Uniform
     shader_.Use();
-    UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::Spine, ID);
+    Get<UBOModule>().ShootDataToUniformBuffer(UBOModule::Type::Spine, ID);
     //Temporary draw order
     float drawOrder = 0.0f;
     //Testing scale, will be replaced
@@ -240,7 +240,7 @@ namespace UWUEngine
   {
     if (skeletons.find(ID) != skeletons.end())
     {
-      TraceLogger::Log(TraceLogger::DEBUG) << "Skeleton component already exists for object: " << ID << std::endl;
+      Get<LogSys>().Log(LogSys::DEBUG) << "Skeleton component already exists for object: " << ID << std::endl;
     }
     skeletons.insert_or_assign(ID, SpineSkeleton(spineData, ID));
   }
@@ -249,7 +249,7 @@ namespace UWUEngine
   {
     if (skeletons.find(ID) != skeletons.end())
     {
-      TraceLogger::Log(TraceLogger::DEBUG) << "Skeleton component already exists for object: " << ID << std::endl;
+      Get<LogSys>().Log(LogSys::DEBUG) << "Skeleton component already exists for object: " << ID << std::endl;
     }
     skeletons.insert_or_assign(ID, SpineSkeleton(SpineDataManager::GetData(name), ID));
   }

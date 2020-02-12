@@ -62,10 +62,10 @@ void Behavior<type::ParticleEmitter>::Update()
     for (int i = 0; i < emissionCount; ++i)
     {
       EntityID id = EntityManager::New(type::Particle);
-      BehaviorComponentManager::Activate(id);
+      BehaviorComp::Activate(id);
       ParentChildComponentManager::Activate(id);
       ParentChildComponentManager::AddParent(GetID(), id);
-      BehaviorComponentManager::GetBehavior<type::Particle>(id)->InitData(partEvent);
+      BehaviorComp::GetBehavior<type::Particle>(id)->InitData(partEvent);
     }
     emissionTimer.SetDuration(partEvent.emissionRate.Get());
   }
@@ -180,8 +180,8 @@ void Behavior<type::Particle>::Update()
     /*if (trailTimer.Finished())
     {
       EntityID trail = EntityManager::New(Type::Trail);
-      BehaviorComponentManager::Activate(trail);
-      BehaviorComponentManager::GetBehavior<Type::Trail>(trail)->CreateTrail(GetID());
+      BehaviorComp::Activate(trail);
+      BehaviorComp::GetBehavior<Type::Trail>(trail)->CreateTrail(GetID());
       trailTimer.SetDuration(0.05f);
       trailTimer.Start();
     }*/
@@ -501,5 +501,5 @@ void CachedBehavior<type::ParticleEmitter>::Deserialize(rapidjson::Value& object
 
 void CachedBehavior<type::ParticleEmitter>::InstantiateBehavior(EntityID ID)
 {
-  BehaviorComponentManager::GetBehavior<type::ParticleEmitter>(ID)->PushEvents(particleEvents);
+  BehaviorComp::GetBehavior<type::ParticleEmitter>(ID)->PushEvents(particleEvents);
 }

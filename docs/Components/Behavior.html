@@ -23,7 +23,7 @@
     <body class="vscode-light">
         <h1 id="behavior">Behavior</h1>
 <p>The Behavior component in <a href="../../README.html">UWU Engine</a> allows you to give any entity type-specific data and functionality. Any type can have its own specializization of a behavior, and specific polymorphic functions will be called automatically for any object with an instantiated specialized behavior.</p>
-<p>To use this component, <code>#include &quot;BehaviorComponentManager.h&quot;</code></p>
+<p>To use this component, <code>#include &quot;BehaviorComp.h&quot;</code></p>
 <h2 id="usage">Usage</h2>
 <p>Behaviors should be used to give any entity-type functionality not covered by any other component. For example, a text entity-type needs a string stream to store the text it needs to render, a custom update function that gets called automatically by the engine that creates character entities for each character, and a function to set the text.</p>
 <h2 id="create-a-behavior">Create a behavior</h2>
@@ -34,14 +34,14 @@
 };
 </div></code></pre>
 <p>Then, in order for the manager to be able to create your behavior, you must add the prototype for the constructor specialization for your object to the allBehaviors map, declared in
-<code>BehaviorComponentManager.h</code>
+<code>BehaviorComp.h</code>
 For example, for a text object to be able to use your text behavior, allBehaviors should look like this:</p>
 <pre><code class="language-cpp"><div><span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">map</span>&lt;EntitySys::Type, BaseBehavior * (* <span class="hljs-keyword">const</span>)()&gt; allBehaviors =
 { 
     { EntitySys::Type::Text_, CreateBehavior&lt;EntitySys::Type::Text_&gt; }
 }
 </div></code></pre>
-<p>Finally, in order for the manager to find your constructor, include the location of its declaration to the bottom of <code>BehaviorComponentManager.h</code></p>
+<p>Finally, in order for the manager to find your constructor, include the location of its declaration to the bottom of <code>BehaviorComp.h</code></p>
 <h2 id="core-behavior-functionality">Core behavior functionality</h2>
 <p>The most useful methods any behavior specialization can define include:</p>
 <ul>
@@ -70,7 +70,7 @@ For example, for a text object to be able to use your text behavior, allBehavior
 <h2 id="access-your-behavior">Access your behavior</h2>
 <p>First, in order to give the entity that your behavior was specialized for your behavior, you must activate it. For example, tp create an object of type text and give it your specialized behavior component, do this:</p>
 <pre><code class="language-cpp"><div>EntityID text = EntitySys::New(EntitySys::Type::Text);
-BehaviorComponentManager::Activate(text);
+BehaviorComp::Activate(text);
 </div></code></pre>
 <p>Now, to call any of the functions defined by the base behavior, such as the Update or Deserialize methods, access the BaseBehavior for any entity directly by calling GetBaseBehavior, prototyped below:</p>
 <pre><code class="language-cpp"><div><span class="hljs-function">BaseBehavior* <span class="hljs-title">GetBaseBehavior</span><span class="hljs-params">(EntityID ID)</span></span>;
@@ -80,7 +80,7 @@ BehaviorComponentManager::Activate(text);
   <span class="hljs-keyword">static</span> Behavior&lt;T&gt;* GetBehavior(EntityID ID);
 </div></code></pre>
 <p>For example, you can set the text of a text object with an EntityID named text like so:</p>
-<pre><code class="language-cpp"><div>BehaviorComponentManager::GetBehavior&lt;EntitySys::Type::Text&gt;(text)-&gt;SetText();
+<pre><code class="language-cpp"><div>BehaviorComp::GetBehavior&lt;EntitySys::Type::Text&gt;(text)-&gt;SetText();
 </div></code></pre>
 
     </body>

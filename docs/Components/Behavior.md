@@ -1,7 +1,7 @@
 # Behavior
 The Behavior component in [UWU Engine](../../README.md) allows you to give any entity type-specific data and functionality. Any type can have its own specializization of a behavior, and specific polymorphic functions will be called automatically for any object with an instantiated specialized behavior.
 
-To use this component, `#include "BehaviorComponentManager.h"`
+To use this component, `#include "BehaviorComp.h"`
 
 ## Usage
  Behaviors should be used to give any entity-type functionality not covered by any other component. For example, a text entity-type needs a string stream to store the text it needs to render, a custom update function that gets called automatically by the engine that creates character entities for each character, and a function to set the text.
@@ -17,7 +17,7 @@ class Behavior<EntitySys::Type::Text> : public BaseBehavior
 ```
 
 Then, in order for the manager to be able to create your behavior, you must add the prototype for the constructor specialization for your object to the allBehaviors map, declared in
-`BehaviorComponentManager.h`
+`BehaviorComp.h`
 For example, for a text object to be able to use your text behavior, allBehaviors should look like this:
 
 ```cpp
@@ -26,7 +26,7 @@ const std::map<EntitySys::Type, BaseBehavior * (* const)()> allBehaviors =
     { EntitySys::Type::Text_, CreateBehavior<EntitySys::Type::Text_> }
 }
 ```
-Finally, in order for the manager to find your constructor, include the location of its declaration to the bottom of `BehaviorComponentManager.h`
+Finally, in order for the manager to find your constructor, include the location of its declaration to the bottom of `BehaviorComp.h`
 
 ## Core behavior functionality
 The most useful methods any behavior specialization can define include:
@@ -57,7 +57,7 @@ First, in order to give the entity that your behavior was specialized for your b
 
 ```cpp
 EntityID text = EntitySys::New(EntitySys::Type::Text);
-BehaviorComponentManager::Activate(text);
+BehaviorComp::Activate(text);
 ```
 
 Now, to call any of the functions defined by the base behavior, such as the Update or Deserialize methods, access the BaseBehavior for any entity directly by calling GetBaseBehavior, prototyped below:
@@ -73,5 +73,5 @@ template<EntitySys::Type T>
 
 For example, you can set the text of a text object with an EntityID named text like so:
 ```cpp
-BehaviorComponentManager::GetBehavior<EntitySys::Type::Text>(text)->SetText();
+BehaviorComp::GetBehavior<EntitySys::Type::Text>(text)->SetText();
 ```

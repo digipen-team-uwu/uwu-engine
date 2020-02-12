@@ -21,6 +21,9 @@ Copyright 2019 DigiPen, All rights reserved.
 
 StateMachine(Player, false, StartUp, Grounded, Airborne, Dash, Hurt, Death)
 
+namespace UWUEngine
+{
+
 class PlayerData
 {
 public:
@@ -46,22 +49,22 @@ public:
 
 private:
   //TODO::Deserialize Player Data
-  static EntityID playerID;
-  static size_t health;
-  static size_t energy;
+  EntityID playerID;
+  size_t health;
+  size_t energy;
 
   //Hurt Data
-  static bool HurtFromRight;
-  static float HurtSpeed;
-  static float HurtTime;
-  static float HurtDir;
-  static Timer HurtTimer;
+  bool HurtFromRight;
+  float HurtSpeed;
+  float HurtTime;
+  float HurtDir;
+  TimerSys::Timer HurtTimer;
 
-  static Timer DashCooldown;
-  static PlayerStateMachine::_PlayerStateMachinestate currState;
+  TimerSys::Timer DashCooldown;
+  PlayerStateMachine::_PlayerStateMachinestate currState;
 
   // Last safe position for hazard damage reset
-  static glm::vec4 lastSafePos;
+  glm::vec4 lastSafePos;
 
 
   //Cheats
@@ -105,3 +108,5 @@ private:
   bool IsDirectionRight(float angle) const;
 
 };
+
+}

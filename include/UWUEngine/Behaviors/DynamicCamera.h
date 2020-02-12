@@ -1,7 +1,7 @@
 #pragma once
 #include <UWUEngine/System.h>
 #include <glm/glm.hpp>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <vector>
 #include <iostream>
 
