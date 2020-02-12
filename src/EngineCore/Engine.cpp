@@ -1,25 +1,30 @@
 #include <UWUEngine/Entity/EntitySys.h>
-
+#include <UWUEngine/Space.h>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/statemachine.hpp>
 #include "GLFW/glfw3.h"
-#include <UWUEngine/WindowManager.h>
+#include <UWUEngine/WindowSys.h>
 #include "sstream"
 #include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/GamePlay/PlayerController.h>
-
 // Systems
-SystemUpdater Engine::systemUpdater;
 
 //TextureAtlaser Engine::textureAtlaser;
 //TextureLoader Engine::textureLoader;
 //Instances Engine::instances;
 
-// Component managers
 
+
+// Component managers
+namespace UWUEngine
+{
+
+Engine::Engine()
+{
+  systems = new 
+}
 void Engine::StartUp()
 {
-	SystemUpdater::StartUp();
 	StateMachineUpdater::StartUp();
 }
 
@@ -34,7 +39,7 @@ void Engine::Update()
     title << "Active Entities: " << EntitySys::EntityCount();
     title << " | FPS: " << FrameRateController::GetFPS();
     title << " | Energy: " << PlayerData::GetEnergy();
-    glfwSetWindowTitle(WindowManager::getWindowHandle(), title.str().c_str());
+    glfwSetWindowTitle(WindowSys::getWindowHandle(), title.str().c_str());
 }
 
 void Engine::ShutDown()
@@ -43,4 +48,5 @@ void Engine::ShutDown()
 
   // delete vbos
   //instances.ShutDown();
+}
 }

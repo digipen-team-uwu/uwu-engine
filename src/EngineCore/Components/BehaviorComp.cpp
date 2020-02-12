@@ -10,7 +10,7 @@
   Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Graphics/RenderSys.h>
 #include <UWUEngine/Entity/EntitySys.h>
 

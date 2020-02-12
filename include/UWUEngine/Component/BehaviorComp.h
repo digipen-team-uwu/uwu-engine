@@ -39,7 +39,7 @@ namespace UWUEngine
     std::string filepath;
   };
 
-  template <EntitySys::Type T>
+  template <EntitySys::Tag T>
   struct CachedBehavior : public BaseCachedBehavior
   {
     virtual void Deserialize(rapidjson::Value& object) {}
@@ -48,7 +48,7 @@ namespace UWUEngine
 
 
 
-  template <EntitySys::Type T>
+  template <EntitySys::Tag T>
   class Behavior : public BaseBehavior
   {
   public:
@@ -61,37 +61,37 @@ namespace UWUEngine
     ~Behavior() = default;
   };
 
-  template<EntitySys::Type T>
+  template<EntitySys::Tag T>
   static BaseBehavior* MakeBehavior(EntityID id)
   {
     return static_cast<BaseBehavior*>(new Behavior<T>(id));
   }
 
-  template<EntitySys::Type T>
+  template<EntitySys::Tag T>
   static BaseCachedBehavior* MakeCachedBehavior()
   {
     return static_cast<BaseCachedBehavior*>(new CachedBehavior<T>());
   }
 
-  const std::map<EntitySys::Type, BaseBehavior* (*const)(EntityID)> allBehaviors =
+  const std::map<EntitySys::Tag, BaseBehavior* (*const)(EntityID)> allBehaviors =
   {
     //whenever you make a specialization of a behavior, copy and paste another line below with the right type
-  { EntitySys::Type::Text_,			      MakeBehavior<EntitySys::Type::Text_> },
-  { EntitySys::Type::ParticleEmitter, MakeBehavior<EntitySys::Type::ParticleEmitter> },
-  { EntitySys::Type::Particle,        MakeBehavior<EntitySys::Type::Particle> },
-  { EntitySys::Type::Player,			    MakeBehavior<EntitySys::Type::Player>},
-  { EntitySys::Type::Fang_,           MakeBehavior<EntitySys::Type::Fang_>},
-  { EntitySys::Type::Perception,      MakeBehavior<EntitySys::Type::Perception>},
-  { EntitySys::Type::HUDHealth,       MakeBehavior<EntitySys::Type::HUDHealth>},
-  { EntitySys::Type::HUDEnergy,       MakeBehavior<EntitySys::Type::HUDEnergy>},
-  { EntitySys::Type::CameraBounds,    MakeBehavior<EntitySys::Type::CameraBounds>}
+  { EntitySys::Tag::Text_,			     MakeBehavior<EntitySys::Tag::Text_> },
+  { EntitySys::Tag::ParticleEmitter, MakeBehavior<EntitySys::Tag::ParticleEmitter> },
+  { EntitySys::Tag::Particle,        MakeBehavior<EntitySys::Tag::Particle> },
+  { EntitySys::Tag::Player,			     MakeBehavior<EntitySys::Tag::Player>},
+  { EntitySys::Tag::Fang_,           MakeBehavior<EntitySys::Tag::Fang_>},
+  { EntitySys::Tag::Perception,      MakeBehavior<EntitySys::Tag::Perception>},
+  { EntitySys::Tag::HUDHealth,       MakeBehavior<EntitySys::Tag::HUDHealth>},
+  { EntitySys::Tag::HUDEnergy,       MakeBehavior<EntitySys::Tag::HUDEnergy>},
+  { EntitySys::Tag::CameraBounds,    MakeBehavior<EntitySys::Tag::CameraBounds>}
 
   };
 
-  const std::map<EntitySys::Type, BaseCachedBehavior* (*const)()> allCachedBehaviors =
+  const std::map<EntitySys::Tag, BaseCachedBehavior* (*const)()> allCachedBehaviors =
   {
     //whenever you make a specialization of a cached behavior, copy and paste another line below with the right type
-  { EntitySys::Type::ParticleEmitter, MakeCachedBehavior<EntitySys::Type::ParticleEmitter> }
+  { EntitySys::Tag::ParticleEmitter, MakeCachedBehavior<EntitySys::Tag::ParticleEmitter> }
   };
 
 
@@ -107,9 +107,9 @@ namespace UWUEngine
     void Update() override;
     static BaseBehavior* GetBaseBehavior(EntityID ID);
 
-    static BaseCachedBehavior* CreateCachedBehavior(EntitySys::Type type);
+    static BaseCachedBehavior* CreateCachedBehavior(EntitySys::Tag type);
 
-    template<EntitySys::Type T>
+    template<EntitySys::Tag T>
     static Behavior<T>* GetBehavior(EntityID ID)
     {
       return dynamic_cast<Behavior<T>*>(behaviors[ID]);

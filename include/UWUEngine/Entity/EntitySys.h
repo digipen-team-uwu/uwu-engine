@@ -21,7 +21,6 @@ class IBaseComponent;
 
 //TODO: factory construction of different GameObjects (Maybe?)
 namespace goc = GameObjectConstants;
-namespace uwu = UWUEngine;
 
 namespace UWUEngine
 {
@@ -29,8 +28,25 @@ namespace UWUEngine
 class EntitySys : public System
 {
 public:
+  enum Tag : uint64_t
+  {
+    STATIC        = 1 << 0,
+    FALLS         = 1 << 1,
+    HURTS         = 1 << 2,
+    BRIGHT        = 1 << 3,
+    EMITS         = 1 << 4,
+    EXPIRES       = 1 << 5,
+  };
 
-	enum Type
+  void AddTag(EntityID id, Tag tag);
+
+  void RemoveTag(EntityID id, Tag tag);
+
+  bool HasTag(EntityID ID, Tag tag);
+
+  void SetTags(EntityID id, Tag tag);
+
+	/*enum Tags
 	{
 		Empty,
 		Player,
@@ -55,6 +71,8 @@ public:
 		Lantern,
 		TypeCount,
 		Prop_,
+    cockandballs,
+    CBT,
 		Black,
 		BrokenPillars,
 		RockBG,
@@ -67,7 +85,7 @@ public:
 		Hazard,
 		LevelEnd,
 		End,
-	};
+	};*/
 
 	//! \brief
 	//    Gets the number of active entities
@@ -204,7 +222,7 @@ public:
 private:
 	std::vector<EntityID> ids;
 	std::vector<EntityID> freeIDs;
-	EntityVector<Type> types;
+	EntityVector<Type> tags;
 	EntityVector<std::uint8_t> destroyeds;
 	EntityVector<std::uint8_t> clearImmune;
 	EntityVector<std::uint8_t> dontSerialize;

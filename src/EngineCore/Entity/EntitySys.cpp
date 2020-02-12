@@ -40,23 +40,40 @@
 
 #pragma region GETTERS
 
-size_t uwu::EntitySys::EntityCount()
+using namespace UWUEngine;
+
+size_t EntitySys::EntityCount()
 {
   return ids.size();
 }
 
-const std::vector<EntityID>& uwu::EntitySys::GetIDs()
+const std::vector<EntityID>& EntitySys::GetIDs()
 {
     return ids;
 }
 
-uwu::EntitySys::Type uwu::EntitySys::GetType(EntityID ID)
+void EntitySys::AddTag(EntityID id, Tag tag)
 {
-    return types[ID];
+  tags[id] |= tag;
+}
+
+void EntitySys::SetTags(EntityID id, Tag tag)
+{
+  tags[id] = tag;
+}
+
+void EntitySys::RemoveTag(EntityID id, Tag tag)
+{
+  tags[id] &= ~tag;
+}
+
+bool EntitySys::HasTag(EntityID ID, Tag tag)
+{
+    return tags[ID] & tag;
 }
 
 
-EntityID uwu::EntitySys::New(Type type)
+EntityID EntitySys::New(Type type)
 {
     if (!type) //if its Type.Empty
         return -1;//then dont waste time calling this function
@@ -80,7 +97,8 @@ EntityID uwu::EntitySys::New(Type type)
     if (id >= EntityVectorManager::GetVectorSize())
     {
       EntityVectorManager::ResizeVectors();
-      Instances::CreateInstances(MeshSys::GetEntityMesh());
+
+      Instances::CreateInstances(Mesh::GetEntityMesh());
     }
 
     types[id] = type;
@@ -98,7 +116,7 @@ EntityID uwu::EntitySys::New(Type type)
 
 #pragma region DOERS
 
-uwu::EntitySys::EntitySys()
+EntitySys::EntitySys()
 {
     ids.reserve(goc::INITIAL_OBJECT_COUNT);
     freeIDs.resize(goc::INITIAL_OBJECT_COUNT);
@@ -110,13 +128,13 @@ uwu::EntitySys::EntitySys()
     InitComponents();
 }
 
-uwu::EntitySys::~EntitySys()
+EntitySys::~EntitySys()
 {
     ids.clear();
     freeIDs.clear();
 }
 
-void uwu::EntitySys::Update( )
+void EntitySys::Update( )
 {
   if (destroyed)
   {
@@ -129,7 +147,7 @@ void uwu::EntitySys::Update( )
   }
 }
 
-void uwu::EntitySys::InitComponents()
+void EntitySys::InitComponents()
 {
   for (auto& comp : GetComponents())
   {
@@ -137,7 +155,7 @@ void uwu::EntitySys::InitComponents()
   }
 }
 
-void uwu::EntitySys::Destroy(EntityID id, int idsIndex)
+void EntitySys::Destroy(EntityID id, int idsIndex)
 {
   //Mark all the children as destroyed
   //for (auto child : ParentChildComponentManager::GetChildren(id))
@@ -166,7 +184,7 @@ void uwu::EntitySys::Destroy(EntityID id, int idsIndex)
 
 }
 
-void uwu::EntitySys::DestroyAll()
+void EntitySys::DestroyAll()
 {
   Editors::EntityViewer::RemoveAllNames();
   for (int i = static_cast<int>(ids.size()) - 1; i > -1; --i)
@@ -185,13 +203,13 @@ void uwu::EntitySys::DestroyAll()
   destroyed = false;
 }
 
-std::map<size_t, uwu::EntitySys::IComponentConstructorProxy*>& uwu::EntitySys::GetComponents()
+std::map<size_t, EntitySys::IComponentConstructorProxy*>& EntitySys::GetComponents()
 {
   static std::map<size_t, IComponentConstructorProxy*> components;
   return components;
 }
 
-void uwu::EntitySys::Destroy_()
+void EntitySys::Destroy_()
 {
   EntityID id = 0;
   for (int i = 0; i < ids.size(); ++i)
@@ -214,7 +232,7 @@ void uwu::EntitySys::Destroy_()
   destroyed = false;
 }
 
-void uwu::EntitySys::Deactivate(EntityID& id)
+void EntitySys::Deactivate(EntityID& id)
 {
   //deactivate transform
   for (auto& it : GetComponents())
@@ -229,12 +247,12 @@ void uwu::EntitySys::Deactivate(EntityID& id)
 
 #pragma region SETTERS
 
-void uwu::EntitySys::SetClearImmunity(EntityID id, bool clearImmunity)
+void EntitySys::SetClearImmunity(EntityID id, bool clearImmunity)
 {
   clearImmune[id] = clearImmunity;
 }
 
-void uwu::EntitySys::SetDontSerialize(EntityID id, bool serialize)
+void EntitySys::SetDontSerialize(EntityID id, bool serialize)
 {
   dontSerialize[id] = serialize;
 }
@@ -249,7 +267,7 @@ void uwu::EntitySys::SetDontSerialize(EntityID id, bool serialize)
 //    stream - The file stream that components will be written to
 //             (this should be opened and checked for validity ahead of time,
 //              but this function will double check just in case)
-void uwu::EntitySys::LevelSerialize(std::ofstream &stream)
+void EntitySys::LevelSerialize(std::ofstream &stream)
 {
     if (stream.is_open())
     {

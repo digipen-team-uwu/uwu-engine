@@ -25,7 +25,7 @@ enum class SystemOrder : unsigned
   Render,
   Action,
   Input,
-  Window,
+  Window
 };
 
 enum class ComponentOrder : unsigned
