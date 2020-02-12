@@ -17,7 +17,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/constants.h>
 #include <UWUEngine/FrameLimiterSys.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <fstream>
 #include <UWUEngine/Serialization.h>
@@ -50,7 +50,7 @@ void AnimationComp::SetCurrentAnimation(int currentAnimation, EntityID id)
 
 void AnimationComp::Update()
 {
-    std::vector<EntityID> ids = EntityManager::GetIDs();
+    std::vector<EntityID> ids = EntitySys::GetIDs();
     auto it = ids.begin();
     while (it != ids.end())
     {

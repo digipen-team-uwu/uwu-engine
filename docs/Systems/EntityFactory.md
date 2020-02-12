@@ -6,7 +6,7 @@ The EntityFactory is a system that provides functions which perform the work req
 to create an entity in the engine and return the ID of the newly created entity.
 
 There is only one include file required to use Enity Factory functions, which is EnityFactory.h
-EntityFactory.h itself includes several .h files, including [EntityManager.h](./EnityManager.h) and rapidjson library headers.
+EntityFactory.h itself includes several .h files, including [EntitySys.h](./EnityManager.h) and rapidjson library headers.
 
 
 ## Creating an Entity
@@ -15,7 +15,7 @@ There are two methods of Entity creation through the Entity Factory, each perfor
 Each version of this function automatically adds the created entity to the Entity Manager.
 One requires that the user pass in an EntityType such as Player, like so:
 ```cpp
-EntityID id = EntityFactory::CreateObject(EntityManager::Player);
+EntityID id = EntityFactory::CreateObject(EntitySys::Player);
 ```
 This function activates all components used by the type of object passed to the function as well.
 

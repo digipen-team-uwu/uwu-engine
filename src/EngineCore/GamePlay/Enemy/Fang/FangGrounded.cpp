@@ -17,17 +17,17 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #define AGGRO_RANGE 2000
 
-void Behavior<EntityManager::Type::Fang_>::Load_Grounded()
+void Behavior<EntitySys::Type::Fang_>::Load_Grounded()
 {
     // DNI
 }
 
-void Behavior<EntityManager::Type::Fang_>::Enter_Grounded()
+void Behavior<EntitySys::Type::Fang_>::Enter_Grounded()
 {
     SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("Idle", true);
 }
 
-void Behavior<EntityManager::Type::Fang_>::Update_Grounded(float dt)
+void Behavior<EntitySys::Type::Fang_>::Update_Grounded(float dt)
 {
   glm::vec2 playerPosition = TransformComponentManager::GetTranslation(PlayerData::GetPlayerID());
   glm::vec2 selfPosition = TransformComponentManager::GetTranslation(GetID());
@@ -40,12 +40,12 @@ void Behavior<EntityManager::Type::Fang_>::Update_Grounded(float dt)
   }
 }
 
-void Behavior<EntityManager::Type::Fang_>::Exit_Grounded()
+void Behavior<EntitySys::Type::Fang_>::Exit_Grounded()
 {
     // Currently exists to suppress compiler warnings
 }
 
-void Behavior<EntityManager::Type::Fang_>::Unload_Grounded()
+void Behavior<EntitySys::Type::Fang_>::Unload_Grounded()
 {
 	// DNI
 }

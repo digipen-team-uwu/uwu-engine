@@ -1,4 +1,4 @@
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/statemachine.hpp>
@@ -31,7 +31,7 @@ void Engine::Update()
 	SystemUpdater::Update();
     // title
     std::stringstream title;
-    title << "Active Entities: " << EntityManager::EntityCount();
+    title << "Active Entities: " << EntitySys::EntityCount();
     title << " | FPS: " << FrameRateController::GetFPS();
     title << " | Energy: " << PlayerData::GetEnergy();
     glfwSetWindowTitle(WindowManager::getWindowHandle(), title.str().c_str());

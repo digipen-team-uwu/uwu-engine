@@ -11,7 +11,7 @@ To use this component, `#include "BehaviorComponentManager.h"`
 
 ```cpp
 template<>
-class Behavior<EntityManager::Type::Text> : public BaseBehavior
+class Behavior<EntitySys::Type::Text> : public BaseBehavior
 {
 };
 ```
@@ -21,9 +21,9 @@ Then, in order for the manager to be able to create your behavior, you must add 
 For example, for a text object to be able to use your text behavior, allBehaviors should look like this:
 
 ```cpp
-const std::map<EntityManager::Type, BaseBehavior * (* const)()> allBehaviors =
+const std::map<EntitySys::Type, BaseBehavior * (* const)()> allBehaviors =
 { 
-    { EntityManager::Type::Text_, CreateBehavior<EntityManager::Type::Text_> }
+    { EntitySys::Type::Text_, CreateBehavior<EntitySys::Type::Text_> }
 }
 ```
 Finally, in order for the manager to find your constructor, include the location of its declaration to the bottom of `BehaviorComponentManager.h`
@@ -47,7 +47,7 @@ virtual void Deserialize(rapidjson::Value& object, EntityID ID, const char* file
 ```
 * In order to get the ID of the entity that contains your behavior (so you can change its data in any behavior metod), call the base behavior's GetID() function like so:
 ```cpp
-void Behavior<EntityManager::Type::Text> Update()
+void Behavior<EntitySys::Type::Text> Update()
 {
     EntityID currentID = GetID();
 }
@@ -56,7 +56,7 @@ void Behavior<EntityManager::Type::Text> Update()
 First, in order to give the entity that your behavior was specialized for your behavior, you must activate it. For example, tp create an object of type text and give it your specialized behavior component, do this:
 
 ```cpp
-EntityID text = EntityManager::New(EntityManager::Type::Text);
+EntityID text = EntitySys::New(EntitySys::Type::Text);
 BehaviorComponentManager::Activate(text);
 ```
 
@@ -67,11 +67,11 @@ BaseBehavior* GetBaseBehavior(EntityID ID);
 
 In order to get the specialized behavior for any entity (so you can call any entity-specific method not declared by the base behavior), you can either dynamically cast the base behavior pointer obtained by the function above, or call GetBehavior for your specialization, prototyped below:
 ```cpp
-template<EntityManager::Type T>
+template<EntitySys::Type T>
   static Behavior<T>* GetBehavior(EntityID ID);
 ```
 
 For example, you can set the text of a text object with an EntityID named text like so:
 ```cpp
-BehaviorComponentManager::GetBehavior<EntityManager::Type::Text>(text)->SetText();
+BehaviorComponentManager::GetBehavior<EntitySys::Type::Text>(text)->SetText();
 ```

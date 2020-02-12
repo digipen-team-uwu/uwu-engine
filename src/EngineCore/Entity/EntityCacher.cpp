@@ -59,7 +59,7 @@ EntityCacher::EntityCacher()
 {
   for (const auto& dir : std::filesystem::directory_iterator(sc::JSON_PATH))
   {
-    for (auto i : EntityManagerTypeIterator())
+    for (auto i : EntitySysTypeIterator())
     {
       //add 1 to path because dir path adds a backslash
       std::string key = dir.path().string().substr(strlen(sc::JSON_PATH) + 1);
@@ -91,7 +91,7 @@ EntityCacher::EntityCacher()
 
     if (obj.HasMember("type"))
     {
-      entity.type = magic_enum::enum_cast<EntityManager::Type>(obj["type"].GetString()).value();
+      entity.type = magic_enum::enum_cast<EntitySys::Type>(obj["type"].GetString()).value();
     }
 
     if (obj.HasMember("transform"))
@@ -290,7 +290,7 @@ void EntityCacher::CacheEntity(const CachedEntity& entity)
 
 EntityID EntityCacher::CreateCachedEntity(const CachedEntity& entity)
 {
-  EntityID object = EntityManager::New(entity.type);
+  EntityID object = EntitySys::New(entity.type);
 
   if (entity.physics.active)
   {
@@ -348,12 +348,12 @@ EntityID EntityCacher::CreateCachedEntity(const CachedEntity& entity)
   return object;
 }
 
-bool EntityCacher::EntityIsCached(EntityManager::Type type)
+bool EntityCacher::EntityIsCached(EntitySys::Type type)
 {
   return entities.find(type) != entities.end();
 }
 
-const CachedEntity& EntityCacher::GetCachedEntity(EntityManager::Type type)
+const CachedEntity& EntityCacher::GetCachedEntity(EntitySys::Type type)
 {
   return entities[type];
 }

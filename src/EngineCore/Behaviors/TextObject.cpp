@@ -18,7 +18,7 @@
 #include <UWUEngine/UI/UIManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
 #include "UWUEngine/Graphics/Texture/AtlasModule.h"
-typedef EntityManager::Type type;
+typedef EntitySys::Type type;
 
 void Behavior<type::Text_>::Update()
 {

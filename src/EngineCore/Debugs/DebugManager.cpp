@@ -10,7 +10,7 @@
   Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Entity/EntityCacher.h>
 #include <UWUEngine/Debugs/DebugManager.h>
 #include <UWUEngine/Input/InputManager.h>
@@ -94,7 +94,7 @@ void DebugManager::Render()
 
     if (drawVectors)
     {
-      for (auto it : EntityManager::GetIDs())
+      for (auto it : EntitySys::GetIDs())
       {
         if (PhysicsComponentManager::IsActive(it))
         {

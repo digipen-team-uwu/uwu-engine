@@ -15,7 +15,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 // The amount of time the enemy is stunned for after getting hurt
 #define STUN_TIME 0.25f
 
-void Behavior<EntityManager::Type::Perception>::Enter_Hurt()
+void Behavior<EntitySys::Type::Perception>::Enter_Hurt()
 {
 
     // Decrement health by one
@@ -33,7 +33,7 @@ void Behavior<EntityManager::Type::Perception>::Enter_Hurt()
     {
         SoundInterface::playSound("perception_dead");
         // Destroy the object, as death has occurred
-        EntityManager::Destroy(GetID());
+        EntitySys::Destroy(GetID());
     }
     else
     {
@@ -43,12 +43,12 @@ void Behavior<EntityManager::Type::Perception>::Enter_Hurt()
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::Load_Hurt()
+void Behavior<EntitySys::Type::Perception>::Load_Hurt()
 {
     // Exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Update_Hurt(float dt)
+void Behavior<EntitySys::Type::Perception>::Update_Hurt(float dt)
 {
     // Wait for stun time to run out
     stunTimeRemaining -= dt;
@@ -59,12 +59,12 @@ void Behavior<EntityManager::Type::Perception>::Update_Hurt(float dt)
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::Unload_Hurt()
+void Behavior<EntitySys::Type::Perception>::Unload_Hurt()
 {
     // Exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Exit_Hurt()
+void Behavior<EntitySys::Type::Perception>::Exit_Hurt()
 {
     // Currently exists to suppress compiler errors
 }

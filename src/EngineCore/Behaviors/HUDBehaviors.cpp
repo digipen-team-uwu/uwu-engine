@@ -18,7 +18,7 @@
 #include <UWUEngine/Entity/EntityCacher.h>
 #include "UWUEngine/Graphics/Texture/AtlasModule.h"
 
-void Behavior<EntityManager::Type::HUDHealth>::Render()
+void Behavior<EntitySys::Type::HUDHealth>::Render()
 {
   glm::vec4 offset = {};
   offset.x = 0.f;
@@ -36,12 +36,12 @@ void Behavior<EntityManager::Type::HUDHealth>::Render()
       offset.x += 70.f;
   }
 }
-void Behavior<EntityManager::Type::HUDHealth>::Update()
+void Behavior<EntitySys::Type::HUDHealth>::Update()
 {
   Render();
 }
 
-void Behavior<EntityManager::Type::HUDEnergy>::Update()
+void Behavior<EntitySys::Type::HUDEnergy>::Update()
 {
   /* static Timer timer(2);
   if (timer.Finished())
@@ -50,7 +50,7 @@ void Behavior<EntityManager::Type::HUDEnergy>::Update()
     EntityCacher::InstantiateCachedBehavior(particles, "Energy");
   }*/
   TransformComponentManager::SetTranslation(TransformComponentManager::GetTranslation(GetID()) + glm::vec4{ 0, 20, 0, 0 }, particles);
-  auto& event = BehaviorComponentManager::GetBehavior<EntityManager::Type::ParticleEmitter>(particles)->GetEvent();
+  auto& event = BehaviorComponentManager::GetBehavior<EntitySys::Type::ParticleEmitter>(particles)->GetEvent();
   event.scale.scaleRate = energy / 50.f;
   if (energy != 0)
   {
@@ -63,17 +63,17 @@ void Behavior<EntityManager::Type::HUDEnergy>::Update()
   }
   Render();
 }
-Behavior<EntityManager::Type::HUDEnergy>::Behavior(EntityID id) : BaseBehavior(id), energy(0)
+Behavior<EntitySys::Type::HUDEnergy>::Behavior(EntityID id) : BaseBehavior(id), energy(0)
 {
   ParentChildComponentManager::Activate(id);
-  particles = EntityFactory::CreateObject(EntityManager::Type::ParticleEmitter);
+  particles = EntityFactory::CreateObject(EntitySys::Type::ParticleEmitter);
   ParentChildComponentManager::AddChild(id, particles);
   EntityCacher::InstantiateCachedBehavior(particles, "Energy");
-  EntityManager::SetClearImmunity(particles, true);
-  EntityManager::SetDontSerialize(particles, true);
+  EntitySys::SetClearImmunity(particles, true);
+  EntitySys::SetDontSerialize(particles, true);
 }
 
-void Behavior<EntityManager::Type::HUDEnergy>::Render()
+void Behavior<EntitySys::Type::HUDEnergy>::Render()
 {
     UIManager::PushElement(0, TransformComponentManager::GetTranslation(GetID()), TransformComponentManager::GetScale(GetID()),
       TextureComponentManager::GetColor(GetID()), { 0, 0 },

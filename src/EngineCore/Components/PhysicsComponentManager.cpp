@@ -10,7 +10,7 @@ Copyright ☺ 2019 DigiPen, All rights reserved.
 
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <glm/gtc/matrix_transform.hpp>

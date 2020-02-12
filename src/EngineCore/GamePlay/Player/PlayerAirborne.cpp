@@ -68,7 +68,7 @@ void PlayerStateMachine::Unload_Airborne()
 {
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollideAirborne(const Event<EventType::Collision>& info)
+void Behavior<EntitySys::Type::Player>::OnCollideAirborne(const Event<EventType::Collision>& info)
 {
   // Calculate the resolution angle
   glm::vec2 resolveAngle = CalculateResolveAngle(info);
@@ -77,7 +77,7 @@ void Behavior<EntityManager::Type::Player>::OnCollideAirborne(const Event<EventT
   const EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
 
   // Branch according to object type
-  switch (EntityManager::GetType(collidingWith))
+  switch (EntitySys::GetType(collidingWith))
   {
   case Type::Solid:
     // Land

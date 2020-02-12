@@ -3,12 +3,24 @@
 #include <UWUEngine/Helper.h>
 #include <fstream>
 
-#define TEE(x) EXPAND(TraceLogger::Tee((x), #x, FUNCTION_SIGNATURE))
+#define TEE(x) EXPAND(Get<LogSys>().Tee((x), #x, FUNCTION_SIGNATURE))
+
+char* LogSys::stdout_buffer = new char[stdout_bufsize];
+size_t LogSys::trace_UID = GenTraceUID();
+std::ofstream LogSys::log_file;
+LogSys::LogStream LogSys::log_stream;
+LogSys::LogStream LogSys::log_null;
+
+#ifdef _DEBUG
+LogSys::Severity LogSys::min_severity = SERIALIZATION;
+#else
+LogSys::Severity LogSys::min_severity = SERIALIZATION;
+#endif
 
 namespace UWUEngine
 {
 
-class TraceLogger : public System
+class LogSys : public System
 {
 public:
   class LogStream
@@ -22,14 +34,14 @@ public:
 
     friend LogStream& operator<< (LogStream& ls, std::ostream& (*f)(std::ostream&));
 
-    friend class TraceLogger;
+    friend class LogSys;
   private:
     void attach(std::ofstream* log);
     std::ofstream* log_;
   };
 
-  TraceLogger();
-  ~TraceLogger();
+  LogSys(ISpace*);
+  ~LogSys();
   void Update() override;
 
   enum Severity
@@ -43,23 +55,28 @@ public:
     FAILURE,
   };
 
-  static void SetMinSeverity(Severity level);
-  static void Assert(bool expression, char const* format, ...);
-  static int Log(Severity level, char const* format, ...);
-  static LogStream& Log(Severity level); // TraceLogger::Log(ERROR) << "blah blah c++" << std::endl;
+  void SetMinSeverity(Severity level);
+  void Assert(bool expression, char const* format, ...);
+  int Log(Severity level, char const* format, ...);
+  LogStream& Log(Severity level); // TraceLogger::Log(ERROR) << "blah blah c++" << std::endl;
 
   template <typename T>
-  static auto Tee(T&& value, char const* name, char const* pretty_function);
+  auto Tee(T&& value, char const* name, char const* pretty_function);
 private:
-  static size_t GenTraceUID();
-  static std::string GetHeader();
+  size_t GenTraceUID();
+  std::string GetHeader();
 
-  static size_t trace_UID;
-  static char* stdout_buffer;
-  static Severity min_severity;
-  static std::ofstream log_file;
-  static LogStream log_stream;
-  static LogStream log_null;
+  size_t trace_UID = GenTraceUID();
+  const size_t stdout_bufsize = 4096;
+  char* stdout_buffer = new char[stdout_bufsize];
+#ifdef _DEBUG
+  Severity min_severity = SERIALIZATION;
+#else
+  Severity min_severity = WARNING;
+#endif
+  std::ofstream log_file;
+  LogStream log_stream;
+  LogStream log_null;
 };
 
 }

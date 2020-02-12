@@ -72,7 +72,7 @@ void Scene::Load() const
 void Scene::UnLoad() const
 {
   SoundInterface::stopAllSounds();
-  EntityManager::DestroyAll();
+  EntitySys::DestroyAll();
   TextureAtlaser::ClearData();
 }
 

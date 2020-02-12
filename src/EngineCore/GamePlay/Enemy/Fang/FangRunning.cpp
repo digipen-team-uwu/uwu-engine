@@ -4,17 +4,17 @@
 #include <UWUEngine/Component/PhysicsComponentManager.h>
 #include "glm/vec3.hpp"
 
-void Behavior<EntityManager::Type::Fang_>::Load_Running()
+void Behavior<EntitySys::Type::Fang_>::Load_Running()
 {
     // DNI
 }
 
-void Behavior<EntityManager::Type::Fang_>::Enter_Running()
+void Behavior<EntitySys::Type::Fang_>::Enter_Running()
 {
     SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("Run 2.0", true);
 }
 
-void Behavior<EntityManager::Type::Fang_>::Update_Running(float dt)
+void Behavior<EntitySys::Type::Fang_>::Update_Running(float dt)
 {
     // Have Fang walk back and forth
     glm::vec4 velocity = {};
@@ -38,12 +38,12 @@ void Behavior<EntityManager::Type::Fang_>::Update_Running(float dt)
 
 }
 
-void Behavior<EntityManager::Type::Fang_>::Exit_Running()
+void Behavior<EntitySys::Type::Fang_>::Exit_Running()
 {
     // Currently exists to suppress compiler warnings
 }
 
-void Behavior<EntityManager::Type::Fang_>::Unload_Running()
+void Behavior<EntitySys::Type::Fang_>::Unload_Running()
 {
 	// DNI
 }

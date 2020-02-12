@@ -15,11 +15,11 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
 #include <UWUEngine/Component/ColliderComponentManager.h>
 
-Collider* Behavior<EntityManager::Type::Perception>::idleCollider;
-Collider* Behavior<EntityManager::Type::Perception>::attackCollider;
+Collider* Behavior<EntitySys::Type::Perception>::idleCollider;
+Collider* Behavior<EntitySys::Type::Perception>::attackCollider;
 
-Behavior<EntityManager::Type::Perception>::Behavior(EntityID ID):
-BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Perception>::OnCollide), ID)
+Behavior<EntitySys::Type::Perception>::Behavior(EntityID ID):
+BaseBehavior(ID), listener(MemberFunc(&Behavior<EntitySys::Type::Perception>::OnCollide), ID)
 {
   if (!idleCollider)
   {
@@ -46,29 +46,29 @@ BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Perception>
   EventSystem::Register(listener);
 }
 
-Behavior<EntityManager::Type::Perception>::~Behavior()
+Behavior<EntitySys::Type::Perception>::~Behavior()
 {
   EventSystem::UnRegister(listener);
 }
 
-void Behavior<EntityManager::Type::Perception>::Update()
+void Behavior<EntitySys::Type::Perception>::Update()
 {
     UpdateState(FrameRateController::GetDeltaTime<float>());
 }
 
-void Behavior<EntityManager::Type::Perception>::Render()
+void Behavior<EntitySys::Type::Perception>::Render()
 {
     // Ignore, only exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Serialize(std::ofstream& stream)
+void Behavior<EntitySys::Type::Perception>::Serialize(std::ofstream& stream)
 {
   stream << ",\n";
   stream << Tabs::TWO;
   stream << "\"behavior\": true";
 }
 
-void Behavior<EntityManager::Type::Perception>::Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath)
+void Behavior<EntitySys::Type::Perception>::Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath)
 {
     // Check for the health member
     if (object.HasMember("health"))
@@ -79,7 +79,7 @@ void Behavior<EntityManager::Type::Perception>::Deserialize(rapidjson::Value& ob
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::OnCollide(const Event<EventType::Collision>& info)
+void Behavior<EntitySys::Type::Perception>::OnCollide(const Event<EventType::Collision>& info)
 {
     // Figure out which object is the other object
     EntityID otherObject;
@@ -92,9 +92,9 @@ void Behavior<EntityManager::Type::Perception>::OnCollide(const Event<EventType:
         otherObject = info.obj1;
     }
 
-    switch (EntityManager::GetType(otherObject))
+    switch (EntitySys::GetType(otherObject))
     {
-    case EntityManager::Type::Player:
+    case EntitySys::Type::Player:
     {
         // Check if the player is dashing
         if (PlayerData::GetCurrentState() == PlayerStateMachine::_PlayerStateMachinestate::Dash)
@@ -114,7 +114,7 @@ void Behavior<EntityManager::Type::Perception>::OnCollide(const Event<EventType:
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::SetHealth(size_t amount)
+void Behavior<EntitySys::Type::Perception>::SetHealth(size_t amount)
 {
     health = amount;
 }

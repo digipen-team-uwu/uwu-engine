@@ -41,7 +41,7 @@ public:
   static PlayerStateMachine::_PlayerStateMachinestate GetCurrentState();
   static bool FacingRight();
 
-  friend Behavior<EntityManager::Type::Player>;
+  friend Behavior<EntitySys::Type::Player>;
   friend PlayerStateMachine;
 
 private:
@@ -69,7 +69,7 @@ private:
 };
 
 template<>
-class Behavior<EntityManager::Type::Player> : public BaseBehavior
+class Behavior<EntitySys::Type::Player> : public BaseBehavior
 {
 public:
   Behavior(EntityID id);

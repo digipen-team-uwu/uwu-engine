@@ -117,14 +117,14 @@ void PlayerStateMachine::Unload_Grounded()
 {
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollideGrounded(const Event<EventType::Collision>& info)
+void Behavior<EntitySys::Type::Player>::OnCollideGrounded(const Event<EventType::Collision>& info)
 {
   glm::vec2 resolveAngle = CalculateResolveAngle(info);
   float angle = atan2(resolveAngle.y, resolveAngle.x);
 
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
 
-  switch (EntityManager::GetType(collidingWith))
+  switch (EntitySys::GetType(collidingWith))
   {
   case Type::Solid:
     //Fix state to grounded

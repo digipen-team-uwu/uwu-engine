@@ -38,7 +38,7 @@
 </li>
 </ul>
 <p>The base component is a component of <a href="../README.html">uwu Engine</a>.</p>
-<p>It automatically registers itself into the <a href="./Systems/EntityManager.html">Entity Manager</a> which will handle construction, initialization, updating, and deconstruction of the component.
+<p>It automatically registers itself into the <a href="./Systems/EntitySys.html">Entity Manager</a> which will handle construction, initialization, updating, and deconstruction of the component.
 It is relatively easy to add new components to the engine.
 The base component is available in the <code>BaseComponent.h</code> header.</p>
 <h2 id="interface">Interface</h2>
@@ -66,8 +66,8 @@ The InitObject function should initialize any data the component needs for the g
 <p>Now, the component can be implemented. <strong>All members and methods must be static.</strong> If you need a dynamically allocated member, use a static pointer and allocate it appropriately. The only exception to this is if your component has further children (such as the <a href="./Components/Behavior.html">Behavior Component</a>.)
 Note: It is preferable to initialize static data members in the static initializer instead of the constructor.</p>
 <h3 id="registration">Registration</h3>
-<p>Immediately following the declaration of the class, it is time to set up the auto-registration. You can choose what order your component updates in, as it pertains to the SystemOrder. All components update within the <a href="./Systems/EntityManager.html">Entity Manager</a>, but some components need to update in a particular order. If this is the case, add an entry to the <code>ComponentUpdateOrder</code> enumeration for your system. If the order your component updates in does not matter, simply use <code>ComponentUpdateOrder::LAST</code>. To enable the auto-registration:</p>
-<pre><code class="language-cpp"><div><span class="hljs-keyword">size_t</span> RegisterComponentHelper&lt;MyNewComponent&gt;::RegisterComponentHelper_ID = EntityManager::AddComponent&lt;MyNewComponent&gt;(ComponentUpdateOrder:LAST);
+<p>Immediately following the declaration of the class, it is time to set up the auto-registration. You can choose what order your component updates in, as it pertains to the SystemOrder. All components update within the <a href="./Systems/EntitySys.html">Entity Manager</a>, but some components need to update in a particular order. If this is the case, add an entry to the <code>ComponentUpdateOrder</code> enumeration for your system. If the order your component updates in does not matter, simply use <code>ComponentUpdateOrder::LAST</code>. To enable the auto-registration:</p>
+<pre><code class="language-cpp"><div><span class="hljs-keyword">size_t</span> RegisterComponentHelper&lt;MyNewComponent&gt;::RegisterComponentHelper_ID = EntitySys::AddComponent&lt;MyNewComponent&gt;(ComponentUpdateOrder:LAST);
 </div></code></pre>
 <p>Whew. With that line, registration will be completed for you and there is nothing else to do. Your component is complete!</p>
 

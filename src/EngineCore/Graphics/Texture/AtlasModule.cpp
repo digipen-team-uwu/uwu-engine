@@ -253,7 +253,7 @@ void AtlasModule::LoadAtlasPage(GLboolean isTwice_)
   Instances::SetEntityVAOKey(vao_key);
 
   // setting atlas uv and atlas scale
-  auto& ids = EntityManager::GetIDs();
+  auto& ids = EntitySys::GetIDs();
   for (int i = 0; i < ids.size(); ++i)
   {
     SetAtlasData(i);

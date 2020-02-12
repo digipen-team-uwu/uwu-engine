@@ -1,6 +1,6 @@
 #pragma once
 #include <UWUEngine/Component/BehaviorComponentManager.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <sstream>
 
 //TODO: make this a text emittor, make a text object that renders one character

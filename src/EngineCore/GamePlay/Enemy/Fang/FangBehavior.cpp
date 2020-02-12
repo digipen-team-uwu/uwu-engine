@@ -3,39 +3,39 @@
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include <UWUEngine/Serialization.h>
 
-Behavior<EntityManager::Type::Fang_>::Behavior(EntityID ID) :
-  BaseBehavior(ID), listener(MemberFunc(&Behavior<EntityManager::Type::Fang_>::OnCollide), ID)
+Behavior<EntitySys::Type::Fang_>::Behavior(EntityID ID) :
+  BaseBehavior(ID), listener(MemberFunc(&Behavior<EntitySys::Type::Fang_>::OnCollide), ID)
 {
   EventSystem::Register(listener);
 }
 
-Behavior<EntityManager::Type::Fang_>::~Behavior()
+Behavior<EntitySys::Type::Fang_>::~Behavior()
 {
   EventSystem::UnRegister(listener);
 }
 
-void Behavior<EntityManager::Type::Fang_>::Serialize(std::ofstream & stream)
+void Behavior<EntitySys::Type::Fang_>::Serialize(std::ofstream & stream)
 {
   stream << ",\n";
   stream << Tabs::TWO;
   stream << "\"behavior\": true";
 }
 
-void Behavior<EntityManager::Type::Fang_>::Update()
+void Behavior<EntitySys::Type::Fang_>::Update()
 {
   UpdateState(FrameRateController::GetDeltaTime<float>());
 }
 
-void Behavior<EntityManager::Type::Fang_>::Render()
+void Behavior<EntitySys::Type::Fang_>::Render()
 {
 }
 
-void Behavior<EntityManager::Type::Fang_>::Deserialize(rapidjson::Value & object, EntityID ID, const char* filePath)
+void Behavior<EntitySys::Type::Fang_>::Deserialize(rapidjson::Value & object, EntityID ID, const char* filePath)
 {
 
 }
 
-void Behavior<EntityManager::Type::Fang_>::OnCollide(const Event<EventType::Collision>& info)
+void Behavior<EntitySys::Type::Fang_>::OnCollide(const Event<EventType::Collision>& info)
 {
   // Figure out which object is the other object
   EntityID otherObject;
@@ -48,9 +48,9 @@ void Behavior<EntityManager::Type::Fang_>::OnCollide(const Event<EventType::Coll
     otherObject = info.obj1;
   }
 
-  switch (EntityManager::GetType(otherObject))
+  switch (EntitySys::GetType(otherObject))
   {
-  case EntityManager::Type::Player:
+  case EntitySys::Type::Player:
   {
     // Check if the player is dashing
     if (PlayerData::GetCurrentState() == PlayerStateMachine::_PlayerStateMachinestate::Dash)
@@ -61,7 +61,7 @@ void Behavior<EntityManager::Type::Fang_>::OnCollide(const Event<EventType::Coll
     break;
   }
 
-  case EntityManager::Type::Solid:
+  case EntitySys::Type::Solid:
   {
     // Check if Fang is within one frame's travel distance away from the ledge
 
@@ -109,23 +109,23 @@ void Behavior<EntityManager::Type::Fang_>::OnCollide(const Event<EventType::Coll
 // They are currently here to suppress compiler
 #pragma region PlaceHolder
 
-void Behavior<EntityManager::Type::Fang_>::Enter_Charge()
+void Behavior<EntitySys::Type::Fang_>::Enter_Charge()
 {
 }
 
-void Behavior<EntityManager::Type::Fang_>::Load_Charge()
+void Behavior<EntitySys::Type::Fang_>::Load_Charge()
 {
 }
 
-void Behavior<EntityManager::Type::Fang_>::Update_Charge(float dt)
+void Behavior<EntitySys::Type::Fang_>::Update_Charge(float dt)
 {
 }
 
-void Behavior<EntityManager::Type::Fang_>::Unload_Charge()
+void Behavior<EntitySys::Type::Fang_>::Unload_Charge()
 {
 }
 
-void Behavior<EntityManager::Type::Fang_>::Exit_Charge()
+void Behavior<EntitySys::Type::Fang_>::Exit_Charge()
 {
 }
 

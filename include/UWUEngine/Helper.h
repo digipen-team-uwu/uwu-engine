@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 #include <string>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Random.h>
 #include <fstream>
 
@@ -34,9 +34,6 @@ public:
     }
     bool operator!=(const Iterator& i) { return val != i.val; }
 };
-
-typedef Iterator<EntityManager::Type, EntityManager::Type::Empty, EntityManager::Type::End> EntityManagerTypeIterator;
-
 
 template <typename Iter, typename Cont>
 bool is_last(Iter iter, const Cont& cont)

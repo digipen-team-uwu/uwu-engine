@@ -11,7 +11,7 @@
 /******************************************************************************/
 #include <UWUEngine/UI/HUDSys.h>
 #include <UWUEngine/FrameLimiterSys.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
@@ -35,7 +35,7 @@ void HUDSys::DisplayFPS()
 {
   if (fps == goc::INVALID_ID)
   {
-    fps = EntityManager::New(EntityManager::Type::Text_);
+    fps = EntitySys::New(EntitySys::Type::Text_);
     TextureComponentManager::Activate(fps);
     BehaviorComp::Activate(fps);
     TransformComponentManager::Activate(fps);
@@ -44,8 +44,8 @@ void HUDSys::DisplayFPS()
     TextureComponentManager::SetFilePath(fps, "./assets/coolfont.png");
     TextureComponentManager::SetDimensions(UIConstants::FONTSHEET_SIZE, fps);
     TextureComponentManager::SetColor(fps, { 1, 1, 1, 1 });
-    EntityManager::SetClearImmunity(fps, true);
-    EntityManager::SetDontSerialize(fps, true);
+    EntitySys::SetClearImmunity(fps, true);
+    EntitySys::SetDontSerialize(fps, true);
     TextureComponentManager::SetUV(fps, { -1.f,-1.f });
   }
 }
@@ -54,7 +54,7 @@ void HUDSys::DisplayHealth()
 {
   if (healthBar == goc::INVALID_ID)
   {
-    healthBar = EntityManager::New(EntityManager::Type::HUDHealth);
+    healthBar = EntitySys::New(EntitySys::Type::HUDHealth);
     TextureComponentManager::Activate(healthBar);
     BehaviorComp::Activate(healthBar);
     TransformComponentManager::Activate(healthBar);
@@ -62,8 +62,8 @@ void HUDSys::DisplayHealth()
     TransformComponentManager::SetScale({ 50.f, 43.f, 1.f }, healthBar);
     TextureComponentManager::SetFilePath(healthBar, "./assets/UI/UI_FullHeart.png", 0);
     TextureComponentManager::SetFilePath(healthBar, "./assets/UI/UI_EmptyHeart.png", 1);
-    EntityManager::SetClearImmunity(healthBar, true);
-    EntityManager::SetDontSerialize(healthBar, true);
+    EntitySys::SetClearImmunity(healthBar, true);
+    EntitySys::SetDontSerialize(healthBar, true);
     TextureComponentManager::SetUV(healthBar, { -1.f,-1.f });
   }
 }
@@ -72,15 +72,15 @@ void HUDSys::DisplayEnergy()
 {
   if (energyBar == goc::INVALID_ID)
   {
-    energyBar = EntityManager::New(EntityManager::Type::HUDEnergy);
+    energyBar = EntitySys::New(EntitySys::Type::HUDEnergy);
     TextureComponentManager::Activate(energyBar);
     BehaviorComp::Activate(energyBar);
     TransformComponentManager::Activate(energyBar);
     TransformComponentManager::SetTranslation({ -wc::WINDOW_WIDTH / 2 + 80, wc::WINDOW_HEIGHT / 2 - 100, 0, 1 }, energyBar);
     TransformComponentManager::SetScale({ 273.f / 3, 487.f / 3, 1.f }, energyBar);
     TextureComponentManager::SetFilePath(energyBar, "./assets/UI/UI_Energy.png");
-    EntityManager::SetClearImmunity(energyBar, true);
-    EntityManager::SetDontSerialize(energyBar, true);
+    EntitySys::SetClearImmunity(energyBar, true);
+    EntitySys::SetDontSerialize(energyBar, true);
     TextureComponentManager::SetUV(energyBar, { -1.f,-1.f });
   }
 }
@@ -92,15 +92,15 @@ void HUDSys::Update()
     double frames = Get<FrameLimiterSys>().GetFPS();
     int pres;
     pres = (frames > 99) ? 3 : 2;
-    BehaviorComp::GetBehavior<EntityManager::Type::Text_>(fps)->SetText() << "FPS: " << std::setprecision(pres) << frames;
+    BehaviorComp::GetBehavior<EntitySys::Type::Text_>(fps)->SetText() << "FPS: " << std::setprecision(pres) << frames;
   }
   if (healthBar != goc::INVALID_ID)
   {
-    BehaviorComp::GetBehavior<EntityManager::Type::HUDHealth>(healthBar)->SetHealth(PlayerData::GetHealth());
+    BehaviorComp::GetBehavior<EntitySys::Type::HUDHealth>(healthBar)->SetHealth(PlayerData::GetHealth());
   }
   if (energyBar != goc::INVALID_ID)
   {
-    BehaviorComp::GetBehavior<EntityManager::Type::HUDEnergy>(energyBar)->SetEnergy(PlayerData::GetEnergy());
+    BehaviorComp::GetBehavior<EntitySys::Type::HUDEnergy>(energyBar)->SetEnergy(PlayerData::GetEnergy());
   }
 }
 

@@ -13,7 +13,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/BaseSystem.h>
 #include <rapidjson/document.h>
-#include "EntityManager.h"
+#include "EntitySys.h"
 
 //!class EntityFactory
 class EntityFactory : public BaseSystem<EntityFactory>
@@ -51,7 +51,7 @@ public:
 			The ID of the created game object
 	*/
 	/******************************************************************************/
-	static EntityID CreateObject(std::string filepath, EntityManager::Type type = EntityManager::Empty);
+	static EntityID CreateObject(std::string filepath, EntitySys::Type type = EntitySys::Empty);
   
   /******************************************************************************/
   /*!
@@ -65,7 +65,7 @@ public:
       The ID of the created game object
   */
   /******************************************************************************/
-  static EntityID CreateObject(EntityManager::Type type);
+  static EntityID CreateObject(EntitySys::Type type);
 
   /******************************************************************************/
   /*!

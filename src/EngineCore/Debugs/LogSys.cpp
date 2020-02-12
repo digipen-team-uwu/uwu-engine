@@ -1,4 +1,4 @@
-﻿#include <UWUEngine/Debugs/TraceLogger.h>
+﻿#include <UWUEngine/Debugs/LogSys.h>
 #include <string>
 #include <cstdarg>
 #include <cassert>
@@ -14,26 +14,27 @@
 #include <UWUEngine/PlatformSpecificDefinitions.h>
 #include <UWUEngine/PlatformSpecific.h>
 
-#include <UWUEngine/Debugs/TraceLogger.specialization.cpp>
+#include <UWUEngine/Debugs/LogSys.specialization.cpp>
 #include <memory>
 #include <filesystem>
+#include <iostream>
 
-
-constexpr size_t stdout_bufsize = 4096;
-
-TraceLogger::LogStream::LogStream(std::ofstream & log)
-:
-log_(&log)
+namespace UWUEngine
 {
-  
+
+LogSys::LogStream::LogStream(std::ofstream& log)
+  :
+  log_(&log)
+{
+
 };
 
-void TraceLogger::LogStream::attach(std::ofstream* log)
+void LogSys::LogStream::attach(std::ofstream* log)
 {
   log_ = log;
 }
-  
-TraceLogger::LogStream& operator<< (TraceLogger::LogStream& ls, std::ostream& (*f)(std::ostream&))
+
+LogSys::LogStream& operator<< (LogSys::LogStream& ls, std::ostream& (*f)(std::ostream&))
 {
   f(std::cerr);
   f(*(ls.log_));
@@ -41,58 +42,47 @@ TraceLogger::LogStream& operator<< (TraceLogger::LogStream& ls, std::ostream& (*
 }
 
 using namespace ColoredOutput;
-char* TraceLogger::stdout_buffer = new char[stdout_bufsize];
-size_t TraceLogger::trace_UID = GenTraceUID();
-std::ofstream TraceLogger::log_file;
-TraceLogger::LogStream TraceLogger::log_stream;
-TraceLogger::LogStream TraceLogger::log_null;
-
-#ifdef _DEBUG
-TraceLogger::Severity TraceLogger::min_severity = SERIALIZATION;
-#else
-TraceLogger::Severity TraceLogger::min_severity = SERIALIZATION;
-#endif
 
 namespace
 {
-  std::string string_format(char const* format, std::va_list args)
+std::string string_format(char const* format, std::va_list args)
+{
+  std::va_list args_copy;
+  va_copy(args_copy, args);
+  int const length = std::vsnprintf(nullptr, 0, format, args) + 1;
+  va_end(args);
+  if (length <= 0)
   {
-    std::va_list args_copy;
-    va_copy(args_copy, args);
-    int const length = std::vsnprintf(nullptr, 0, format, args) + 1;
-    va_end(args);
-    if(length <= 0)
-    {
-      // TODO: remove temp exception
-      throw std::runtime_error("Error during formatting.");
-    }
-    std::unique_ptr<char[]> buf(new char[length]);
-    std::vsnprintf(buf.get(), length, format, args_copy);
-    return std::string(buf.get(), buf.get() + length - 1);
+    // TODO: remove temp exception
+    throw std::runtime_error("Error during formatting.");
   }
-
-  std::string string_format(char const* format, ...)
-  {
-    std::va_list args;
-    va_start(args, format);
-    std::string formatted = string_format(format, args);
-    va_end(args);
-    return formatted;
-  }
-
-  Color severity_colors[] =
-  {
-    Blue,       // SERIALIZATION
-    Aqua,       // TRACE
-    Green,      // DEBUG
-    Lime,       // INFO
-    Yellow,     // WARNING
-    Red,        // ERROR
-    Crimson,    // FAILURE
-  };
+  std::unique_ptr<char[]> buf(new char[length]);
+  std::vsnprintf(buf.get(), length, format, args_copy);
+  return std::string(buf.get(), buf.get() + length - 1);
 }
 
-TraceLogger::TraceLogger()
+std::string string_format(char const* format, ...)
+{
+  std::va_list args;
+  va_start(args, format);
+  std::string formatted = string_format(format, args);
+  va_end(args);
+  return formatted;
+}
+
+Color severity_colors[] =
+{
+  Blue,       // SERIALIZATION
+  Aqua,       // TRACE
+  Green,      // DEBUG
+  Lime,       // INFO
+  Yellow,     // WARNING
+  Red,        // ERROR
+  Crimson,    // FAILURE
+};
+}
+
+LogSys::LogSys(ISpace* p) : System(p)
 {
 #ifdef _DEBUG
 #ifdef _MSVC
@@ -151,7 +141,7 @@ TraceLogger::TraceLogger()
         GetSetColorEnabled(false, true);
       }
     }
-    catch(std::exception)
+    catch (std::exception)
     {
       GetSetColorEnabled(false, false);
     }
@@ -183,29 +173,29 @@ TraceLogger::TraceLogger()
   Log(INFO) << "my name a jeff" << std::endl;
 }
 
-TraceLogger::~TraceLogger()
+LogSys::~LogSys()
 {
   try
   {
     log_file.close();
   }
-  catch(...)
+  catch (...)
   {
     /* :) */
   }
 }
 
-void TraceLogger::Update()
+void LogSys::Update()
 {
   log_file.flush();
 }
 
-void TraceLogger::SetMinSeverity(Severity level)
+void LogSys::SetMinSeverity(Severity level)
 {
   min_severity = level;
 }
 
-void TraceLogger::Assert(bool expression, char const* format, ...)
+void LogSys::Assert(bool expression, char const* format, ...)
 {
   std::va_list args;
   if (expression)
@@ -223,7 +213,7 @@ void TraceLogger::Assert(bool expression, char const* format, ...)
   }
 }
 
-int TraceLogger::Log(Severity level, char const* format, ...)
+int LogSys::Log(Severity level, char const* format, ...)
 {
   std::va_list args;
   va_start(args, format);
@@ -233,7 +223,7 @@ int TraceLogger::Log(Severity level, char const* format, ...)
   return static_cast<int>(message.length());
 }
 
-TraceLogger::LogStream& TraceLogger::Log(Severity level)
+LogSys::LogStream& LogSys::Log(Severity level)
 {
   if (level >= min_severity)
   {
@@ -244,7 +234,7 @@ TraceLogger::LogStream& TraceLogger::Log(Severity level)
     // file
     if (log_file.is_open() && !log_file.fail())
     {
-       log_file << "[" << magic_enum::enum_name(level) << "]: ";
+      log_file << "[" << magic_enum::enum_name(level) << "]: ";
     }
 
     return log_stream;
@@ -253,7 +243,7 @@ TraceLogger::LogStream& TraceLogger::Log(Severity level)
   return log_null;
 }
 
-size_t TraceLogger::GenTraceUID()
+size_t LogSys::GenTraceUID()
 {
   /* Get the current time. */
   const std::time_t current_time = std::time(nullptr);
@@ -268,7 +258,7 @@ size_t TraceLogger::GenTraceUID()
   return trace_UID;
 }
 
-std::string TraceLogger::GetHeader()
+std::string LogSys::GetHeader()
 {
   std::stringstream header;
 
@@ -282,4 +272,6 @@ std::string TraceLogger::GetHeader()
   }
 
   return header.str();
+}
+
 }

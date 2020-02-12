@@ -2,7 +2,7 @@
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 
 template<>
-class Behavior<EntityManager::Type::HUDHealth> : public BaseBehavior
+class Behavior<EntitySys::Type::HUDHealth> : public BaseBehavior
 {
 public:
   Behavior(EntityID id) : BaseBehavior(id), health(0) { }
@@ -14,7 +14,7 @@ private:
 };
 
 template<>
-class Behavior<EntityManager::Type::HUDEnergy> : public BaseBehavior
+class Behavior<EntitySys::Type::HUDEnergy> : public BaseBehavior
 {
 public:
   Behavior(EntityID id);

@@ -24,12 +24,12 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 void FlipScaleX(EntityID id, glm::vec3 scale);
 
-void Behavior<EntityManager::Type::Perception>::Load_Attack()
+void Behavior<EntitySys::Type::Perception>::Load_Attack()
 {
     // DNI, Exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Enter_Attack()
+void Behavior<EntitySys::Type::Perception>::Enter_Attack()
 {
     SoundInterface::playSound("perception_attack");
 
@@ -67,7 +67,7 @@ void Behavior<EntityManager::Type::Perception>::Enter_Attack()
     attackTimeRemaining = ANIMATION_LENGTH;
 }
 
-void Behavior<EntityManager::Type::Perception>::Update_Attack(float dt)
+void Behavior<EntitySys::Type::Perception>::Update_Attack(float dt)
 {
     // Uncomment the below for collider stuff
     // EntityID id = GetID();
@@ -84,13 +84,13 @@ void Behavior<EntityManager::Type::Perception>::Update_Attack(float dt)
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::Exit_Attack()
+void Behavior<EntitySys::Type::Perception>::Exit_Attack()
 {
     // Pointless?
     // For now, exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Unload_Attack()
+void Behavior<EntitySys::Type::Perception>::Unload_Attack()
 {
     // DNI, exists to suppress compiler errors
 }

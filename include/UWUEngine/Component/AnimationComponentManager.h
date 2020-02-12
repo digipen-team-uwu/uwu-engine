@@ -12,7 +12,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/Component.h>
 #include <array>
 

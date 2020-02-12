@@ -11,7 +11,7 @@ Copyright 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #include <UWUEngine/Graphics/Lighting/LightSys.h>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Graphics/CameraSys.h>
 #include <UWUEngine/Graphics/Shader/ShaderModule.h>
 #include <UWUEngine/Input/InputSys.h>
@@ -151,9 +151,9 @@ void LightSys::Update()
   {
     return;
   }
-  for (auto& i : EntityManager::GetIDs())
+  for (auto& i : EntitySys::GetIDs())
   {
-    if (EntityManager::GetType(i) != EntityManager::Dropped)
+    if (EntitySys::GetType(i) != EntitySys::Dropped)
     {
       LightingComp::SetShininess(i, 16.0f);
     }

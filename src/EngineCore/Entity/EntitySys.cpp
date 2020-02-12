@@ -10,7 +10,7 @@
     */
 /******************************************************************************/
 
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Entity/EntityIDManager.h>
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Component/TransformComponentManager.h>

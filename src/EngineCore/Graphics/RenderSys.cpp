@@ -9,7 +9,7 @@
 Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Graphics/RenderSys.h>
 #include <array>
 #include <GL/glew.h>
@@ -23,7 +23,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <imgui_impl_glfw.h>
 #include "imgui_impl_opengl3.h"
 #include <UWUEngine/UI/UISys.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Debugs/LogSys.h>
 #include <UWUEngine/Graphics/Texture/AtlasModule.h>
 
 namespace wc = WindowConstants;

@@ -1,10 +1,10 @@
 #pragma once
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/Component.h>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 #include <unordered_map>
-#include <assert.h>
+#include <cassert>
 #include <sstream>
 
 //TODO: templatize an entity cache object specialized by the behaviors entity type with all the entity cache data plus behavior data

@@ -19,7 +19,7 @@ Copyright 2019 DigiPen, All rights reserved.
 StateMachine(Fang, false, Grounded, Charge, Running, Hurt);
 
 template<>
-class Behavior<EntityManager::Type::Fang_>: public BaseBehavior, public FangStateMachine
+class Behavior<EntitySys::Type::Fang_>: public BaseBehavior, public FangStateMachine
 {
 public:
     Behavior(EntityID ID);

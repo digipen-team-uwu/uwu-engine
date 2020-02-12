@@ -97,8 +97,8 @@ PlayerStateMachine::_PlayerStateMachinestate PlayerData::GetCurrentState()
 }
 
 
-Behavior<EntityManager::Type::Player>::Behavior(EntityID id) :
-BaseBehavior(id), listener(MemberFunc(&Behavior<EntityManager::Type::Player>::OnCollide), id)
+Behavior<EntitySys::Type::Player>::Behavior(EntityID id) :
+BaseBehavior(id), listener(MemberFunc(&Behavior<EntitySys::Type::Player>::OnCollide), id)
 {
   PlayerData::playerID = GetID();
   PlayerData::InitPlayer();
@@ -106,12 +106,12 @@ BaseBehavior(id), listener(MemberFunc(&Behavior<EntityManager::Type::Player>::On
   EventSystem::Register(listener);
 }
 
-Behavior<EntityManager::Type::Player>::~Behavior()
+Behavior<EntitySys::Type::Player>::~Behavior()
 {
   EventSystem::UnRegister(listener);
 }
 
-void Behavior<EntityManager::Type::Player>::Update()
+void Behavior<EntitySys::Type::Player>::Update()
 {
   player_state_.UpdateState(FrameRateController::GetDeltaTime<float>());
 
@@ -148,18 +148,18 @@ void Behavior<EntityManager::Type::Player>::Update()
   //Camera::SetCameraPosition(glm::vec3(glm::vec2(TransformComponentManager::GetTranslation(PlayerData::GetPlayerID())) + glm::vec2{0, 100}, Camera::GetCameraPosition().z));
 }
 
-void Behavior<EntityManager::Type::Player>::Serialize(std::ofstream & stream)
+void Behavior<EntitySys::Type::Player>::Serialize(std::ofstream & stream)
 {
   stream << ",\n";
   stream << Tabs::TWO;
   stream << "\"behavior\": true";
 }
 
-void Behavior<EntityManager::Type::Player>::Deserialize(rapidjson::Value & object, EntityID ID, const char* filePath)
+void Behavior<EntitySys::Type::Player>::Deserialize(rapidjson::Value & object, EntityID ID, const char* filePath)
 {
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollide(const Event<EventType::Collision>& info)
+void Behavior<EntitySys::Type::Player>::OnCollide(const Event<EventType::Collision>& info)
 {
   // First check and see if the thing was a hazard
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
@@ -180,7 +180,7 @@ void Behavior<EntityManager::Type::Player>::OnCollide(const Event<EventType::Col
   }
 }
 
-glm::vec2 Behavior<EntityManager::Type::Player>::CalculateResolveAngle(const Event<EventType::Collision>& info) const
+glm::vec2 Behavior<EntitySys::Type::Player>::CalculateResolveAngle(const Event<EventType::Collision>& info) const
 {
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
 
@@ -192,7 +192,7 @@ glm::vec2 Behavior<EntityManager::Type::Player>::CalculateResolveAngle(const Eve
   return positive ? info.direction : -info.direction;
 }
 
-Behavior<EntityManager::Type::Player>::ABSTRACT_DIR Behavior<EntityManager::Type::Player>::GetAbstractDirection(float angle) const
+Behavior<EntitySys::Type::Player>::ABSTRACT_DIR Behavior<EntitySys::Type::Player>::GetAbstractDirection(float angle) const
 {
   constexpr float piOverFour = glm::pi<float>() / 4;
   if (angle < piOverFour && angle >= -piOverFour)
@@ -214,7 +214,7 @@ Behavior<EntityManager::Type::Player>::ABSTRACT_DIR Behavior<EntityManager::Type
   return ABSTRACT_DIR::INVALID;
 }
 
-bool Behavior<EntityManager::Type::Player>::IsDirectionRight(float angle) const
+bool Behavior<EntitySys::Type::Player>::IsDirectionRight(float angle) const
 {
   constexpr float piOverTwo = glm::pi<float>() / 2;
   if (angle > -piOverTwo && angle < piOverTwo)

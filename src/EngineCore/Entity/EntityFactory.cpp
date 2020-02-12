@@ -10,7 +10,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Entity/EntityCacher.h>
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
@@ -34,7 +34,7 @@ using namespace ColoredOutput;
 char EntityFactory::readBuffer[65536];
 
 
-EntityID EntityFactory::CreateObject(std::string filepath, EntityManager::Type type)
+EntityID EntityFactory::CreateObject(std::string filepath, EntitySys::Type type)
 {
 	// Returns the ID of the object
 	EntityID resultID = -1;
@@ -77,17 +77,17 @@ EntityID EntityFactory::CreateObject(std::string filepath, EntityManager::Type t
 	//assert(doc["type"].IsString());
 	
 	
-	if(type != EntityManager::Empty) //if type was given
-		resultID = EntityManager::New(type);// Get the EntityID from the manager
+	if(type != EntitySys::Empty) //if type was given
+		resultID = EntitySys::New(type);// Get the EntityID from the manager
 	else
 	{
 	  //figure it out from file name
-		for (auto i : EntityManagerTypeIterator())
+		for (auto i : EntitySysTypeIterator())
 		{
             if (filepath.find(magic_enum::enum_name(i).data()) != std::string::npos)
             {
 		  	    type = i;
-                resultID = EntityManager::New(type);// Get the EntityID from the manager
+                resultID = EntitySys::New(type);// Get the EntityID from the manager
                 break;
             }
 		}
@@ -146,7 +146,7 @@ EntityID EntityFactory::CreateObject(std::string filepath, EntityManager::Type t
     The ID of the created game object
 */
 /******************************************************************************/
-EntityID EntityFactory::CreateObject(EntityManager::Type type)
+EntityID EntityFactory::CreateObject(EntitySys::Type type)
 {
 #if 0
     // Returns the ID of the object
@@ -188,7 +188,7 @@ EntityID EntityFactory::CreateObject(EntityManager::Type type)
     //assert(doc["type"].IsString());
 
     // Get the EntityID from the manager
-    resultID = EntityManager::New(type);
+    resultID = EntitySys::New(type);
 
     // Construct all relevant components
     if (doc.HasMember("name"))
@@ -255,8 +255,8 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
   TraceLogger::Log(TraceLogger::SERIALIZATION) << "Checking that object type is legal\n";
 
     //TODO::Something is wrong here after I add LevelEnd, that's why I changed this logic into magic enum cast but something needs to be fixed
-    EntityManager::Type type = magic_enum::enum_cast<EntityManager::Type>(object["type"].GetString()).value();
-    //for (auto i : EntityManagerTypeIterator())
+    EntitySys::Type type = magic_enum::enum_cast<EntitySys::Type>(object["type"].GetString()).value();
+    //for (auto i : EntitySysTypeIterator())
     //{
     //  //printf("Checking Type Against: %s\n", magic_enum::enum_name(i).data());
     //    // Check to see if the strings are the same (evaluates to !0 if they are)
@@ -269,9 +269,9 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
     
     // This assert should only trigger if the if check above never evaluated to true,
     // or if the object's type is set to Empty or TypeCount, which are illegal object types
-    TraceLogger::Assert(type != EntityManager::Empty && type != EntityManager::TypeCount, "type is legal.");
+    TraceLogger::Assert(type != EntitySys::Empty && type != EntitySys::TypeCount, "type is legal.");
 
-    /*if (type == EntityManager::Background)
+    /*if (type == EntitySys::Background)
     {
         printf("Here\n");
     }*/
@@ -282,7 +282,7 @@ EntityID EntityFactory::CreateObject(rapidjson::Value& object, const char * file
     if (!EntityCacher::EntityIsCached(type))
     {
         // Type is currently untemplated, going to need to do a full construction
-        resultID = EntityManager::New(type);
+        resultID = EntitySys::New(type);
         partial = false;
     }
     else

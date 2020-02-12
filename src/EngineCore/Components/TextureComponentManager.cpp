@@ -9,7 +9,7 @@
 Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/TextureComponentManager.h>
 #include <UWUEngine/constants.h>
 #include <string>
@@ -40,7 +40,7 @@ void TextureComp::InitObject(EntityID ID)
 
 TextureComp::~TextureComp()
 {
-  for (auto i : EntityManager::GetIDs())
+  for (auto i : EntitySys::GetIDs())
   {
     glDeleteTextures(1, &textureID_[i]);
   }

@@ -34,7 +34,7 @@ SpineAnimationComponentManager::SetAnimation(EntityID ID, const char* name);
 You can either call this function by providing a [spine data](../Stateless/SpineData.md) or provide the name of spine data that's already being loaded in the engine.
 
 ## Get a spine animation component
-Get a spine animation component of an [entity](../Systems/EntityManager.md) by calling this function
+Get a spine animation component of an [entity](../Systems/EntitySys.md) by calling this function
 ```cpp
 SpineAnimation& animation = SpineAnimationComponentManager::GetAnimation(EntityID);
 ```

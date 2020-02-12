@@ -29,16 +29,16 @@
 <h2 id="create-a-behavior">Create a behavior</h2>
 <p>To create a behavior, specialize a Behavior class by the type of the entity you want to make a behavior for, and it inherit the base behavior. Here is how you would create a behavior for a text object:</p>
 <pre><code class="language-cpp"><div><span class="hljs-keyword">template</span>&lt;&gt;
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Behavior</span>&lt;EntityManager::Type::Text&gt; :</span> <span class="hljs-keyword">public</span> BaseBehavior
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Behavior</span>&lt;EntitySys::Type::Text&gt; :</span> <span class="hljs-keyword">public</span> BaseBehavior
 {
 };
 </div></code></pre>
 <p>Then, in order for the manager to be able to create your behavior, you must add the prototype for the constructor specialization for your object to the allBehaviors map, declared in
 <code>BehaviorComponentManager.h</code>
 For example, for a text object to be able to use your text behavior, allBehaviors should look like this:</p>
-<pre><code class="language-cpp"><div><span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">map</span>&lt;EntityManager::Type, BaseBehavior * (* <span class="hljs-keyword">const</span>)()&gt; allBehaviors =
+<pre><code class="language-cpp"><div><span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">map</span>&lt;EntitySys::Type, BaseBehavior * (* <span class="hljs-keyword">const</span>)()&gt; allBehaviors =
 { 
-    { EntityManager::Type::Text_, CreateBehavior&lt;EntityManager::Type::Text_&gt; }
+    { EntitySys::Type::Text_, CreateBehavior&lt;EntitySys::Type::Text_&gt; }
 }
 </div></code></pre>
 <p>Finally, in order for the manager to find your constructor, include the location of its declaration to the bottom of <code>BehaviorComponentManager.h</code></p>
@@ -62,25 +62,25 @@ For example, for a text object to be able to use your text behavior, allBehavior
 <ul>
 <li>In order to get the ID of the entity that contains your behavior (so you can change its data in any behavior metod), call the base behavior's GetID() function like so:</li>
 </ul>
-<pre><code class="language-cpp"><div><span class="hljs-keyword">void</span> Behavior&lt;EntityManager::Type::Text&gt; Update()
+<pre><code class="language-cpp"><div><span class="hljs-keyword">void</span> Behavior&lt;EntitySys::Type::Text&gt; Update()
 {
     EntityID currentID = GetID();
 }
 </div></code></pre>
 <h2 id="access-your-behavior">Access your behavior</h2>
 <p>First, in order to give the entity that your behavior was specialized for your behavior, you must activate it. For example, tp create an object of type text and give it your specialized behavior component, do this:</p>
-<pre><code class="language-cpp"><div>EntityID text = EntityManager::New(EntityManager::Type::Text);
+<pre><code class="language-cpp"><div>EntityID text = EntitySys::New(EntitySys::Type::Text);
 BehaviorComponentManager::Activate(text);
 </div></code></pre>
 <p>Now, to call any of the functions defined by the base behavior, such as the Update or Deserialize methods, access the BaseBehavior for any entity directly by calling GetBaseBehavior, prototyped below:</p>
 <pre><code class="language-cpp"><div><span class="hljs-function">BaseBehavior* <span class="hljs-title">GetBaseBehavior</span><span class="hljs-params">(EntityID ID)</span></span>;
 </div></code></pre>
 <p>In order to get the specialized behavior for any entity (so you can call any entity-specific method not declared by the base behavior), you can either dynamically cast the base behavior pointer obtained by the function above, or call GetBehavior for your specialization, prototyped below:</p>
-<pre><code class="language-cpp"><div><span class="hljs-keyword">template</span>&lt;EntityManager::Type T&gt;
+<pre><code class="language-cpp"><div><span class="hljs-keyword">template</span>&lt;EntitySys::Type T&gt;
   <span class="hljs-keyword">static</span> Behavior&lt;T&gt;* GetBehavior(EntityID ID);
 </div></code></pre>
 <p>For example, you can set the text of a text object with an EntityID named text like so:</p>
-<pre><code class="language-cpp"><div>BehaviorComponentManager::GetBehavior&lt;EntityManager::Type::Text&gt;(text)-&gt;SetText();
+<pre><code class="language-cpp"><div>BehaviorComponentManager::GetBehavior&lt;EntitySys::Type::Text&gt;(text)-&gt;SetText();
 </div></code></pre>
 
     </body>

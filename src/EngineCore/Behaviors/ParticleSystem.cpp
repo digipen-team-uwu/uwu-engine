@@ -10,9 +10,9 @@
   Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/Entity/EntityCacher.h>
 #include <UWUEngine/Behaviors/ParticleSystem.h>
+#include <UWUEngine/Entity/EntitySys.h>
+#include <UWUEngine/Entity/EntityCacher.h>
 #include <UWUEngine/Engine.h>
 #include <UWUEngine/FrameLimiterSys.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
@@ -21,11 +21,13 @@
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Serialization.h>
 #include <UWUEngine/Deserialization.h>
-#include <UWUEngine/UI/UIManager.h>
+#include <UWUEngine/UI/UISys.h>
 #include "UWUEngine/Graphics/Texture/AtlasModule.h"
 #include<rttr/registration.h>
 
-typedef EntityManager::Type type;
+using namespace UWUEngine;
+
+typedef EntitySys::Type type;
 
 void Behavior<type::ParticleEmitter>::PushEvent(ParticleEvent partEvent)
 {
@@ -68,40 +70,6 @@ void Behavior<type::ParticleEmitter>::Update()
     emissionTimer.SetDuration(partEvent.emissionRate.Get());
   }
 }
-
-/*
-void Behavior<type::Trail>::Update()
-{
-  glm::vec4 color = TextureComponentManager::GetColor(GetID());
-  color.a -= FrameRateController::GetDeltaTime<float>();
-  if (color.a <= 0)
-    EntityManager::Destroy(GetID());
-  else
-  {
-    TextureComponentManager::SetColor(GetID(), color);
-  }
-}
-
-void Behavior<type::Trail>::CreateTrail(EntityID id)
-{
-  TextureComponentManager::SetFilePath(GetID(), TextureComponentManager::getFilePath(id).c_str());
-  TextureComponentManager::SetColor(GetID(), TextureComponentManager::GetColor(id));
-  TextureComponentManager::SetDimensions(TextureComponentManager::GetDimensions(id), GetID());
-  TextureAtlaser::SetAtlasData(GetID());
-  TransformComponentManager::SetTranslation(TransformComponentManager::GetTranslation(id), GetID());
-  TransformComponentManager::SetScale(TransformComponentManager::GetScale(id), GetID());
-  TransformComponentManager::SetRotation(TransformComponentManager::GetRotation(id), GetID());
-}*/
-
-/* int Behavior<type::ParticleEmitter>::GetCurrentEvent()
-{
-  return currentEvent;
-}
-
-ParticleEvent &Behavior<type::ParticleEmitter>::GetParticleEvent(int eventNumber)
-{
-  return particleEvents[eventNumber];
-}*/
 
 void Behavior<type::Particle>::InitData(ParticleEvent& partEvent)
 {

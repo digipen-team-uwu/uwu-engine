@@ -17,7 +17,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 StateMachine(Perception, false, Idle, Attack, Hurt);
 
 template<>
-class Behavior<EntityManager::Type::Perception> : public BaseBehavior, public PerceptionStateMachine
+class Behavior<EntitySys::Type::Perception> : public BaseBehavior, public PerceptionStateMachine
 {
 public:
     Behavior(EntityID ID);

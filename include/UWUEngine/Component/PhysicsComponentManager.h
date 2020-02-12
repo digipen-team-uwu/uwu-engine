@@ -14,7 +14,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <glm/vec3.hpp>
 #include <glm/matrix.hpp>
 
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Entity/EntityVector.h>
 #include <UWUEngine/Component/Component.h>
 

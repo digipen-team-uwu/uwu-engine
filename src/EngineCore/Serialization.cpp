@@ -9,7 +9,7 @@
 Copyright © 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Entity/EntityFactory.h>
 #include <UWUEngine/Serialization.h>
 #include "stdio.h"
@@ -21,7 +21,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
 #include <UWUEngine/Helper.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
+#include <UWUEngine/Debugs/LogSys.h>
 #include <sstream>
 #include <filesystem>
 #include <locale>
@@ -40,6 +40,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 using namespace Tabs;
 static char readBuffer[65536];
 using namespace rapidjson;
+using namespace UWUEngine;
 
 
 void SerializeObject(rttr::instance &obj, std::string file)
@@ -102,7 +103,7 @@ void SerializeLevel(const char* level)
   // Guarantee that every printed number is interpreted as a float by RapidJSON parsing
   stream.setf(std::ios::fixed);
 
-  // EntityManager::Serialize(stream);
+  // EntitySys::Serialize(stream);
   EntitySys::LevelSerialize(stream);
 }
 

@@ -10,7 +10,7 @@
 
 The base component is a component of [uwu Engine](../README.md).
 
-It automatically registers itself into the [Entity Manager](./Systems/EntityManager.md) which will handle construction, initialization, updating, and deconstruction of the component.
+It automatically registers itself into the [Entity Manager](./Systems/EntitySys.md) which will handle construction, initialization, updating, and deconstruction of the component.
 It is relatively easy to add new components to the engine.
 The base component is available in the ``` BaseComponent.h ``` header.
 
@@ -47,8 +47,8 @@ Now, the component can be implemented. **All members and methods must be static.
 Note: It is preferable to initialize static data members in the static initializer instead of the constructor.
 
 ### Registration
-Immediately following the declaration of the class, it is time to set up the auto-registration. You can choose what order your component updates in, as it pertains to the SystemOrder. All components update within the [Entity Manager](./Systems/EntityManager.md), but some components need to update in a particular order. If this is the case, add an entry to the ```ComponentUpdateOrder``` enumeration for your system. If the order your component updates in does not matter, simply use ```ComponentUpdateOrder::LAST```. To enable the auto-registration:
+Immediately following the declaration of the class, it is time to set up the auto-registration. You can choose what order your component updates in, as it pertains to the SystemOrder. All components update within the [Entity Manager](./Systems/EntitySys.md), but some components need to update in a particular order. If this is the case, add an entry to the ```ComponentUpdateOrder``` enumeration for your system. If the order your component updates in does not matter, simply use ```ComponentUpdateOrder::LAST```. To enable the auto-registration:
 ```cpp
-size_t RegisterComponentHelper<MyNewComponent>::RegisterComponentHelper_ID = EntityManager::AddComponent<MyNewComponent>(ComponentUpdateOrder:LAST);
+size_t RegisterComponentHelper<MyNewComponent>::RegisterComponentHelper_ID = EntitySys::AddComponent<MyNewComponent>(ComponentUpdateOrder:LAST);
 ```
 Whew. With that line, registration will be completed for you and there is nothing else to do. Your component is complete!

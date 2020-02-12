@@ -10,7 +10,7 @@ Copyright 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
 #pragma once
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/BaseSystem.h>
 #include <string>
 

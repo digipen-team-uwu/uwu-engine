@@ -13,7 +13,7 @@ Copyright � 2019 DigiPen, All rights reserved.
 #include <vector>
 #include <glm/vec3.hpp>
 #include <glm/matrix.hpp>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/Component.h>
 #include <UWUEngine/Component/MeshComponentManager.h>
 #include <UWUEngine/Component/PhysicsComponentManager.h>

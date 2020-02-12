@@ -1,7 +1,7 @@
 #pragma once
 #include <UWUEngine/Component/AnimationComponentManager.h>
 #include <UWUEngine/System.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <vector>
 #include <array>
 #include <UWUEngine/Component/PhysicsComponentManager.h>
@@ -16,7 +16,7 @@ struct BaseCachedBehavior;
 
 struct CachedEntity
 {
-  EntityManager::Type type;
+  EntitySys::Type type;
 
   struct
   {
@@ -75,9 +75,9 @@ public:
   EntityCacher();
   void CacheEntity(const CachedEntity& entity);
   void CacheBehavior(::std::string filepath, BaseCachedBehavior* behavior);
-  bool EntityIsCached(EntityManager::Type type);
+  bool EntityIsCached(EntitySys::Type type);
   EntityID CreateCachedEntity(const CachedEntity& entity);
-  const CachedEntity& GetCachedEntity(EntityManager::Type type);
+  const CachedEntity& GetCachedEntity(EntitySys::Type type);
   void Update() override {}
   void CacheFile(::std::string file);
   void InstantiateCachedBehavior(EntityID id, ::std::string fileName);
@@ -85,7 +85,7 @@ public:
   void UpdateCachedBehavior(::std::string filename);
 private:
   void MakeJsonObject(const char* filepath, rapidjson::Document& obj);
-  ::std::unordered_map<EntityManager::Type, CachedEntity> entities;
+  ::std::unordered_map<EntitySys::Type, CachedEntity> entities;
   ::std::unordered_map<::std::string, BaseCachedBehavior*> behaviors;
   ::std::vector<::std::string> cachedFilepaths;
 };

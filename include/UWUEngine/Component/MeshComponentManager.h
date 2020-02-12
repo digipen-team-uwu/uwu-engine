@@ -12,10 +12,10 @@ Copyright � 2019 DigiPen, All rights reserved.
 
 #pragma once
 #include <GL/glew.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <tuple>
 
-using Type = EntityManager::Type;
+using Type = UWUEngine::EntitySys::Type;
 namespace UWUEngine
 {
   namespace Mesh

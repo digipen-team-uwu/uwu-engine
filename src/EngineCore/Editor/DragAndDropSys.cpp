@@ -113,7 +113,7 @@ void DragAndDropSys::DropCallback(GLFWwindow* window, int count, const char** pa
     }
     TraceLogger::Log(TraceLogger::INFO, "Finished modifying path: %s\n", path.c_str());
 
-    EntityID newEnt = EntityManager::New(EntityManager::Type::Dropped);
+    EntityID newEnt = EntitySys::New(EntitySys::Type::Dropped);
     TransformComponentManager::Activate(newEnt);
     TransformComponentManager::SetScale(glm::vec3(AtlasModule::GetBrayanTexture(paths[i]), 1.f), newEnt);
     TransformComponentManager::SetTranslation(glm::vec<4, double>(worldX, worldY, worldZ, 1.0), newEnt);

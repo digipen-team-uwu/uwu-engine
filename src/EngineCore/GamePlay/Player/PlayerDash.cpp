@@ -178,7 +178,7 @@ void PlayerStateMachine::Update_Dash(float dt)
 
 
 	//TODO: redo this later
-    //if (ColliderComponentManager::IsColliding(PlayerData::GetPlayerID(), EntityManager::Solid))
+    //if (ColliderComponentManager::IsColliding(PlayerData::GetPlayerID(), EntitySys::Solid))
     //{
     //    SetNextState(Airborne);
     //}
@@ -204,12 +204,12 @@ void PlayerStateMachine::Unload_Dash()
     // Pointless
 }
 
-void Behavior<EntityManager::Type::Player>::OnCollideDash(const Event<EventType::Collision>& info)
+void Behavior<EntitySys::Type::Player>::OnCollideDash(const Event<EventType::Collision>& info)
 {
   glm::vec2 resolveAngle = CalculateResolveAngle(info);
   EntityID collidingWith = GetID() == info.obj1 ? info.obj2 : info.obj1;
 
-  switch (EntityManager::GetType(collidingWith))
+  switch (EntitySys::GetType(collidingWith))
   {
   case Type::Solid:
     //Become grounded

@@ -2,7 +2,7 @@
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 
 template<>
-class Behavior<EntityManager::Type::DebugVector> : public BaseBehavior
+class Behavior<EntitySys::Type::DebugVector> : public BaseBehavior
 {
 public:
   Behavior() : BaseBehavior() { }
@@ -11,7 +11,7 @@ private:
 };
 
 template<>
-class Behavior<EntityManager::Type::DebugRect> : public BaseBehavior
+class Behavior<EntitySys::Type::DebugRect> : public BaseBehavior
 {
 public:
   Behavior() : BaseBehavior() {}

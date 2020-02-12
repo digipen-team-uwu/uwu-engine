@@ -6,11 +6,14 @@
 #include <UWUEngine/Helper.h>
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Event/Event.h>
 #include <UWUEngine/Event/EventListener.h>
 
 namespace psc = ParticleSystemConstants;
+
+namespace UWUEngine
+{
 
 struct ParticleEvent
 {
@@ -29,26 +32,26 @@ struct ParticleEvent
   }scale;
 
 
-  FlatOrRange<float> rotationalVelocity =  0;
-  
+  FlatOrRange<float> rotationalVelocity = 0;
+
   FlatOrRange<float> startRotation = 0;
 
   FlatOrRange<float> emissionRate = 1;
 
-  
-    //all 3 indexes into the vector correspond to the same particle texture
+
+  //all 3 indexes into the vector correspond to the same particle texture
   struct Sprite
   {
-    std::vector<AnimationComponentManager::AnimationData> animations;
+    std::vector<AnimationComp::AnimationData> animations;
     std::vector<std::string> textures;
     std::vector<glm::uvec2> dimensions;
   }sprite;
-  
+
   FlatOrRange<int> particlesPerEmission = 1;
 
   FlatOrRange<float> speed = 1.f;
 
-    //rotation of velocity direction vector
+  //rotation of velocity direction vector
 
   struct Direction
   {
@@ -64,9 +67,9 @@ struct ParticleEvent
 
   FlatOrRange<float> inverseMass = 1.f;
 
- std::shared_ptr<std::vector<std::shared_ptr<Polynomial>>> vectorfieldx = NULL;
+  std::shared_ptr<std::vector<std::shared_ptr<Polynomial>>> vectorfieldx = NULL;
 
- std::shared_ptr<std::vector<std::shared_ptr<Polynomial>>> vectorfieldy = NULL;
+  std::shared_ptr<std::vector<std::shared_ptr<Polynomial>>> vectorfieldy = NULL;
 
   bool endWithAnimation = false;
 
@@ -78,12 +81,12 @@ struct ParticleEvent
 };
 
 template<>
-class Behavior<EntityManager::Type::Particle> : public BaseBehavior
+class Behavior<EntitySys::Type::Particle> : public BaseBehavior
 {
 public:
   Behavior(EntityID id) : BaseBehavior(id) {}
   void Update();
-  void InitData(ParticleEvent &partEvent);
+  void InitData(ParticleEvent& partEvent);
 
   //void OnCollide(const Event<EventType::Collision>& info);
 private:
@@ -94,8 +97,8 @@ private:
   glm::vec3 endScale{};
   std::shared_ptr<Polynomial> vectorfieldx;
   std::shared_ptr<Polynomial> vectorfieldy;
-  float colorRate {};
-  float scaleRate {};
+  float colorRate{};
+  float scaleRate{};
   bool endWithAnimation = false;
   bool rotateByVelocity = false;
   bool UIParticle = false;
@@ -104,20 +107,10 @@ private:
 };
 
 template<>
-class Behavior<EntityManager::Type::Trail> : public BaseBehavior
+class Behavior<EntitySys::Type::ParticleEmitter> : public BaseBehavior
 {
 public:
   Behavior(EntityID id) : BaseBehavior(id) {}
-  void Update();
-  void CreateTrail(EntityID id);
-private:
-};
-
-template<>
-class Behavior<EntityManager::Type::ParticleEmitter> : public BaseBehavior
-{
-public:
-  Behavior(EntityID id) : BaseBehavior(id){}
   void Update();
   void Deserialize(rapidjson::Value& object, EntityID ID, const char* filePath);
   void PushEvent(ParticleEvent partEvent);
@@ -126,17 +119,19 @@ public:
   //int GetCurrentEvent();
   //ParticleEvent &GetParticleEvent(int eventNumber);
 private:
-  Timer emissionTimer;
+  TimerSys::Timer emissionTimer;
   std::vector<ParticleEvent> particleEvents;
-  Timer eventTimer;
+  TimerSys::Timer eventTimer;
   int currentEvent = 0;
   std::string name;
 };
 
 template<>
-class CachedBehavior<EntityManager::Type::ParticleEmitter> : public BaseCachedBehavior
+class CachedBehavior<EntitySys::Type::ParticleEmitter> : public BaseCachedBehavior
 {
   std::vector<ParticleEvent> particleEvents;
   void Deserialize(rapidjson::Value& object);
   void InstantiateBehavior(EntityID id);
 };
+
+}

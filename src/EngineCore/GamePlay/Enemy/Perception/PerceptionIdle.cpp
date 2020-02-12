@@ -26,19 +26,19 @@ Copyright © 2019 DigiPen, All rights reserved.
 // Not used right now, so 0.0f
 #define AGGRO_Y_OFFSET 0.0f
 
-void Behavior<EntityManager::Type::Perception>::Enter_Idle()
+void Behavior<EntitySys::Type::Perception>::Enter_Idle()
 {
     // Set the idle animation
     SpineAnimationComponentManager::GetAnimation(GetID()).ChangeAnimation("Idle", true);
     ColliderComp::SetCollider(GetID(), idleCollider);
 }
 
-void Behavior<EntityManager::Type::Perception>::Load_Idle()
+void Behavior<EntitySys::Type::Perception>::Load_Idle()
 {
     // Exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Update_Idle(float dt)
+void Behavior<EntitySys::Type::Perception>::Update_Idle(float dt)
 {
   //SoundInterface::playSound("perception_idle");
     // Get the player's ID
@@ -80,12 +80,12 @@ void Behavior<EntityManager::Type::Perception>::Update_Idle(float dt)
     }
 }
 
-void Behavior<EntityManager::Type::Perception>::Unload_Idle()
+void Behavior<EntitySys::Type::Perception>::Unload_Idle()
 {
     // Exists to suppress compiler errors
 }
 
-void Behavior<EntityManager::Type::Perception>::Exit_Idle()
+void Behavior<EntitySys::Type::Perception>::Exit_Idle()
 {
     // For now, exists to suppress compiler errors
 }

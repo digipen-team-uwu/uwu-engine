@@ -12,13 +12,13 @@
 /******************************************************************************/
 #include <UWUEngine/Component/BehaviorComponentManager.h>
 #include <UWUEngine/Graphics/RenderSys.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 
 namespace UWUEngine
 {
   BehaviorComp::~BehaviorComponentManager()
   {
-    auto ids = EntityManager::GetIDs();
+    auto ids = EntitySys::GetIDs();
     auto it = ids.begin();
     while (it != ids.end())
     {
@@ -58,14 +58,14 @@ namespace UWUEngine
 
   void BehaviorComp::InitObject(EntityID ID)
   {
-    const auto funct = allBehaviors.find(EntityManager::GetType(ID));
+    const auto funct = allBehaviors.find(EntitySys::GetType(ID));
     if (funct != allBehaviors.end())
     {
       behaviors[ID] = funct->second(ID);
     }
   }
 
-  BaseCachedBehavior* BehaviorComp::CreateCachedBehavior(EntityManager::Type type)
+  BaseCachedBehavior* BehaviorComp::CreateCachedBehavior(EntitySys::Type type)
   {
     const auto funct = allCachedBehaviors.find(type);
     if (funct != allCachedBehaviors.end())
@@ -93,7 +93,7 @@ namespace UWUEngine
   void BaseCachedBehavior::Instantiate(EntityID ID)
   {
     //+2 because of the slash
-    std::string key = filepath.substr(strlen(SerializationConstants::JSON_PATH) + 2 + magic_enum::enum_name(EntityManager::GetType(ID)).size());
+    std::string key = filepath.substr(strlen(SerializationConstants::JSON_PATH) + 2 + magic_enum::enum_name(EntitySys::GetType(ID)).size());
     //strip .json
     key = key.substr(0, key.size() - 5);
     BehaviorComp::GetBaseBehavior(ID)->SetKey(key);

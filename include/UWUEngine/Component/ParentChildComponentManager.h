@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/Component.h>
 
 

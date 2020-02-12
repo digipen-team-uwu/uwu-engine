@@ -19,7 +19,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Editor/Components/EditorPhysics.h>
 
 #include <imgui.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <magic_enum.hpp>
 
 using namespace Editors;
@@ -60,7 +60,7 @@ void ComponentViewer::Update()
   //Create a place holder with type name
   if (!EntityViewer::HasName(selected))
   {
-    EntityViewer::SetName(selected, magic_enum::enum_name(EntityManager::GetType(selected)).data());
+    EntityViewer::SetName(selected, magic_enum::enum_name(EntitySys::GetType(selected)).data());
   }
   std::string& name = EntityViewer::name.find(selected)->second;
 

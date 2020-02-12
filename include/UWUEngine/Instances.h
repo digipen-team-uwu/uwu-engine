@@ -11,7 +11,7 @@ Copyright 2019 DigiPen, All rights reserved.
 /******************************************************************************/
 #pragma once
 #include <GL/glew.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <unordered_map>
 #include <UWUEngine/Entity/EntityVector.h>
 

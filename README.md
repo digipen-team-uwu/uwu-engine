@@ -12,7 +12,7 @@ To see all the libraries we used in the UWU Engine, goto [Libraries](docs/Librar
 All systems are derived from the [base system](docs/Systems/BaseSystem.md).
 The following **systems** are currently implemented in UWU Engine:
 - [Finite State Machine](docs/Systems/StateMachine.md)
-- [Entity Manager](docs/Systems/EntityManager.md)
+- [Entity Manager](docs/Systems/EntitySys.md)
 - [Entity Factory](docs/Systems/EntityFactory.md)
 - [Frame Rate Controller](docs/Systems/FrameRateController.md)
 - [Render](docs/Systems/Render.md)

@@ -89,7 +89,7 @@ public:
 	//    a const ref to container of ids
 	Type GetType(EntityID ID);
 	//! \brief
-	//    starts up the EntityManager
+	//    starts up the EntitySys
 	//    call only once at the beginning of the game
 	//  \return
 	//    nothing  

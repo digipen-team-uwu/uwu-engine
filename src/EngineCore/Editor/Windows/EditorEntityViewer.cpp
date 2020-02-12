@@ -12,7 +12,7 @@ Copyright © 2019 DigiPen, All rights reserved.
 
 #include <UWUEngine/Editor/Windows/EditorEntityViewer.h>
 #include <UWUEngine/Editor/EditorHelper.h>
-#include <UWUEngine/Entity/EntityManager.h>
+#include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Component/ParentChildComponentManager.h>
 
 #include <magic_enum.hpp>
@@ -41,7 +41,7 @@ void EntityViewer::Update()
   PopUpRightClick();
 
   //Iterate through EntityID container
-  for (auto id : EntityManager::GetIDs())
+  for (auto id : EntitySys::GetIDs())
   {
     //If the current entity is a child, skip
     if (ParentChildComponentManager::GetParent(id))
@@ -97,7 +97,7 @@ void EntityViewer::UpdateEntity(EntityID id)
   //Get the name of the child, if there's no name get the type
   const std::string& name = HasName(id) ? 
   GetName(id) :
-  magic_enum::enum_name(EntityManager::GetType(id)).data();
+  magic_enum::enum_name(EntitySys::GetType(id)).data();
 
   //Set Node Flags
   //If children is empty
@@ -153,12 +153,12 @@ void EntityViewer::PopUpRightClick()
     HelpMarker("This is work in progress");
     if (ImGui::Button("Delete"))
     {
-      EntityManager::Destroy(selected);
+      EntitySys::Destroy(selected);
       ImGui::CloseCurrentPopup();
     }
     if (ImGui::Button("Delete All"))
     {
-      EntityManager::DestroyAll();
+      EntitySys::DestroyAll();
       ImGui::CloseCurrentPopup();
     }
     ImGui::EndPopup();

@@ -7,12 +7,12 @@
 #define STUN_TIME 0.5f
 #define DEATH_TIME 0.5F
 
-void Behavior<EntityManager::Type::Fang_>::Load_Hurt()
+void Behavior<EntitySys::Type::Fang_>::Load_Hurt()
 {
     // DNI
 }
 
-void Behavior<EntityManager::Type::Fang_>::Enter_Hurt()
+void Behavior<EntitySys::Type::Fang_>::Enter_Hurt()
 {
     health -= 1;
     if (health > 99999)
@@ -35,14 +35,14 @@ void Behavior<EntityManager::Type::Fang_>::Enter_Hurt()
     }
 }
 
-void Behavior<EntityManager::Type::Fang_>::Update_Hurt(float dt)
+void Behavior<EntitySys::Type::Fang_>::Update_Hurt(float dt)
 {
     hurtTimeRemaining -= dt;
     if (hurtTimeRemaining <= 0)
     {
         if (health == 0)
         {
-            EntityManager::Destroy(GetID());
+            EntitySys::Destroy(GetID());
         }
         else
         {
@@ -51,12 +51,12 @@ void Behavior<EntityManager::Type::Fang_>::Update_Hurt(float dt)
     }
 }
 
-void Behavior<EntityManager::Type::Fang_>::Exit_Hurt()
+void Behavior<EntitySys::Type::Fang_>::Exit_Hurt()
 {
     // Currently exists to suppress compiler warnings
 }
 
-void Behavior<EntityManager::Type::Fang_>::Unload_Hurt()
+void Behavior<EntitySys::Type::Fang_>::Unload_Hurt()
 {
 	// DNI
 }
