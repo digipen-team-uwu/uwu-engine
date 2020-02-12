@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <UWUEngine/Timer.h>
 #include <UWUEngine/Helper.h>
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Component/AnimationComponentManager.h>
 #include <UWUEngine/Entity/EntitySys.h>
 #include <UWUEngine/Event/Event.h>

@@ -50,7 +50,7 @@ void AnimationComp::SetCurrentAnimation(int currentAnimation, EntityID id)
 
 void AnimationComp::Update()
 {
-    std::vector<EntityID> ids = EntitySys::GetIDs();
+    std::vector<EntityID> ids = Get<EntitySys>().GetIDs();
     auto it = ids.begin();
     while (it != ids.end())
     {
@@ -60,7 +60,7 @@ void AnimationComp::Update()
             AnimationData& data = GetCurrentData(*it);
             if (data.isRunning_)
             {
-              data.frameDelay_ -= FrameLimiterSys::GetDeltaTime<float>();
+              data.frameDelay_ -= Get<FrameLimiterSys>().GetDeltaTime<float>();
               if (data.frameDelay_ < 0)
               {
                 ++data.currentFrame_;

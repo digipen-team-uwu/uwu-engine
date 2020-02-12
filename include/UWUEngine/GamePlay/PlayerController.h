@@ -12,7 +12,7 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #pragma once
 
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/statemachine.hpp>
 #include <UWUEngine/Timer.h>
 

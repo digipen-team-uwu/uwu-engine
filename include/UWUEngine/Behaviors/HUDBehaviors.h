@@ -1,5 +1,5 @@
 #pragma once
-#include <UWUEngine/Component/BehaviorComponentManager.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 
 namespace UWUEngine
 {
