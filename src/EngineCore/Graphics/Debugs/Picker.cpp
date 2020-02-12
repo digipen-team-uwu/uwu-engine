@@ -1,23 +1,17 @@
 #include <UWUEngine/Graphics/Debugs/Picker.h>
-#include <UWUEngine/Input/InputManager.h>
-#include <UWUEngine/Graphics/Camera.h>
+#include <UWUEngine/Input/InputSys.h>
+#include <UWUEngine/Graphics/CameraSys.h>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/WindowManager.h>
+#include <UWUEngine/WindowSys.h>
 #include <UWUEngine/Component/TransformComponentManager.h>
 #include "UWUEngine/Editor/Windows/EditorEntityViewer.h"
-#include "UWUEngine/Debugs/TraceLogger.h"
+#include "UWUEngine/Debugs/LogSys.h"
 #include "UWUEngine/Component/TextureComponentManager.h"
 #include <glm/gtx/intersect.hpp>
 
-glm::mat3 Picker::GLFW_to_vp;
-glm::mat3 Picker::ndc_to_vp;
-glm::mat3 Picker::ndc_to_vf;
-glm::vec3 Picker::mouse_world;
-EntityID Picker::saved_ID;
-float Picker::saved_d;
-std::unordered_map<EntityID, float> Picker::ID_and_distance;
+using namespace UWUEngine;
 
-Picker::Picker()
+Picker::Picker(ISpace* p) : System(p)
 {
   saved_d = std::numeric_limits<float>::max();
   saved_ID = static_cast<unsigned>(-1);
@@ -53,8 +47,8 @@ void Picker::Update()
 void Picker::CalculateMouseWorld(glm::vec2 Pos)
 {
   glm::vec3 mousePos = glm::vec3(Pos, 1.0f);
-  float width = WindowManager::getWindowWidth();
-  float height = WindowManager::getWindowHeight();
+  float width = Get<WindowSys>().getWindowWidth();
+  float height = Get<WindowSys>().getWindowHeight();
 
 #pragma region convert glfw to viewport
   GLFW_to_vp = glm::mat3(1.0f);
@@ -79,10 +73,10 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
 #pragma endregion
 
 #pragma region convert ndc to view finder
-  float fov = Camera::getFOV();
-  float nearDist = Camera::getNearDistance();
+  float fov = Get<CameraSys>().getFOV();
+  float nearDist = Get<CameraSys>().getNearDistance();
   float height_vf = 2.f * nearDist * tanf(glm::radians(fov) / 2.0f);
-  float aspectRatio = Camera::getAspectRatio();
+  float aspectRatio = Get<CameraSys>().getAspectRatio();
   float width_vf = aspectRatio * height_vf;
 
   ndc_to_vf = glm::mat3(1.0f);
@@ -93,7 +87,7 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
   ndc_to_vf[2].y = 0.0f;
   ndc_to_vf[2].z = 1.0f;
 
-  glm::vec3 mouse_vf = glm::mat3(glm::inverse(Camera::GetProjectionMatrix())) * mouse_ndc;
+  glm::vec3 mouse_vf = glm::mat3(glm::inverse(Get<CameraSys>().GetProjectionMatrix())) * mouse_ndc;
 #pragma endregion 
 
 #pragma region convert view finder to view frame
@@ -101,7 +95,7 @@ void Picker::CalculateMouseWorld(glm::vec2 Pos)
 #pragma endregion 
 
 #pragma region convert view frame to world
-  glm::mat4 world_to_view = Camera::GetViewMatrix();
+  glm::mat4 world_to_view = Get<CameraSys>().GetViewMatrix();
   glm::mat4 view_to_world = glm::inverse(world_to_view);
   glm::vec4 temp = view_to_world * mouse_v;
   mouse_world = glm::vec3(temp);
@@ -125,8 +119,8 @@ bool Picker::IsPointInAABB(AABB aabb, Point p)
 void Picker::Pick()
 {
   // get a list of current active objects
-  auto ids = EntityManager::GetIDs();
-  auto cameraPos = Camera::GetCameraPosition();
+  auto ids = Get<EntitySys>().GetIDs();
+  auto cameraPos = Get<CameraSys>().GetPosition();
   for (auto it = ids.begin(); it != ids.end(); ++it)
   {
     // ray form: r(t) = cameraPos + t * (P_world - cameraPos) = cameraPos + t*d

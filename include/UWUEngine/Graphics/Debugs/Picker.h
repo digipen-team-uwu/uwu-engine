@@ -1,11 +1,14 @@
 #pragma once
 #include <unordered_map>
-#include <UWUEngine/Entity/EntityManager.h>
-#include <UWUEngine/BaseSystem.h>
+#include <UWUEngine/Entity/EntitySys.h>
+#include <UWUEngine/System.h>
 
 using Point = glm::vec2;
 
-class Picker : public BaseSystem<Picker>
+namespace UWUEngine
+{
+
+class Picker : public System
 {
 public:
 
@@ -25,23 +28,25 @@ public:
     Total
   };
 
-  Picker();
+  Picker(ISpace*);
   ~Picker() = default;
   void Update() override;
-  static void Pick();
-  static void PickID();
-  static glm::vec2 GetMouseWorld();
-  static void CalculateMouseWorld(glm::vec2 Pos);
-  static void Attaching(EntityID ID);
-  static void Detaching();
+  void Pick();
+  void PickID();
+  glm::vec2 GetMouseWorld();
+  void CalculateMouseWorld(glm::vec2 Pos);
+  void Attaching(EntityID ID);
+  void Detaching();
 private:
-  static void Reset();
-  static bool IsPointInAABB(AABB aabb, Point p);
-  static glm::mat3 GLFW_to_vp;
-  static glm::mat3 ndc_to_vp;
-  static glm::mat3 ndc_to_vf;
-  static glm::vec3 mouse_world;
-  static EntityID saved_ID;
-  static float saved_d;
-  static std::unordered_map<EntityID, float> ID_and_distance;
+  void Reset();
+  bool IsPointInAABB(AABB aabb, Point p);
+  glm::mat3 GLFW_to_vp;
+  glm::mat3 ndc_to_vp;
+  glm::mat3 ndc_to_vf;
+  glm::vec3 mouse_world;
+  EntityID saved_ID;
+  float saved_d;
+  std::unordered_map<EntityID, float> ID_and_distance;
 };
+
+}
