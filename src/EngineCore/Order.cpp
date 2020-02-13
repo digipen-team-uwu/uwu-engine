@@ -14,6 +14,12 @@ SystemOrder GetSystemOrder<WindowSys>()
 }
 
 template<>
+SystemOrder GetSystemOrder<FrameLimiterSys>()
+{
+  return SystemOrder::FrameLimiter;
+}
+
+template<>
 SystemOrder GetSystemOrder<LogSys>()
 {
   return SystemOrder::Log;

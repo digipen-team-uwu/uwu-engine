@@ -12,6 +12,6 @@ namespace UWUEngine
     ~Engine() = default;
     void Run();
   private:
-    Space<System, LogSys, WindowSys> systems;
+    Space<System, LogSys, WindowSys, FrameLimiterSys> systems;
   };
 }

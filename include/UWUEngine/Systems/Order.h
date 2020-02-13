@@ -9,7 +9,7 @@ enum class SystemOrder : unsigned
 {
   Invalid = -1,
   Log,
-  FrameRate,
+  FrameLimiter,
   StateMachine,
   SceneManager,
   Editor,
