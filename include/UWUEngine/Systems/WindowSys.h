@@ -36,8 +36,8 @@ public:
   [[nodiscard]]
   bool shouldClose() const;
 
-  float getWindowHeight();
-  float getWindowWidth();
+  float getWindowHeight() const;
+  float getWindowWidth() const;
 private:
   /* ======== DATA MEMBERS ======== */
 

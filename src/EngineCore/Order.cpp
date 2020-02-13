@@ -37,4 +37,10 @@ SystemOrder GetSystemOrder<InputSys>()
   return SystemOrder::Input;
 }
 
+template<>
+SystemOrder GetSystemOrder<TimerSys>()
+{
+  return SystemOrder::Timer;
+}
+
 } // namespace UWUEngine

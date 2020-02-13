@@ -13,14 +13,14 @@ namespace UWUEngine
     void Run();
   private:
     //These are in new lines now because they are our init order now.
-    Space<
-    System,
+    Space<System,
 
     LogSys,
     WindowSys,
     InputSys,
     FrameLimiterSys,
-    EventSys
+    EventSys,
+    TimerSys
     > systems;
   };
 }

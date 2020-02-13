@@ -100,12 +100,12 @@ void WindowSys::SetupGLEW()
   }
 }
 
-float WindowSys::getWindowHeight()
+float WindowSys::getWindowHeight() const
 {
   return static_cast<float>(WindowConstants::WINDOW_HEIGHT);
 }
 
-float WindowSys::getWindowWidth()
+float WindowSys::getWindowWidth() const
 {
   return static_cast<float>(WindowConstants::WINDOW_WIDTH);
 }
