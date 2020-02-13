@@ -12,7 +12,6 @@ enum class SystemOrder : unsigned
   Log,
   Input,
   FrameLimiter,
-  StateMachine,
   SceneManager,
   Editor,
   Entity,

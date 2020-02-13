@@ -43,4 +43,10 @@ SystemOrder GetSystemOrder<TimerSys>()
   return SystemOrder::Timer;
 }
 
+template<>
+SystemOrder GetSystemOrder<SceneSys>()
+{
+  return SystemOrder::SceneManager;
+}
+
 } // namespace UWUEngine

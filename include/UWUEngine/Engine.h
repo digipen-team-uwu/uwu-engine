@@ -20,7 +20,8 @@ namespace UWUEngine
     InputSys,
     FrameLimiterSys,
     EventSys,
-    TimerSys
+    TimerSys,
+    SceneSys
     > systems;
   };
 }
