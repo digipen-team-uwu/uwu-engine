@@ -10,17 +10,16 @@
     */
 /******************************************************************************/
 
-#include <UWUEngine/WindowSys.h>
+#include <UWUEngine/Systems/WindowSys.h>
 #include <UWUEngine/constants.h>
-#include <UWUEngine/Debugs/TraceLogger.h>
-#include <UWUEngine/Debugs/SystemException.h>
+#include <UWUEngine/Systems/LogSys.h>
+#include <UWUEngine/Debug/SystemException.h>
 
 namespace wc = WindowConstants;
 
 /* ======== HELPER FUNCTION DECLARATIONS ======= */
 namespace
 {
-void setup_glew();
 void setup_hints() noexcept;
 }
 
@@ -30,7 +29,7 @@ namespace UWUEngine
 WindowSys::WindowSys(ISpace* p) : System(p)
 {
   SetupGLFW();
-  setup_glew();
+  SetupGLEW();
 }
 
 WindowSys::~WindowSys()
@@ -57,7 +56,7 @@ void WindowSys::SetupGLFW()
     const auto error = glfwGetError(buffer);
     if (error)
     {
-      TraceLogger::Log(TraceLogger::FAILURE) << "COULD NOT INITIALIZE GLFW! " << std::string(*buffer) << std::endl;
+      Get<LogSys>().Log(LogSys::FAILURE) << "COULD NOT INITIALIZE GLFW! " << std::string(*buffer) << std::endl;
       throw SystemStartupException<WindowSys>();
     }
   }
@@ -70,7 +69,7 @@ void WindowSys::SetupGLFW()
   {
     const char** buffer;
     glfwGetError(buffer);
-    TraceLogger::Log(TraceLogger::FAILURE) << "Window Not Opened Properly!" << std::string(*buffer) << std::endl;
+    Get<LogSys>().Log(LogSys::FAILURE) << "Window Not Opened Properly!" << std::string(*buffer) << std::endl;
     throw SystemStartupException<WindowSys>();
   }
 
@@ -80,32 +79,47 @@ void WindowSys::SetupGLFW()
   glfwSwapInterval(1);
 }
 
-} // namespace UWUEngine
-
-/* ====== HELPER FUNCTION IMPLEMENTATIONS ====== */
-namespace
-{
-
-void setup_glew()
+void WindowSys::SetupGLEW()
 {
   const auto err = glewInit();
   if (GLEW_OK != err)
   {
-    TraceLogger::Log(TraceLogger::FAILURE) << "Unable to initialize GLEW - error: "
+    Get<LogSys>().Log(LogSys::FAILURE) << "Unable to initialize GLEW - error: "
       << glewGetErrorString(err) << std::endl;
     throw SystemStartupException<UWUEngine::WindowSys>();
   }
   if (GLEW_VERSION_4_5)
   {
-    TraceLogger::Log(TraceLogger::INFO) << "Using GLEW version: " << glewGetString(GLEW_VERSION) << std::endl;
-    TraceLogger::Log(TraceLogger::INFO) << "Driver supports OpenGL 4.5" << std::endl;
+    Get<LogSys>().Log(LogSys::INFO) << "Using GLEW version: " << glewGetString(GLEW_VERSION) << std::endl;
+    Get<LogSys>().Log(LogSys::INFO) << "Driver supports OpenGL 4.5" << std::endl;
   }
   else
   {
-    TraceLogger::Log(TraceLogger::FAILURE) << "Driver doesn't support OpenGL 4.5" << std::endl;
+    Get<LogSys>().Log(LogSys::FAILURE) << "Driver doesn't support OpenGL 4.5" << std::endl;
     throw SystemStartupException<UWUEngine::WindowSys>();
   }
 }
+
+float WindowSys::getWindowHeight()
+{
+  return static_cast<float>(WindowConstants::WINDOW_HEIGHT);
+}
+
+float WindowSys::getWindowWidth()
+{
+  return static_cast<float>(WindowConstants::WINDOW_WIDTH);
+}
+
+bool WindowSys::shouldClose() const
+{
+  return glfwWindowShouldClose(getWindowHandle());
+}
+
+} // namespace UWUEngine
+
+/* ====== HELPER FUNCTION IMPLEMENTATIONS ====== */
+namespace
+{
 
 void setup_hints() noexcept
 {
@@ -127,19 +141,4 @@ void setup_hints() noexcept
   glfwWindowHint(GLFW_DEPTH_BITS, 32);
 }
 
-}
-
-float WindowManager::getWindowHeight()
-{
-  return static_cast<float>(WindowConstants::WINDOW_HEIGHT);
-}
-
-float WindowManager::getWindowWidth()
-{
-  return static_cast<float>(WindowConstants::WINDOW_WIDTH);
-}
-
-void WindowManager::Update()
-{
-  glfwSwapBuffers(window_);
 }

@@ -1,9 +1,10 @@
 #pragma once
 #include <type_traits>
 #include <string>
-#include <UWUEngine/Entity/EntitySys.h>
-#include <UWUEngine/Random.h>
+//#include <UWUEngine/Entity/EntitySys.h>
+//#include <UWUEngine/Random.h>
 #include <fstream>
+#include <glm/glm.hpp>
 
 #define EXPAND(x) x
 

@@ -1,4 +1,5 @@
 #include <UWUEngine/Helper.h>
+#include <algorithm>
 
 std::string str_toupper(std::string const& str)
 {

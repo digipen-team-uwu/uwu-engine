@@ -5,6 +5,7 @@
 #include <UWUTest/Helper/TestFloat.hpp>
 
 #include <glm/gtc/constants.hpp>
+#include <iostream>
 
 using namespace UWUTest;
 

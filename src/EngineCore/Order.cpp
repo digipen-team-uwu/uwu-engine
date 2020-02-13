@@ -1,26 +1,22 @@
-#include <UWUEngine/Order.h>
+#include <UWUEngine/Systems/Order.h>
 
 #pragma region system_includes
-#include <UWUEngine/WindowSys.h>
-#include <UWUEngine/Timer.h>
-#include <UWUEngine/Scene/SceneSys.h>
+#include <UWUEngine/Systems/AllSystems.h>
 #pragma endregion 
 
 namespace UWUEngine
 {
 
 template<>
-constexpr SystemOrder GetSystemOrder<WindowSys>()
+SystemOrder GetSystemOrder<WindowSys>()
 {
   return SystemOrder::Window;
 }
 
 template<>
-constexpr SystemOrder GetSystemOrder<TimerSys>()
+SystemOrder GetSystemOrder<LogSys>()
 {
-  return SystemOrder::Timer;
+  return SystemOrder::Log;
 }
-
-
 
 } // namespace UWUEngine
