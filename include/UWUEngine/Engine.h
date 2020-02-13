@@ -12,6 +12,13 @@ namespace UWUEngine
     ~Engine() = default;
     void Run();
   private:
-    Space<System, LogSys, WindowSys, FrameLimiterSys> systems;
+    //These are in new lines now because they are our init order now.
+    Space<
+    System,
+    LogSys,
+    WindowSys,
+    FrameLimiterSys,
+    EventSys
+    > systems;
   };
 }

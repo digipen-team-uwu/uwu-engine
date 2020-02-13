@@ -8,6 +8,7 @@ namespace UWUEngine
 enum class SystemOrder : unsigned
 {
   Invalid = -1,
+  Event,
   Log,
   FrameLimiter,
   StateMachine,
@@ -23,7 +24,6 @@ enum class SystemOrder : unsigned
   Debug,
   Timer,
   Camera,
-  Event,
   Render,
   Action,
   Input,

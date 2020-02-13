@@ -25,4 +25,10 @@ SystemOrder GetSystemOrder<LogSys>()
   return SystemOrder::Log;
 }
 
+template<>
+SystemOrder GetSystemOrder<EventSys>()
+{
+  return SystemOrder::Event;
+}
+
 } // namespace UWUEngine
