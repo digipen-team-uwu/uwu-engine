@@ -86,7 +86,7 @@ void WindowSys::SetupGLEW()
   {
     Get<LogSys>().Log(LogSys::FAILURE) << "Unable to initialize GLEW - error: "
       << glewGetErrorString(err) << std::endl;
-    throw SystemStartupException<UWUEngine::WindowSys>();
+    throw SystemStartupException<WindowSys>();
   }
   if (GLEW_VERSION_4_5)
   {
@@ -96,7 +96,7 @@ void WindowSys::SetupGLEW()
   else
   {
     Get<LogSys>().Log(LogSys::FAILURE) << "Driver doesn't support OpenGL 4.5" << std::endl;
-    throw SystemStartupException<UWUEngine::WindowSys>();
+    throw SystemStartupException<WindowSys>();
   }
 }
 

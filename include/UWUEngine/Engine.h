@@ -15,8 +15,10 @@ namespace UWUEngine
     //These are in new lines now because they are our init order now.
     Space<
     System,
+
     LogSys,
     WindowSys,
+    InputSys,
     FrameLimiterSys,
     EventSys
     > systems;

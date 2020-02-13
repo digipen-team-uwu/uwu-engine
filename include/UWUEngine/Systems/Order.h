@@ -10,6 +10,7 @@ enum class SystemOrder : unsigned
   Invalid = -1,
   Event,
   Log,
+  Input,
   FrameLimiter,
   StateMachine,
   SceneManager,
@@ -26,7 +27,7 @@ enum class SystemOrder : unsigned
   Camera,
   Render,
   Action,
-  Input,
+  
   Window,
 };
 

@@ -31,4 +31,10 @@ SystemOrder GetSystemOrder<EventSys>()
   return SystemOrder::Event;
 }
 
+template<>
+SystemOrder GetSystemOrder<InputSys>()
+{
+  return SystemOrder::Input;
+}
+
 } // namespace UWUEngine

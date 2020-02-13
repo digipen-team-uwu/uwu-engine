@@ -56,7 +56,7 @@ namespace UWUEngine
     std::map<EventType, IEventDispatcher*> dispatchers;
   };
 }
-#include "Event.inl"
+#include <UWUEngine/Event/Event.inl>
 
 #pragma region EventSpecialization
 #include <UWUEngine/Event/Type/Collision.h>
