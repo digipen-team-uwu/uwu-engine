@@ -1,7 +1,11 @@
 #pragma once
 
-struct EngineSettings
+namespace UWUEngine
 {
-  static bool Lighting;
-  static bool DynamicCamera;
-};
+  struct EngineSettings
+  {
+    static bool Editor;
+    static bool Lighting;
+    static bool DynamicCamera;
+  };
+}

@@ -14,6 +14,7 @@
 #include <UWUEngine/Systems/LogSys.h>
 #include <UWUEngine/Systems/FrameLimiterSys.h>
 #include <UWUEngine/Helper.h>
+#include <UWUEngine/EngineSettings.h>
 
 #include <cctype>
 #include <array>
@@ -56,14 +57,28 @@ void InputSys::PushInput(std::map<int, ic::InputResult>& map, int key, int actio
 
 void InputSys::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 {
-  ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
+  if (EngineSettings::Editor)
+  {
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mod);
+    if (ImGui::GetIO().WantCaptureKeyboard)
+    {
+      return;
+    }
+  }
   if (action != GLFW_REPEAT)
     PushInput(keys, key, action);
 }
 
 void InputSys::MouseCallback(GLFWwindow* window, int button, int action, int mods)
 {
-  ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+  if (EngineSettings::Editor)
+  {
+    ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+    if (ImGui::GetIO().WantCaptureMouse)
+    {
+      return;
+    }
+  }
   PushInput(mouse, button, action);
 }
 
@@ -89,7 +104,14 @@ void InputSys::MousePosCallback(GLFWwindow* window, double xPos, double yPos)
 
 void InputSys::ScrollWheelCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
-  ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+  if (EngineSettings::Editor)
+  {
+    ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+    if (ImGui::GetIO().WantCaptureMouse)
+    {
+      return;
+    }
+  }
   scrollVec.x = static_cast<float>(xOffset);
   if (scrollVec.y < ic::MAX_SCROLL && scrollVec.y > -ic::MAX_SCROLL)
     scrollVec.y += static_cast<float>(yOffset)* ic::SCROLL_RATE;
