@@ -10,5 +10,7 @@ public:
   void Update() override;
   EntityID CreateEntity(ISpace*);
   void DestroyEntity(ISpace*, EntityID id);
+private:
+  void CleanDestroyeds(ISpace* space);
 };
 }

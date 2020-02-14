@@ -1,8 +1,11 @@
+#pragma once
 #include <vector>
 #include <stack>
+#include <unordered_map>
 #include <UWUEngine/Component/Component.h>
 
-using EntityID = unsigned int;
+
+
 
 namespace UWUEngine
 {
@@ -73,6 +76,8 @@ public:
     EXPIRES = 1 << 5
   };
 
+  virtual void InitObject(EntityID ID) {};
+  virtual void ShutdownObject(EntityID ID) {};
   void ResizeVectors();
   void AddVector(EntityVectorBase* vec);
   size_t GetVectorSize();
@@ -86,14 +91,15 @@ public:
   std::stack<EntityID>& GetFreeIDs();
   std::vector<EntityID>& GetIDs();
   void SetDestroyed(EntityID id);
+  std::stack<EntityID>& GetDestroyeds();
 private:
   std::vector<EntityVectorBase*> vectors;
   size_t vectorSize;
   size_t idCount;
   std::vector<EntityID> ids;
   std::stack<EntityID> freeIDs;
-  EntityVector<Tag> tags{ parent };
-  EntityVector<std::uint8_t> destroyeds{ parent };
+  std::unordered_map<EntityID, Tag> tags{};
+  std::stack<EntityID> destroyed;
 };
 
 }

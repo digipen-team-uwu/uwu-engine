@@ -25,6 +25,7 @@ namespace UWUEngine
     SceneSys,
     EntitySys,
     CameraSys,
+    CompSpaceSys,
 
     //Modules
     SpineDataMod,

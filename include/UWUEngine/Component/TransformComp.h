@@ -55,7 +55,6 @@ namespace UWUEngine
   public:
     TransformComp(ISpace* space) : Component(space) {}
     ~TransformComp() = default;
-    void Update() override {}
     void ShutdownObject(EntityID ID) override {}
     void InitObject(EntityID ID) override;
 

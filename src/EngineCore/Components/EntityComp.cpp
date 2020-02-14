@@ -20,12 +20,17 @@ void EntityComp::RemoveTag(EntityID id, EntityComp::Tag tag)
 
 bool EntityComp::HasTag(EntityID ID, EntityComp::Tag tag) const
 {
-  return tags[ID] & tag;
+  return tags.at(ID) & tag;
+}
+
+std::stack<EntityID>& EntityComp::GetDestroyeds()
+{
+  return destroyed;
 }
 
 EntityComp::Tag EntityComp::GetTags(EntityID ID) const
 {
-  return tags[ID];
+  return tags.at(ID);
 }
 
 std::stack<EntityID>& EntityComp::GetFreeIDs()
@@ -35,7 +40,7 @@ std::stack<EntityID>& EntityComp::GetFreeIDs()
 
 void EntityComp::SetDestroyed(EntityID id)
 {
-  destroyeds[id] = true;
+  destroyed.push(id);
 }
 
 std::vector<EntityID>& EntityComp::GetIDs()

@@ -13,7 +13,7 @@ public:
 };
 
 template <class Base, class ... Derived>
-class Space : ISpace
+class Space : public ISpace
 {
 public:
   template <class T>

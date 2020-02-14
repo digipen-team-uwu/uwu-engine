@@ -11,7 +11,6 @@ using EntityID = unsigned;
 class IComponent : public NonCopyable
 {
 public:
-  virtual void Update() = 0;
   virtual void InitObject(EntityID ID) = 0;
   virtual void ShutdownObject(EntityID ID) = 0;
   IComponent(ISpace* p) : parent(p) {}

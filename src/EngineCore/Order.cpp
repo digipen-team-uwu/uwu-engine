@@ -51,6 +51,12 @@ SystemOrder GetSystemOrder<TimerSys>()
 }
 
 template<>
+SystemOrder GetSystemOrder<CompSpaceSys>()
+{
+  return SystemOrder::CompSpace;
+}
+
+template<>
 SystemOrder GetSystemOrder<SceneSys>()
 {
   return SystemOrder::SceneManager;
@@ -100,6 +106,11 @@ template<>
 ComponentOrder GetComponentOrder<EntityComp>()
 {
   return ComponentOrder::Entity;
+}
+template<>
+ComponentOrder GetComponentOrder<TransformComp>()
+{
+  return ComponentOrder::Transform;
 }
 #pragma endregion 
 

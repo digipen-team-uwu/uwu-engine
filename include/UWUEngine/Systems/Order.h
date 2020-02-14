@@ -29,6 +29,7 @@ enum class SystemOrder : unsigned
   Window,
 
   //Modules, Order doesn't matter
+  CompSpace,
   TextureLoader,
   SpineData,
   UBOMod,
@@ -38,6 +39,7 @@ enum class SystemOrder : unsigned
 enum class ComponentOrder : unsigned
 {
   Entity,
+  Transform,
   Animation,
   SpineAnimation,
   SpineSkeleton,
