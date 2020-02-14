@@ -65,7 +65,7 @@ namespace UWUEngine
 class EntityComp : public Component <EntityComp, Nothing>
 {
 public:
-  EntityComp(ISpace *space) : Component(space){}
+  EntityComp(ISpace *space) : Component(space),vectorSize(0), idCount(0){}
   enum Tag : uint64_t
   {
     STATIC = 1 << 0,
