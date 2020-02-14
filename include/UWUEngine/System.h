@@ -10,7 +10,7 @@ class System : NonCopyable
 {
 public:
   System(ISpace* p) : parent(p) {}
-  virtual ~System() = default;
+  virtual ~System() = 0;
   virtual void Update() {}
 
   template <class T>

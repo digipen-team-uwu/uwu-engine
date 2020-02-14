@@ -30,6 +30,7 @@ enum class SystemOrder : unsigned
 
   //Modules, Order doesn't matter
   TextureLoader,
+  SpineData,
   UBOMod
 };
 

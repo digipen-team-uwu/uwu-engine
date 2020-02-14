@@ -27,7 +27,8 @@ namespace UWUEngine
     CameraSys,
 
     //Modules
-    TextureLoaderMod,
+    SpineDataMod,
+    TextureLoaderMod
     UBOMod
     > systems;
   };

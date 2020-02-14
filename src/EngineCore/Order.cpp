@@ -69,7 +69,6 @@ SystemOrder GetSystemOrder<CameraSys>()
 }
 #pragma endregion 
 
-
 #pragma region Modules
 template<>
 SystemOrder GetSystemOrder<TextureLoaderMod>()
@@ -83,12 +82,19 @@ SystemOrder GetSystemOrder<UBOMod>()
   return SystemOrder::UBOMod;
 }
 
+template<>
+SystemOrder GetSystemOrder<SpineDataMod>()
+{
+  return SystemOrder::SpineData;
+}
 #pragma endregion 
 
+#pragma region Components
 template<>
 ComponentOrder GetComponentOrder<EntityComp>()
 {
   return ComponentOrder::Entity;
 }
+#pragma endregion 
 
 } // namespace UWUEngine
