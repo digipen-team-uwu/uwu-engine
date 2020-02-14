@@ -6,7 +6,7 @@
 
 namespace UWUEngine
 {
-
+#pragma region Systems
 template<>
 SystemOrder GetSystemOrder<WindowSys>()
 {
@@ -48,5 +48,24 @@ SystemOrder GetSystemOrder<SceneSys>()
 {
   return SystemOrder::SceneManager;
 }
+
+template<>
+SystemOrder GetSystemOrder<RenderSys>()
+{
+  return SystemOrder::Render;
+}
+#pragma endregion 
+
+
+#pragma region Modules
+template<>
+SystemOrder GetSystemOrder<TextureLoaderMod>()
+{
+  return SystemOrder::TextureLoader;
+}
+
+
+
+#pragma endregion 
 
 } // namespace UWUEngine

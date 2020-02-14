@@ -15,7 +15,6 @@ enum class SystemOrder : unsigned
   SceneManager,
   Editor,
   Entity,
-  TexLoad,
   Atlas,
   EntityVec,
   UI,
@@ -28,6 +27,9 @@ enum class SystemOrder : unsigned
   Action,
   
   Window,
+
+  //Modules, Order doesn't matter
+  TextureLoader
 };
 
 enum class ComponentOrder : unsigned

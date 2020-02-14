@@ -17,11 +17,15 @@ namespace UWUEngine
 
     LogSys,
     WindowSys,
+    RenderSys,
     InputSys,
     FrameLimiterSys,
     EventSys,
     TimerSys,
-    SceneSys
+    SceneSys,
+
+    //Modules
+    TextureLoaderMod
     > systems;
   };
 }
