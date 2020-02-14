@@ -6,9 +6,14 @@ void Engine::Run()
 {
   while (!systems.Get<WindowSys>().shouldClose())
   {
-    for (auto s : systems)
-    {
-      s.second->Update();
-    }
+    Step();
+  }
+}
+
+void Engine::Step()
+{
+  for (auto s : systems)
+  {
+    s.second->Update();
   }
 }
