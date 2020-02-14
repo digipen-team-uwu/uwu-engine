@@ -23,6 +23,7 @@ namespace UWUEngine
     EventSys,
     TimerSys,
     SceneSys,
+    EntitySys,
 
     //Modules
     TextureLoaderMod

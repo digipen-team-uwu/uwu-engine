@@ -4,7 +4,7 @@
 
 namespace UWUEngine
 {
-
+  class IComponent;
 enum class SystemOrder : unsigned
 {
   Invalid = -1,
@@ -34,6 +34,7 @@ enum class SystemOrder : unsigned
 
 enum class ComponentOrder : unsigned
 {
+  Entity,
   Animation,
   SpineAnimation,
   SpineSkeleton,
@@ -56,10 +57,10 @@ constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<System, T
   return GetSystemOrder<T>();
 }
 
-//template <class T>
-//constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<IComponent, T>, ComponentOrder>::type
-//{
-//  return GetComponentOrder<T>();
-//}
+template <class T>
+constexpr auto GetOrder() -> typename std::enable_if<std::is_base_of_v<IComponent, T>, ComponentOrder>::type
+{
+  return GetComponentOrder<T>();
+}
 
 } // namespace UWUEngine

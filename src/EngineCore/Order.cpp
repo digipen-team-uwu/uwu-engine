@@ -2,6 +2,7 @@
 
 #pragma region system_includes
 #include <UWUEngine/Systems/AllSystems.h>
+#include <UWUEngine/Component/AllComponents.h>
 #pragma endregion 
 
 namespace UWUEngine
@@ -38,6 +39,12 @@ SystemOrder GetSystemOrder<InputSys>()
 }
 
 template<>
+SystemOrder GetSystemOrder<EntitySys>()
+{
+  return SystemOrder::Entity;
+}
+
+template<>
 SystemOrder GetSystemOrder<TimerSys>()
 {
   return SystemOrder::Timer;
@@ -67,5 +74,11 @@ SystemOrder GetSystemOrder<TextureLoaderMod>()
 
 
 #pragma endregion 
+
+template<>
+ComponentOrder GetComponentOrder<EntityComp>()
+{
+  return ComponentOrder::Entity;
+}
 
 } // namespace UWUEngine
