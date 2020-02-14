@@ -15,11 +15,12 @@ namespace UWUEngine
     EntityVectorBase(ISpace* space);
     virtual void Resize(size_t size) = 0;
   };
+
   template<typename T>
   class EntityVector : EntityVectorBase
   {
   public:
-    EntityVector(ISpace* space, size_t size = 0, T fill = {}) : EntityVectorBase(space), data(size, fill){}
+    EntityVector(ISpace* space, size_t size = 0, T fill = {}) : EntityVectorBase(space), data(size, fill) {}
     auto operator[](size_t index) -> decltype(std::vector<T>().operator[](index))
     {
       return data[index];
@@ -52,6 +53,11 @@ namespace UWUEngine
       std::iter_swap(data.begin() + pos1, data.begin() + pos2);
     }
 
+    virtual void Swap(EntityVector& rhs)
+    {
+      data.swap(rhs.data);
+    }
+
     virtual void Resize(size_t size)
     {
       data.resize(size);
@@ -60,46 +66,49 @@ namespace UWUEngine
     std::vector<T> data;
   };
 
-  class Nothing{};
+  class Nothing {};
 
-class EntityComp : public Component <EntityComp, Nothing>
-{
-public:
-  EntityComp(ISpace *space) : Component(space),vectorSize(0), idCount(0){}
-  enum Tag : uint64_t
+  class EntityComp : public Component <EntityComp, Nothing>
   {
-    STATIC = 1 << 0,
-    FALLS = 1 << 1,
-    HURTS = 1 << 2,
-    BRIGHT = 1 << 3,
-    EMITS = 1 << 4,
-    EXPIRES = 1 << 5
+  public:
+    EntityComp(ISpace* space) : Component(space), vectorSize(0), idCount(0) {}
+
+    enum Tag : uint64_t
+    {
+      STATIC = 1 << 0,
+      FALLS = 1 << 1,
+      HURTS = 1 << 2,
+      BRIGHT = 1 << 3,
+      EMITS = 1 << 4,
+      EXPIRES = 1 << 5
+    };
+
+    void ResizeVectors();
+    void AddVector(EntityVectorBase* vec);
+    size_t GetVectorSize();
+
+    void AddTag(EntityID id, Tag tag);
+    void RemoveTag(EntityID id, Tag tag);
+    bool HasTag(EntityID ID, Tag tag) const;
+    void SetTags(EntityID id, Tag tag);
+    Tag GetTags(EntityID ID) const;
+
+    size_t GetIDCount();
+    void SetIDCount(size_t count);
+    std::stack<EntityID>& GetFreeIDs();
+    std::vector<EntityID>& GetIDs();
+    void SetDestroyed(EntityID id);
+
+    virtual void InitObject(EntityID ID) {};
+    virtual void ShutdownObject(EntityID ID) {};
+    std::stack<EntityID>& GetDestroyeds();
+  private:
+    std::vector<EntityVectorBase*> vectors;
+    size_t vectorSize;
+    size_t idCount;
+    std::vector<EntityID> ids;
+    std::stack<EntityID> freeIDs;
+    std::unordered_map<EntityID, Tag> tags{};
+    std::stack<EntityID> destroyed;
   };
-
-  virtual void InitObject(EntityID ID) {};
-  virtual void ShutdownObject(EntityID ID) {};
-  void ResizeVectors();
-  void AddVector(EntityVectorBase* vec);
-  size_t GetVectorSize();
-  void AddTag(EntityID id, Tag tag);
-  void RemoveTag(EntityID id, Tag tag);
-  bool HasTag(EntityID ID, Tag tag) const;
-  void SetTags(EntityID id, Tag tag);
-  Tag GetTags(EntityID ID) const;
-  size_t GetIDCount();
-  void SetIDCount(size_t count);
-  std::stack<EntityID>& GetFreeIDs();
-  std::vector<EntityID>& GetIDs();
-  void SetDestroyed(EntityID id);
-  std::stack<EntityID>& GetDestroyeds();
-private:
-  std::vector<EntityVectorBase*> vectors;
-  size_t vectorSize;
-  size_t idCount;
-  std::vector<EntityID> ids;
-  std::stack<EntityID> freeIDs;
-  std::unordered_map<EntityID, Tag> tags{};
-  std::stack<EntityID> destroyed;
 };
-
-}

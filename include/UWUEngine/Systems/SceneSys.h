@@ -2,46 +2,44 @@
 
 #include <UWUEngine/System.h>
 #include <UWUEngine/Systems/EventSys.h>
-//#include <UWUEngine/Serialization.h>
 
 #include <unordered_map>
 #include <string>
 
-struct SceneSettings
-{
-  enum class State
-  {
-    Inherit,
-    Activate,
-    DeActivate
-  };
-  State Lighting{ State::Inherit };
-  State DynamicCamera{ State::Inherit };
-
-  void Apply() const;
-};
-
-class Scene
-{
-public:
-  Scene(std::string name);
-  Scene(std::string name, const SceneSettings& settings);
-  virtual ~Scene() = default;
-
-  virtual void Load() const;
-  virtual void UnLoad() const;
-
-  const std::string& GetName() const;
-  const SceneSettings& GetSettings() const;
-
-private:
-  SceneSettings settings_{};
-  std::string name_;
-};
-
-
 namespace UWUEngine
 {
+  struct SceneSettings
+  {
+    enum class State
+    {
+      Inherit,
+      Activate,
+      DeActivate
+    };
+    State Lighting{ State::Inherit };
+    State DynamicCamera{ State::Inherit };
+
+    void Apply() const;
+  };
+
+  class Scene
+  {
+  public:
+    Scene(std::string name);
+    Scene(std::string name, const SceneSettings& settings);
+    virtual ~Scene() = default;
+
+    virtual void Load() const;
+    virtual void UnLoad() const;
+
+    const std::string& GetName() const;
+    const SceneSettings& GetSettings() const;
+
+  private:
+    SceneSettings settings_{};
+    std::string name_;
+  };
+
   class SceneSys final : public System
   {
   public:

@@ -73,6 +73,13 @@ SystemOrder GetSystemOrder<CameraSys>()
 {
   return SystemOrder::Camera;
 }
+
+template<>
+SystemOrder GetSystemOrder<PhysicsSys>()
+{
+  return SystemOrder::Physics;
+}
+
 #pragma endregion 
 
 #pragma region Modules
@@ -87,6 +94,7 @@ SystemOrder GetSystemOrder<UBOMod>()
 {
   return SystemOrder::UBOMod;
 }
+#pragma endregion 
 
 template<>
 SystemOrder GetSystemOrder<SpineDataMod>()
@@ -102,16 +110,25 @@ SystemOrder GetSystemOrder<SSBOMod>()
 #pragma endregion 
 
 #pragma region Components
+#pragma region Component
 template<>
 ComponentOrder GetComponentOrder<EntityComp>()
 {
   return ComponentOrder::Entity;
 }
+
 template<>
 ComponentOrder GetComponentOrder<TransformComp>()
 {
   return ComponentOrder::Transform;
 }
+
+template<>
+ComponentOrder GetComponentOrder<PhysicsComp>()
+{
+  return ComponentOrder::Physics;
+}
+
 #pragma endregion 
 
 } // namespace UWUEngine

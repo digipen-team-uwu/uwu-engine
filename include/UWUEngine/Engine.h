@@ -24,8 +24,9 @@ namespace UWUEngine
     TimerSys,
     SceneSys,
     EntitySys,
-    CameraSys,
     CompSpaceSys,
+    CameraSys,
+    PhysicsSys,
 
     //Modules
     SpineDataMod,

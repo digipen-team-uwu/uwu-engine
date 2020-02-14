@@ -9,6 +9,7 @@
 Copyright � 2019 DigiPen, All rights reserved.
 */
 /******************************************************************************/
+
 #pragma once
 #include <vector>
 #include <glm/vec3.hpp>
@@ -23,7 +24,7 @@ namespace UWUEngine
   {
     class Transform;
   }
-
+  class PhysicsSys;
   class TransformComp;
 
   class Transform
@@ -81,5 +82,6 @@ namespace UWUEngine
 
     // don't know who added
     friend class Editors::Transform;
+    friend class PhysicsSys;
   };
 }

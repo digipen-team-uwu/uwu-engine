@@ -11,6 +11,7 @@
 #include <UWUEngine/Systems/RenderSys.h>
 #include <UWUEngine/Systems/EntitySys.h>
 #include <UWUEngine/Systems/CameraSys.h>
+#include <UWUEngine/Systems/PhysicsSys.h>
 #include <UWUEngine/Systems/CompSpaceSys.h>
 
 /* MODULES */

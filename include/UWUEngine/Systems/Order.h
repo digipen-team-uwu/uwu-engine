@@ -25,6 +25,7 @@ enum class SystemOrder : unsigned
   Camera,
   Render,
   Action,
+  Physics,
   
   Window,
 
@@ -33,7 +34,7 @@ enum class SystemOrder : unsigned
   TextureLoader,
   SpineData,
   UBOMod,
-  SSBOMod
+  SSBOMod,
 };
 
 enum class ComponentOrder : unsigned
