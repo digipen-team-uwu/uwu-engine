@@ -28,6 +28,12 @@ public:
   {
     return Instance(dynamic_cast<Comp*>(this), ID);
   }
+
+  template <class T>
+  auto& Get() -> std::enable_if_t<std::is_base_of_v<Component, T>>
+  {
+    return *static_cast<T*>(parent->GetObject(static_cast<unsigned>(GetOrder<T>())));
+  }
 };
 
 } // namespace UWUEngine
