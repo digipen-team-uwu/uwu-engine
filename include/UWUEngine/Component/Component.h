@@ -30,9 +30,15 @@ public:
   }
 
   template <class T>
-  auto Get() -> std::enable_if_t<std::is_base_of_v<Component, T>>
+  auto Get() -> std::enable_if_t<std::is_base_of_v<Component, T>, T&>
   {
     return *static_cast<T*>(parent->GetObject(static_cast<unsigned>(GetOrder<T>())));
+  }
+
+  template <class T>
+  auto Get() -> std::enable_if_t<std::is_base_of_v<System, T>, T&>
+  {
+    return *static_cast<T*>(parent->parent->GetObject(static_cast<unsigned>(GetOrder<T>())));
   }
 };
 

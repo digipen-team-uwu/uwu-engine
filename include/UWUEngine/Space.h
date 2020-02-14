@@ -8,8 +8,11 @@ namespace UWUEngine
 class ISpace
 {
 public:
+  ISpace(ISpace* p) : parent(p) {}
   virtual ~ISpace() = default;
   virtual void* GetObject(unsigned i) = 0;
+//protected:
+  ISpace* parent;
 };
 
 template <class Base, class ... Derived>
@@ -30,7 +33,6 @@ public:
   auto begin() -> decltype(objects.begin());
   auto end() -> decltype(objects.end());
 
-  ISpace* parent;
 };
 
 } // namespace UWUEngine
