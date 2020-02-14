@@ -34,7 +34,6 @@ void EntitySys::CleanDestroyeds(ISpace *space)
     EntityID dest = destroyed.top();
     destroyed.pop();
     ids[dest] = temp;
-    ids.back() = dest;
     ids.pop_back();
     free.push(dest);
   }

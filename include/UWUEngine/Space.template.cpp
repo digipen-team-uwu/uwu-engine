@@ -13,8 +13,9 @@ T& Space<Base, Derived...>::Get()
 }
 
 template <class Base, class ... Derived>
-Space<Base, Derived...>::Space<Base, Derived...>() :
-  objects{}
+Space<Base, Derived...>::Space<Base, Derived...>(ISpace* p) :
+  objects{},
+  parent(p)
 {
   ((objects.insert(((std::make_pair(static_cast<unsigned>(GetOrder<Derived>()), static_cast<Base*>(new Derived(this))))))), ...);
 }
@@ -22,7 +23,7 @@ Space<Base, Derived...>::Space<Base, Derived...>() :
 template <class Base, class ... Derived>
 Space<Base, Derived...>::~Space<Base, Derived...>()
 {
-  delete ((dynamic_cast<Derived*>(static_cast<Base*>(GetObject(static_cast<unsigned>(GetOrder<Derived>()))))), ...);
+  (delete (dynamic_cast<Derived*>(static_cast<Base*>(GetObject(static_cast<unsigned>(GetOrder<Derived>()))))), ...);
 }
 
 template <class Base, class ... Derived>

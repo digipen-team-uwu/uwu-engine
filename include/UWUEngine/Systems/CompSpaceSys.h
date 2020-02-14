@@ -16,7 +16,14 @@ public:
   using LightSpace        = Space<IComponent, EntityComp, TransformComp /*, LightingComp*/>;
   using DebugSpace        = Space<IComponent, EntityComp, TransformComp /*, TextureComp, BehaviorComp& */>;
 
-  CompSpaceSys(ISpace* p) : System(p) {}
+  CompSpaceSys(ISpace* p) : System(p),
+  space_environment(p),
+  space_ui(p),
+  space_particle(p),
+  space_gameplay(p),
+  space_light(p),
+  space_debug(p)
+  {}
   ~CompSpaceSys() {}
   void Update() override{}
 

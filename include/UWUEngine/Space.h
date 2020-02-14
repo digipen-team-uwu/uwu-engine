@@ -18,7 +18,7 @@ class Space : public ISpace
 public:
   template <class T>
   T& Get();
-  Space();
+  Space(ISpace* p = nullptr);
   ~Space();
 
 private:
@@ -29,6 +29,8 @@ private:
 public:
   auto begin() -> decltype(objects.begin());
   auto end() -> decltype(objects.end());
+
+  ISpace* parent;
 };
 
 } // namespace UWUEngine
