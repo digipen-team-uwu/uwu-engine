@@ -29,7 +29,8 @@ namespace UWUEngine
     //Modules
     SpineDataMod,
     TextureLoaderMod,
-    UBOMod
+    UBOMod,
+    SSBOMod
     > systems;
   };
 }

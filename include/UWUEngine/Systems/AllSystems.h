@@ -15,4 +15,5 @@
 /* MODULES */
 #include <UWUEngine/Modules/TextureLoaderMod.h>
 #include <UWUEngine/Modules/UBOMod.h>
+#include <UWUEngine/Modules/SSBOMod.h>
 #include <UWUEngine/Modules/SpineDataMod.h>

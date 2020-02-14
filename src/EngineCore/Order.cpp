@@ -87,6 +87,12 @@ SystemOrder GetSystemOrder<SpineDataMod>()
 {
   return SystemOrder::SpineData;
 }
+template<>
+SystemOrder GetSystemOrder<SSBOMod>()
+{
+  return SystemOrder::SSBOMod;
+}
+
 #pragma endregion 
 
 #pragma region Components
