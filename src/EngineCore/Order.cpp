@@ -61,6 +61,12 @@ SystemOrder GetSystemOrder<RenderSys>()
 {
   return SystemOrder::Render;
 }
+
+template<>
+SystemOrder GetSystemOrder<CameraSys>()
+{
+  return SystemOrder::Camera;
+}
 #pragma endregion 
 
 

@@ -9,5 +9,5 @@
 #include <UWUEngine/Systems/SceneSys.h>
 #include <UWUEngine/Systems/RenderSys.h>
 #include <UWUEngine/Systems/EntitySys.h>
-
+#include <UWUEngine/Systems/CameraSys.h>
 #include <UWUEngine/Modules/TextureLoaderMod.h>

@@ -24,6 +24,7 @@ namespace UWUEngine
     TimerSys,
     SceneSys,
     EntitySys,
+    CameraSys,
 
     //Modules
     TextureLoaderMod
