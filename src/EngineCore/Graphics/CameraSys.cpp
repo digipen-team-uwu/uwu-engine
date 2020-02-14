@@ -3,6 +3,7 @@
 #include <UWUEngine/Systems/LogSys.h>
 #include <UWUEngine/Systems/InputSys.h>
 #include <UWUEngine/Systems/FrameLimiterSys.h>
+#include <UWUEngine/Modules/UBOMod.h>
 
 using namespace UWUEngine;
 namespace ic = InputConstants;
@@ -66,9 +67,10 @@ void CameraSys::calculate_camera_data()
 void CameraSys::Update()
 {
   InputSys& inputSys = Get<InputSys>();
+  UBOMod& ubo = Get<UBOMod>();
   //Print_Debug_Value();
   // sending data to Camera uniform buffer
-  //UniformBuffer::ShootDataToUniformBuffer(UniformBuffer::Type::CameraSys);
+  ubo.ShootDataToUniformBuffer(ubo.Type::Camera);
   moveCamera(1500.0f);
   zoomIn(inputSys.GetScrollWheelVec().y * cc::ZOOM_FACTOR);
   if (inputSys.KeyPressed('M'))

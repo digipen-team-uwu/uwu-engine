@@ -77,7 +77,11 @@ SystemOrder GetSystemOrder<TextureLoaderMod>()
   return SystemOrder::TextureLoader;
 }
 
-
+template<>
+SystemOrder GetSystemOrder<UBOMod>()
+{
+  return SystemOrder::UBOMod;
+}
 
 #pragma endregion 
 

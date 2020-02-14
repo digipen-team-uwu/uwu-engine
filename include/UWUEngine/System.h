@@ -11,7 +11,7 @@ class System : NonCopyable
 public:
   System(ISpace* p) : parent(p) {}
   virtual ~System() = default;
-  virtual void Update() = 0;
+  virtual void Update() {}
 
   template <class T>
   T& Get();

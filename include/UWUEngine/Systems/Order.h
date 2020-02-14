@@ -29,7 +29,8 @@ enum class SystemOrder : unsigned
   Window,
 
   //Modules, Order doesn't matter
-  TextureLoader
+  TextureLoader,
+  UBOMod
 };
 
 enum class ComponentOrder : unsigned
