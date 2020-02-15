@@ -21,7 +21,7 @@ namespace UWUEngine
     class RawData; // forward declaration
   public:
     TextureAtlaserMod(ISpace* space);
-    ~TextureAtlaserMod() = default;
+    ~TextureAtlaserMod();
 
     void ClearData();
 

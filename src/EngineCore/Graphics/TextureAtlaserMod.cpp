@@ -19,6 +19,11 @@ TextureAtlaserMod::TextureAtlaserMod(ISpace* space) : System(space)
   layer_counter = 0;
 }
 
+TextureAtlaserMod::~TextureAtlaserMod()
+{
+  glDeleteTextures(1, &texID);
+}
+
 void TextureAtlaserMod::ClearData()
 {
   //free image ptrs
@@ -234,12 +239,6 @@ void TextureAtlaserMod::LoadAtlasPage(GLboolean isTwice_)
 
   // bind to texture unit 0
   glBindTextureUnit(0, texID);
-
-  // create instance vbos and get correspond vao key
-  //VaoKey vao_key = Instances::CreateInstances(Mesh::GetEntityMesh());
-
-  // set entity vao key
-  //Instances::SetEntityVAOKey(vao_key);
 
   // setting atlas uv and atlas scale for all spaces
   auto& compSys = Get<CompSpaceSys>();
