@@ -7,7 +7,6 @@ namespace UWUEngine
   class IComponent;
 enum class SystemOrder : unsigned
 {
-  Invalid = -1,
   Event,
   Log,
   Input,

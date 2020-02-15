@@ -81,7 +81,7 @@ namespace UWUEngine
     const std::unordered_map<EntityID, std::array<std::string, MAX_SPRITES>>& GetArrayFilePaths() const;
 #pragma endregion
 
-#pragma Atlas Setter & Getter
+#pragma region Atlas Setter & Getter
     void SetAtlasData(EntityID ID, unsigned accessID = 0);
     void GetAtlasData(const char* filepath, glm::vec2* scale, glm::vec2* uvs, unsigned* layer);
 #pragma endregion

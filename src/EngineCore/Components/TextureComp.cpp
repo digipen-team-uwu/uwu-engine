@@ -2,14 +2,15 @@
 #include <array>
 #include <UWUEngine/Modules/TextureAtlaserMod.h>
 
-using namespace UWUEngine;
+namespace UWUEngine
+{
 
 Texture TextureComp::operator[](EntityID ID)
 {
-  return Texture(dimensions_[ID], uvs_[ID], colors_[ID], filePaths_[ID], atlas_layers[ID],atlas_uv[ID], atlas_scale[ID]);
+  return Texture(dimensions_[ID], uvs_[ID], colors_[ID], filePaths_[ID], atlas_layers[ID], atlas_uv[ID], atlas_scale[ID]);
 }
 
-UWUEngine::Texture TextureComp::getTexture(EntityID ID)
+Texture TextureComp::getTexture(EntityID ID)
 {
   return Texture(dimensions_[ID], uvs_[ID], colors_[ID], filePaths_[ID], atlas_layers[ID], atlas_uv[ID], atlas_scale[ID]);
 }
@@ -228,3 +229,5 @@ const std::unordered_map<EntityID, std::array<std::string, MAX_SPRITES>>& Textur
   return filePaths_;
 }
 #pragma endregion 
+
+}

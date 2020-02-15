@@ -63,14 +63,14 @@ public:
 	Collider(Collider const&) = default;
 	Collider& operator=(Collider const&) = delete;
 
-	[[nodiscard]] virtual Collider* Clone() const { assert("y'aint supposed to instantiate this", 0); return nullptr; }
-	virtual void Serialize(std::ofstream& stream) const { assert("y'aint supposed to instantiate this", 0); }
-	virtual void Render() { assert("y'aint supposed to instantiate this", 0); }
+	[[nodiscard]] virtual Collider* Clone() const { assert("y'aint supposed to instantiate this" && 0); return nullptr; }
+	virtual void Serialize(std::ofstream& stream) const { assert("y'aint supposed to instantiate this" && 0); }
+	virtual void Render() { assert("y'aint supposed to instantiate this" && 0); }
 
 	Event<EventType::Collision> IsColliding(Collider& rhs);
 
-	[[nodiscard]] virtual Projection Project(Axis const& axis) const { assert("y'aint supposed to instantiate this", 0); return Projection{ 0, 0, {} }; }
-	virtual std::vector<Axis> const& GenerateAxis() { assert("y'aint supposed to instantiate this", 0); return {}; }
+	[[nodiscard]] virtual Projection Project(Axis const& axis) const { assert("y'aint supposed to instantiate this" && 0); return Projection{ 0, 0, {} }; }
+	virtual std::vector<Axis> const& GenerateAxis() { assert("y'aint supposed to instantiate this" && 0); return {}; }
 
 	[[nodiscard]] ShapeType GetType() const;
 	void SetType(ShapeType type);

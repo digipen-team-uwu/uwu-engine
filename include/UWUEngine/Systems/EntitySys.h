@@ -1,7 +1,10 @@
+#pragma once
 #include <UWUEngine/System.h>
+
 using EntityID = unsigned int;
 namespace UWUEngine
 {
+
 class EntitySys : public System
 {
 public:
@@ -13,4 +16,5 @@ public:
 private:
   void CleanDestroyeds(ISpace* space);
 };
+
 }

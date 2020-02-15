@@ -13,7 +13,7 @@ T& Space<Base, Derived...>::Get()
 }
 
 template <class Base, class ... Derived>
-Space<Base, Derived...>::Space<Base, Derived...>(ISpace* p) :
+Space<Base, Derived...>::Space(ISpace* p) :
   ISpace(p),
   objects{}
 {
@@ -21,7 +21,7 @@ Space<Base, Derived...>::Space<Base, Derived...>(ISpace* p) :
 }
 
 template <class Base, class ... Derived>
-Space<Base, Derived...>::~Space<Base, Derived...>()
+Space<Base, Derived...>::~Space()
 {
   (delete (dynamic_cast<Derived*>(static_cast<Base*>(GetObject(static_cast<unsigned>(GetOrder<Derived>()))))), ...);
 }

@@ -45,16 +45,18 @@ EntityID EntitySys::CreateEntity(ISpace *space)
   EntityID id = 0;
   auto& free = comp->GetFreeIDs();
   auto& ids = comp->GetIDs();
-  if (free.size())
+
+  if (free.empty())
+  {
+    id = comp->GetIDCount();
+    comp->SetIDCount(static_cast<size_t>(id) + 1);
+  }
+  else
   {
     id = free.top();
     free.pop();
   }
-  else
-  {
-    id = comp->GetIDCount();
-    comp->SetIDCount(id + 1);
-  }
+  
   ids.push_back(id);
   if (id >= comp->GetVectorSize())
   {

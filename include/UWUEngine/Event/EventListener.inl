@@ -6,8 +6,8 @@ namespace UWUEngine
   EventListener<type>::EventListener(std::function<void(const Event<type>&)> func_, EntityID id) :
     IEventListener(type), func(func_), id(id)
   {
-    static size_t listenerIDs = 0;
-    id = listenerIDs;
+    static EntityID listenerIDs = 0;
+    this->id = listenerIDs;
     ++listenerIDs;
   }
 
