@@ -9,12 +9,12 @@ namespace UWUEngine
 class CompSpaceSys : public System
 {
 public:
-  using EnvironmentSpace  = Space<IComponent, EntityComp, TransformComp, TextureComp/*, AnimationComp*/>;
-  using UISpace           = Space<IComponent, EntityComp, TransformComp, PhysicsComp, TextureComp/*, AnimationComp, BehaviorComp*/>;
-  using ParticleSpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp/*, AnimationComp, BehaviorComp*/>;
-  using GameplaySpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp, SpineAnimationComp, SpineSkeletonComp, ColliderComp>;
-  using LightSpace        = Space<IComponent, EntityComp, TransformComp /*, LightingComp*/>;
-  using DebugSpace        = Space<IComponent, EntityComp, TransformComp, TextureComp/*, BehaviorComp& */>;
+  using EnvironmentSpace  = Space<IComponent, EntityComp, TransformComp, TextureComp, AnimationComp, HierarchyComp>;
+  using UISpace           = Space<IComponent, EntityComp, TransformComp, PhysicsComp, TextureComp, AnimationComp, HierarchyComp/*, BehaviorComp*/>;
+  using ParticleSpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp, AnimationComp, HierarchyComp/*, BehaviorComp*/>;
+  using GameplaySpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp, HierarchyComp, SpineAnimationComp, SpineSkeletonComp, ColliderComp>;
+  using LightSpace        = Space<IComponent, EntityComp, TransformComp, HierarchyComp /*, LightingComp*/>;
+  using DebugSpace        = Space<IComponent, EntityComp, TransformComp, TextureComp, HierarchyComp/*, BehaviorComp& */>;
 
   CompSpaceSys(ISpace* p) : System(p),
   space_environment(p),

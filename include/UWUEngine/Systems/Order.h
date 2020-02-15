@@ -27,6 +27,7 @@ enum class SystemOrder : unsigned
   Action,
   Physics,
   Collider,
+  Animation,
   
   Window, // last one PWEASE
 
@@ -52,6 +53,7 @@ enum class ComponentOrder : unsigned
   Physics,
   Collider,
   Texture,
+  Hierarchy
 };
 
 

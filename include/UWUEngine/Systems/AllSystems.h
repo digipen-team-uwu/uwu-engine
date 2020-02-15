@@ -16,6 +16,7 @@
 /* COMPONENT SYSTEMS */
 #include <UWUEngine/Systems/PhysicsSys.h>
 #include <UWUEngine/Systems/ColliderSys.h>
+#include <UWUEngine/Systems/AnimationSys.h>
 
 /* MODULES */
 #include <UWUEngine/Modules/TextureLoaderMod.h>

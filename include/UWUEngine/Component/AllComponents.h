@@ -6,3 +6,5 @@
 #include <UWUEngine/Component/PhysicsComp.h>
 #include <UWUEngine/Component/TextureComp.h>
 #include <UWUEngine/Component/ColliderComp.h>
+#include <UWUEngine/Component/AnimationComp.h>
+#include <UWUEngine/Component/HierarchyComp.h>

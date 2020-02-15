@@ -68,6 +68,7 @@ SystemOrder GetSystemOrder<RenderSys>()
   return SystemOrder::Render;
 }
 
+
 template<>
 SystemOrder GetSystemOrder<CameraSys>()
 {
@@ -88,6 +89,12 @@ template<>
 SystemOrder GetSystemOrder<ColliderSys>()
 {
   return SystemOrder::Collider;
+}
+
+template<>
+SystemOrder GetSystemOrder<AnimationSys>()
+{
+  return SystemOrder::Animation;
 }
 
 #pragma endregion
@@ -157,9 +164,22 @@ ComponentOrder GetComponentOrder<ColliderComp>()
 }
 
 template<>
+ComponentOrder GetComponentOrder<HierarchyComp>()
+{
+  return ComponentOrder::Hierarchy;
+}
+
+template<>
 ComponentOrder GetComponentOrder<TextureComp>()
 {
   return ComponentOrder::Texture;
+}
+
+
+template<>
+ComponentOrder GetComponentOrder<AnimationComp>()
+{
+  return ComponentOrder::Animation;
 }
 
 template<>
