@@ -7,5 +7,7 @@ namespace UWUEngine
     static bool Editor;
     static bool Lighting;
     static bool DynamicCamera;
+
+    static bool Test;
   };
 }

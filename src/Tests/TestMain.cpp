@@ -6,3 +6,5 @@ using namespace UWUEngine;
 bool EngineSettings::Editor = false;
 bool EngineSettings::Lighting = true;
 bool EngineSettings::DynamicCamera = true;
+bool EngineSettings::Test = true;
+

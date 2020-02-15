@@ -13,3 +13,5 @@ bool EngineSettings::Lighting = true;
 bool EngineSettings::DynamicCamera = true;
 
 #endif
+
+bool EngineSettings::Test = false;

@@ -15,8 +15,8 @@ public:
   class LogStream
   {
   public:
-    explicit LogStream(std::ofstream& log);
-    LogStream() = default;
+    explicit LogStream(std::ofstream& log, bool isNull = false);
+    LogStream(bool isNull = false) : isNull(isNull){}
 
     template <typename T>
     friend LogStream& operator<< (LogStream& ls, const T& out);
@@ -26,6 +26,7 @@ public:
     friend class LogSys;
   private:
     void attach(std::ofstream* log);
+    const bool isNull{false};
     std::ofstream* log_;
   };
 
@@ -58,11 +59,9 @@ private:
   size_t trace_UID = GenTraceUID();
   const size_t stdout_bufsize = 4096;
   char* stdout_buffer = new char[stdout_bufsize];
-#ifdef _DEBUG
+
   Severity min_severity = SERIALIZATION;
-#else
-  Severity min_severity = WARNING;
-#endif
+
   std::ofstream log_file;
   LogStream log_stream;
   LogStream log_null;

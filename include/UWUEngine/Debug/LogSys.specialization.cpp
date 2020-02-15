@@ -9,6 +9,10 @@ namespace UWUEngine
 template <>
 LogSys::LogStream& operator<< <char const*>(LogSys::LogStream& ls, char const* const& out)
 {
+  if (ls.isNull)
+  {
+    return ls;
+  }
   std::cerr << out;
 #ifdef _DEBUG
   * (ls.log_) << Strip(out);
@@ -19,6 +23,10 @@ LogSys::LogStream& operator<< <char const*>(LogSys::LogStream& ls, char const* c
 template<>
 LogSys::LogStream& operator<< <std::string>(LogSys::LogStream& ls, std::string const& out)
 {
+  if (ls.isNull)
+  {
+    return ls;
+  }
   std::cerr << out;
 #ifdef _DEBUG
   * (ls.log_) << Strip(out);

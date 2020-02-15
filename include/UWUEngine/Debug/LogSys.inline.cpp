@@ -23,6 +23,10 @@ auto LogSys::Tee<bool>(bool&& value, char const* name, char const* pretty_functi
 template<typename T>
 LogSys::LogStream& operator<<(LogSys::LogStream& ls, const T& out)
 {
+  if (ls.isNull)
+  {
+    return ls;
+  }
   std::cerr << out;
 #ifdef _DEBUG
   * (ls.log_) << out;

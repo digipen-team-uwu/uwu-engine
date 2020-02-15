@@ -19,13 +19,14 @@
 #include <iostream>
 
 #include <UWUEngine/Debug/LogSys.specialization.cpp>
+#include <UWUEngine/EngineSettings.h>
 
 namespace UWUEngine
 {
 
-LogSys::LogStream::LogStream(std::ofstream& log)
+LogSys::LogStream::LogStream(std::ofstream& log, bool isNull)
   :
-  log_(&log)
+  log_(&log), isNull(isNull)
 {
 
 };
@@ -37,6 +38,10 @@ void LogSys::LogStream::attach(std::ofstream* log)
 
 LogSys::LogStream& operator<< (LogSys::LogStream& ls, std::ostream& (*f)(std::ostream&))
 {
+  if (ls.isNull)
+  {
+    return ls;
+  }
   f(std::cerr);
   f(*(ls.log_));
   return ls;
@@ -83,8 +88,13 @@ Color severity_colors[] =
 };
 }
 
-LogSys::LogSys(ISpace* p) : System(p)
+LogSys::LogSys(ISpace* p) : System(p), log_null(true)
 {
+  if (EngineSettings::Test)
+  {
+    SetMinSeverity(WARNING);
+  }
+
 #ifdef _DEBUG
 #ifdef _MSVC
   std::wstringstream log_filepath;
@@ -131,7 +141,10 @@ LogSys::LogSys(ISpace* p) : System(p)
   if (IsDebuggerPresent())
   {
     GetSetColorEnabled(false, true);
-    std::clog << "Welcome " << "Team U" << Set(Pink) << "." << Set() << "W" << Set(Pink) << "." << Set() << "U" << Set() << " developer.\n";
+    if (min_severity < WARNING)
+    {
+      std::clog << "Welcome " << "Team U" << Set(Pink) << "." << Set() << "W" << Set(Pink) << "." << Set() << "U" << Set() << " developer.\n";
+    }
   }
   else
   {
