@@ -4,6 +4,7 @@
 #include <UWUEngine/Component/TransformComp.h>
 #include <UWUEngine/Component/SpineSkeletonComp.h>
 #include <UWUEngine/Systems/CompSpaceSys.h>
+#include <UWUEngine/Systems/LightSys.h>
 
 using namespace UWUEngine;
 namespace UBC = UniformBufferConstants;
@@ -92,37 +93,38 @@ void UBOMod::ShootDataToUniformBuffer(UBOMod::Type name, EntityID ID)
       glm::value_ptr(gamePlaySpace.Get<SpineSkeletonComp>().GetScaleOffSet(ID)));
     glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
   }
-  //else if (name == Light)
-  //{
-  //  auto& lightPos = Lighting::GetLightPosition();
-  //  auto& lightView = Lighting::GetLightViewPosition();
-  //  auto& lightAmbient = Lighting::GetLightAmbient();
-  //  auto& lightDiffuse = Lighting::GetLightDiffuse();
-  //  auto& lightSpecular = Lighting::GetLightSpecular();
-  //
-  //  glBindBuffer(GL_UNIFORM_BUFFER, data_[name].first);
-  //  // ambient
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    0,
-  //    sizeof(glm::vec3),
-  //    glm::value_ptr(lightPos));
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    sizeof(glm::vec3) + UBC::MEMORY_LAYOUT_OFFSET,
-  //    sizeof(glm::vec3),
-  //    glm::value_ptr(lightView));
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    2 * sizeof(glm::vec3) + 2 * UBC::MEMORY_LAYOUT_OFFSET,
-  //    sizeof(glm::vec3),
-  //    glm::value_ptr(lightAmbient));
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    3 * sizeof(glm::vec3) + 3 * UBC::MEMORY_LAYOUT_OFFSET,
-  //    sizeof(glm::vec3),
-  //    glm::value_ptr(lightDiffuse));
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    4 * sizeof(glm::vec3) + 4 * UBC::MEMORY_LAYOUT_OFFSET,
-  //    sizeof(glm::vec3),
-  //    glm::value_ptr(lightSpecular));
-  //  glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
-  //}
+  else if (name == Light)
+  {
+    auto& lightSys = Get<LightSys>();
+    auto& lightPos = lightSys.GetLightPosition();
+    auto& lightView = lightSys.GetLightViewPosition();
+    auto& lightAmbient = lightSys.GetLightAmbient();
+    auto& lightDiffuse = lightSys.GetLightDiffuse();
+    auto& lightSpecular = lightSys.GetLightSpecular();
+  
+    glBindBuffer(GL_UNIFORM_BUFFER, data_[name].first);
+    // ambient
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      0,
+      sizeof(glm::vec3),
+      glm::value_ptr(lightPos));
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      sizeof(glm::vec3) + UBC::MEMORY_LAYOUT_OFFSET,
+      sizeof(glm::vec3),
+      glm::value_ptr(lightView));
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      2 * sizeof(glm::vec3) + 2 * UBC::MEMORY_LAYOUT_OFFSET,
+      sizeof(glm::vec3),
+      glm::value_ptr(lightAmbient));
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      3 * sizeof(glm::vec3) + 3 * UBC::MEMORY_LAYOUT_OFFSET,
+      sizeof(glm::vec3),
+      glm::value_ptr(lightDiffuse));
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      4 * sizeof(glm::vec3) + 4 * UBC::MEMORY_LAYOUT_OFFSET,
+      sizeof(glm::vec3),
+      glm::value_ptr(lightSpecular));
+    glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
+  }
 
 }

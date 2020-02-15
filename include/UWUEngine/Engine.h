@@ -29,6 +29,7 @@ namespace UWUEngine
       PhysicsSys,
       ColliderSys,
       AnimationSys,
+      LightSys,
 
       //Modules
       VAOMod,

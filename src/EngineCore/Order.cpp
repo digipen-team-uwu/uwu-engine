@@ -75,6 +75,12 @@ SystemOrder GetSystemOrder<CameraSys>()
   return SystemOrder::Camera;
 }
 
+template<>
+SystemOrder GetSystemOrder<LightSys>()
+{
+  return SystemOrder::Light;
+}
+
 #pragma endregion 
 
 #pragma region Component Systems
