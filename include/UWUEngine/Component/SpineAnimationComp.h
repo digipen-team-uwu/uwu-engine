@@ -58,6 +58,9 @@ namespace UWUEngine
     void SetAnimation(EntityID ID, const char* dataName);
     SpineAnimation& GetAnimation(EntityID ID);
 
+    std::unordered_map<EntityID, SpineAnimation>::iterator Begin();
+    std::unordered_map<EntityID, SpineAnimation>::iterator End();
+
   private:
     std::unordered_map<EntityID, SpineAnimation> animations;
   };

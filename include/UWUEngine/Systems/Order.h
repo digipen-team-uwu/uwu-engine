@@ -22,11 +22,12 @@ enum class SystemOrder : unsigned
   Debug,
   Timer,
   Camera,
+  Animation,
+  SpineAnimation,
   Render,
   Action,
   Physics,
   Collider,
-  Animation,
   
   Window, // last one PWEASE
 

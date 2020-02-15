@@ -103,6 +103,12 @@ SystemOrder GetSystemOrder<AnimationSys>()
   return SystemOrder::Animation;
 }
 
+template<>
+SystemOrder GetSystemOrder<SpineAnimationSys>()
+{
+  return SystemOrder::SpineAnimation;
+}
+
 #pragma endregion
 
 #pragma region Modules

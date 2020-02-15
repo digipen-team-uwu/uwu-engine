@@ -40,6 +40,9 @@ namespace UWUEngine
 
     const glm::mat4 GetScaleOffSet(EntityID ID);
 
+    std::unordered_map<EntityID, SpineSkeleton>::iterator Begin();
+    std::unordered_map<EntityID, SpineSkeleton>::iterator End();
+
   private:
     //Containers
     std::unordered_map<EntityID, SpineSkeleton> skeletons;

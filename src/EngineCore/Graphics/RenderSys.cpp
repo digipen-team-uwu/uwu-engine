@@ -1,5 +1,10 @@
 #include <UWUEngine/Systems/RenderSys.h>
 #include <UWUEngine/Systems/LogSys.h>
+#include <UWUEngine/Systems/CompSpaceSys.h>
+
+#include <UWUEngine/Component/EntityComp.h>
+#include <UWUEngine/Component/SpineSkeletonComp.h>
+
 #include <UWUEngine/constants.h>
 
 #include <GL/glew.h>
@@ -41,4 +46,16 @@ void RenderSys::Update()
 	//Iterate through spaces
 	  //Iterate through entities
 	  //Instanced/Behavior/Spine draw
+
+	auto& compSys = Get<CompSpaceSys>();
+
+	RenderSpine(compSys.space_gameplay.Get<SpineSkeletonComp>());
+}
+
+void RenderSys::RenderSpine(SpineSkeletonComp& skelComp)
+{
+	for (auto i = skelComp.Begin(); i != skelComp.End(); ++i)
+	{
+	  i->second.Draw();
+	}
 }

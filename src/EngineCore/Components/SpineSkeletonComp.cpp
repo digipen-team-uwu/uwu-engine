@@ -198,6 +198,16 @@ namespace UWUEngine
     return scale(glm::vec3(scaleOffset, scaleOffset, scaleOffset));
   }
 
+  std::unordered_map<EntityID, SpineSkeleton>::iterator SpineSkeletonComp::Begin()
+  {
+	  return skeletons.begin();
+  }
+
+  std::unordered_map<EntityID, SpineSkeleton>::iterator SpineSkeletonComp::End()
+  {
+	  return skeletons.end();
+  }
+
   void SpineSkeletonComp::InitObject(EntityID ID)
   {
   }

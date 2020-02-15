@@ -3,18 +3,19 @@
 
 namespace UWUEngine
 {
+  //Forward Declaration
+  class EntityComp;
+  class SpineSkeletonComp;
+
   class RenderSys : public System
   {
   public:
     RenderSys(ISpace*);
     ~RenderSys() = default;
     void Update() override;
-    //static void DrawObject(EntityID ID);
 
   private:
-
-    // data member to represent geometric model to be rendered
-    // C++ requires this object to have a definition in render.cpp!!!
+    static void RenderSpine(SpineSkeletonComp&);
   };
 
 }

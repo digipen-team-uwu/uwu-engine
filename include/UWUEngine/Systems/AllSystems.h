@@ -18,6 +18,7 @@
 #include <UWUEngine/Systems/PhysicsSys.h>
 #include <UWUEngine/Systems/ColliderSys.h>
 #include <UWUEngine/Systems/AnimationSys.h>
+#include <UWUEngine/Systems/SpineAnimationSys.h>
 
 /* MODULES */
 #include <UWUEngine/Modules/TextureLoaderMod.h>

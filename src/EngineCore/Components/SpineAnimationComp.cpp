@@ -115,4 +115,14 @@ namespace UWUEngine
   {
     return animations.find(ID)->second;
   }
+
+  std::unordered_map<EntityID, SpineAnimation>::iterator SpineAnimationComp::Begin()
+  {
+    return animations.begin();
+  }
+
+  std::unordered_map<EntityID, SpineAnimation>::iterator SpineAnimationComp::End()
+  {
+    return animations.end();
+  }
 }
