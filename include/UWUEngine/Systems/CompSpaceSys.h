@@ -13,7 +13,7 @@ public:
   using UISpace           = Space<IComponent, EntityComp, TransformComp, PhysicsComp, TextureComp, AnimationComp, HierarchyComp/*, BehaviorComp*/>;
   using ParticleSpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp, AnimationComp, HierarchyComp/*, BehaviorComp*/>;
   using GameplaySpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp, HierarchyComp, SpineAnimationComp, SpineSkeletonComp, ColliderComp>;
-  using LightSpace        = Space<IComponent, EntityComp, TransformComp, HierarchyComp /*, LightingComp*/>;
+  using LightSpace        = Space<IComponent, EntityComp, TransformComp, HierarchyComp, LightComp>;
   using DebugSpace        = Space<IComponent, EntityComp, TransformComp, TextureComp, HierarchyComp/*, BehaviorComp& */>;
 
   CompSpaceSys(ISpace* p) : System(p),

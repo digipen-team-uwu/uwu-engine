@@ -212,6 +212,11 @@ ComponentOrder GetComponentOrder<SpineSkeletonComp>()
   return ComponentOrder::SpineAnimation;
 }
 
+template<>
+ComponentOrder GetComponentOrder<LightComp>()
+{
+  return ComponentOrder::Light;
+}
 #pragma endregion 
 
 } // namespace UWUEngine

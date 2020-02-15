@@ -54,7 +54,8 @@ enum class ComponentOrder : unsigned
   Physics,
   Collider,
   Texture,
-  Hierarchy
+  Hierarchy,
+  Light
 };
 
 

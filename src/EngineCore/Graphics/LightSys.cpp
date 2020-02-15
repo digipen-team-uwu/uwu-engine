@@ -3,6 +3,8 @@
 #include <UWUEngine/Modules/UBOMod.h>
 #include <UWUEngine/Systems/InputSys.h>
 #include <UWUEngine/Systems/CameraSys.h>
+#include <UWUEngine/Component/LightComp.h>
+#include <UWUEngine/Systems/CompSpaceSys.h>
 
 using namespace UWUEngine;
 
@@ -29,6 +31,12 @@ void LightSys::Update()
   ubo.ShootDataToUniformBuffer(ubo.Light);
   shader.SetUniform("lightOn", lightOn_);
   shader.UnUse();
+
+  auto& entity = Get<CompSpaceSys>().space_light.Get<EntityComp>().GetIDs();
+  for (int i = 0; i < entity.size(); ++i)
+  {
+    Get<LightComp>().SetShininess(i, 16.0f);
+  }
 }
 
 void LightSys::LightToggle()
