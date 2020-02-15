@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       PhysicsComponentManager.h
+\file       PhysicsComp.h
 \author     Chau Nguyen
 \date       2019/09/13
 \brief      Managing physics components

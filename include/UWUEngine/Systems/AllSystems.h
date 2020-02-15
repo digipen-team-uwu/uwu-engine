@@ -11,8 +11,11 @@
 #include <UWUEngine/Systems/RenderSys.h>
 #include <UWUEngine/Systems/EntitySys.h>
 #include <UWUEngine/Systems/CameraSys.h>
-#include <UWUEngine/Systems/PhysicsSys.h>
 #include <UWUEngine/Systems/CompSpaceSys.h>
+
+/* COMPONENT SYSTEMS */
+#include <UWUEngine/Systems/PhysicsSys.h>
+#include <UWUEngine/Systems/ColliderSys.h>
 
 /* MODULES */
 #include <UWUEngine/Modules/TextureLoaderMod.h>

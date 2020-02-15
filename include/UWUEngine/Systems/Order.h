@@ -26,8 +26,9 @@ enum class SystemOrder : unsigned
   Render,
   Action,
   Physics,
+  Collider,
   
-  Window,
+  Window, // last one PWEASE
 
   //Modules, Order doesn't matter
   CompSpace,
@@ -38,6 +39,7 @@ enum class SystemOrder : unsigned
   SSBOMod,
 };
 
+  // order does not matter at all
 enum class ComponentOrder : unsigned
 {
   Entity,

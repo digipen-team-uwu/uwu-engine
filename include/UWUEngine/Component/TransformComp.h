@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       TransformComponentManager.h
+\file       TransformComp.h
 \author     Chau Nguyen
 \date       2019/09/13
 \brief      Managing transform components

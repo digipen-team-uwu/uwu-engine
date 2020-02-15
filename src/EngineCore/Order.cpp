@@ -74,13 +74,23 @@ SystemOrder GetSystemOrder<CameraSys>()
   return SystemOrder::Camera;
 }
 
+#pragma endregion 
+
+#pragma region Component Systems
+
 template<>
 SystemOrder GetSystemOrder<PhysicsSys>()
 {
   return SystemOrder::Physics;
 }
 
-#pragma endregion 
+template<>
+SystemOrder GetSystemOrder<ColliderSys>()
+{
+  return SystemOrder::Collider;
+}
+
+#pragma endregion
 
 #pragma region Modules
 template<>
@@ -100,7 +110,6 @@ SystemOrder GetSystemOrder<UBOMod>()
 {
   return SystemOrder::UBOMod;
 }
-#pragma endregion 
 
 template<>
 SystemOrder GetSystemOrder<SpineDataMod>()
@@ -116,7 +125,6 @@ SystemOrder GetSystemOrder<SSBOMod>()
 #pragma endregion 
 
 #pragma region Components
-#pragma region Component
 template<>
 ComponentOrder GetComponentOrder<EntityComp>()
 {
@@ -133,6 +141,12 @@ template<>
 ComponentOrder GetComponentOrder<PhysicsComp>()
 {
   return ComponentOrder::Physics;
+}
+
+template<>
+ComponentOrder GetComponentOrder<ColliderComp>()
+{
+  return ComponentOrder::Collider;
 }
 
 template<>

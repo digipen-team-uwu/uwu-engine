@@ -26,6 +26,7 @@ namespace UWUEngine
       CompSpaceSys,
       CameraSys,
       PhysicsSys,
+      ColliderSys,
 
       //Modules
       SpineDataMod,
