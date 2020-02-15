@@ -63,6 +63,13 @@ EntityID EntitySys::CreateEntity(ISpace *space)
     comp->ResizeVectors();
     //create instances here
   }
+
+  const auto component_space = dynamic_cast<IBaseSpace<IComponent>*>(space);
+  for (auto component : *component_space)
+  {
+    component.second->InitObject(id);
+  }
+  
   return id;
 }
 
@@ -70,4 +77,10 @@ void EntitySys::DestroyEntity(ISpace* space, EntityID id)
 {
   EntityComp* comp = static_cast<EntityComp*>(space->GetObject(static_cast<unsigned>(GetOrder<EntityComp>())));
   comp->SetDestroyed(id);
+
+  auto component_space = dynamic_cast<IBaseSpace<IComponent>*>(space);
+  for (auto component : *component_space)
+  {
+    component.second->ShutdownObject(id);
+  }
 }

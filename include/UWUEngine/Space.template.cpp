@@ -14,10 +14,9 @@ T& Space<Base, Derived...>::Get()
 
 template <class Base, class ... Derived>
 Space<Base, Derived...>::Space(ISpace* p) :
-  ISpace(p),
-  objects{}
+  IBaseSpace<Base>(p)
 {
-  ((objects.insert(((std::make_pair(static_cast<unsigned>(GetOrder<Derived>()), static_cast<Base*>(new Derived(this))))))), ...);
+  ((IBaseSpace<Base>::objects.insert(((std::make_pair(static_cast<unsigned>(GetOrder<Derived>()), static_cast<Base*>(new Derived(this))))))), ...);
 }
 
 template <class Base, class ... Derived>
@@ -29,17 +28,17 @@ Space<Base, Derived...>::~Space()
 template <class Base, class ... Derived>
 void* Space<Base, Derived...>::GetObject(unsigned i)
 {
-  return objects[i];
+  return IBaseSpace<Base>::objects[i];
 }
 
-template <class Base, class ... Derived>
-auto Space<Base, Derived...>::begin() -> decltype(objects.begin())
+template <class Base>
+auto IBaseSpace<Base>::begin() -> decltype(objects.begin())
 {
   return objects.begin();
 }
 
-template <class Base, class ... Derived>
-auto Space<Base, Derived...>::end() -> decltype(objects.end())
+template <class Base>
+auto IBaseSpace<Base>::end() -> decltype(objects.end())
 {
   return objects.end();
 }
