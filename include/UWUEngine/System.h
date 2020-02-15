@@ -15,6 +15,9 @@ public:
 
   template <class T>
   T& Get();
+
+  template <class T>
+  T& Get() const;
 protected:
   ISpace* parent;
 };
