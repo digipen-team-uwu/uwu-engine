@@ -19,7 +19,7 @@ namespace UWUEngine
       std::vector <GLshort>& idx_vtx
     );
 
-    const std::tuple<GLenum, GLuint, GLuint>& GetEntityMesh();
+    const std::tuple<GLenum, GLuint, GLuint> GetEntityMesh();
 
     std::tuple<GLenum, GLuint, GLuint> setup_vao_rect(
       const std::vector<glm::vec3>& pos_vtx,

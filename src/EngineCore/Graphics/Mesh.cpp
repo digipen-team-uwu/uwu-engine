@@ -1,6 +1,6 @@
 #include <UWUEngine/Graphics/Mesh.h>
 
-const std::tuple<GLenum, GLuint, GLuint>& UWUEngine::Mesh::GetEntityMesh()
+const std::tuple<GLenum, GLuint, GLuint> UWUEngine::Mesh::GetEntityMesh()
 {
   return getSquareMesh();
 }
