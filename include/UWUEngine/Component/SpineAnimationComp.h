@@ -26,6 +26,7 @@ namespace UWUEngine
   {
   public:
     //Constructors
+    explicit SpineAnimation();
     explicit SpineAnimation(SpineData& data);
 
     //Functions

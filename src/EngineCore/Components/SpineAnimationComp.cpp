@@ -17,6 +17,11 @@ Copyright 2019 DigiPen, All rights reserved.
 
 namespace UWUEngine
 {
+  SpineAnimation::SpineAnimation():
+    animationState(nullptr)
+  {
+  }
+
   SpineAnimation::SpineAnimation(SpineData& data) :
     animationState(spAnimationState_create(&data.GetAnimationStateData()))
   {
@@ -65,23 +70,9 @@ namespace UWUEngine
     return animationState->data->skeletonData;
   }
 
-  //TODO: Spine animation system
-  //void SpineAnimationComp::Update()
-  //{
-  //  for (auto& animation : animations)
-  //  {
-  //    EntityID ID = animation.first;
-  //    spAnimationState* animationState = animation.second.GetAnimationState();
-  //    spSkeleton* skeleton = SpineSkeletonComponentManager::GetSkeleton(ID).GetSkeleton();
-
-  //    animation.second.UpdateAnimation(FrameRateController::GetDeltaTime<float>() * 1.5f);
-  //    spAnimationState_apply(animationState, skeleton);
-  //    spSkeleton_updateWorldTransform(skeleton);
-  //  }
-  //}
-
   void SpineAnimationComp::InitObject(EntityID ID)
   {
+    animations.insert({ID, SpineAnimation()});
   }
 
   void SpineAnimationComp::ShutdownObject(EntityID ID)

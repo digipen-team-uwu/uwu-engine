@@ -37,6 +37,13 @@ namespace UWUEngine
       position(position), color(color), texCoords(texCoords) {}
   };
 
+  SpineSkeleton::SpineSkeleton(SpineSkeletonComp& skelComp, EntityID id) :
+    Instance<UWUEngine::SpineSkeletonComp>(skelComp),
+    ID(id),
+    scaleOffset()
+  {
+  }
+
   SpineSkeleton::SpineSkeleton(SpineSkeletonComp& spineSkelComp, SpineData& spineData, EntityID ID) :
     Instance<UWUEngine::SpineSkeletonComp>(spineSkelComp),
     skeleton(spSkeleton_create(&spineData.GetSkeletonData())),
@@ -50,129 +57,129 @@ namespace UWUEngine
     auto& shaderMod = Get<ShaderMod>();
     auto& spineShader = shaderMod.GetSpineShader();
 
-		//Send Uniform
+    //Send Uniform
     spineShader.Use();
-		Get<UBOMod>().ShootDataToUniformBuffer(Get<UBOMod>().Spine, ID);
-		//Temporary draw order
-		float drawOrder = 0.0f;
-		//Testing scale, will be replaced
-		float scale = 1.0f;
+    Get<UBOMod>().ShootDataToUniformBuffer(Get<UBOMod>().Spine, ID);
+    //Temporary draw order
+    float drawOrder = 0.0f;
+    //Testing scale, will be replaced
+    float scale = 1.0f;
 
-		for (int i = skeleton->slotsCount - 1; i >= 0; --i) {
-			spSlot* slot = skeleton->drawOrder[i];
+    for (int i = skeleton->slotsCount - 1; i >= 0; --i) {
+      spSlot* slot = skeleton->drawOrder[i];
 
-			//Get current attachment, skip if non attached
-			spAttachment* attachment = slot->attachment;
-			if (!attachment) continue;
+      //Get current attachment, skip if non attached
+      spAttachment* attachment = slot->attachment;
+      if (!attachment) continue;
 
-			//drawOrder += 0.05f;
+      //drawOrder += 0.05f;
 
-			//Get blend mode for the slot
-			//TODO::implement blend modes
-			switch (slot->data->blendMode) {
-			case SP_BLEND_MODE_NORMAL:
-				break;
-			case SP_BLEND_MODE_ADDITIVE:
-				break;
-			case SP_BLEND_MODE_MULTIPLY:
-				break;
-			case SP_BLEND_MODE_SCREEN:
-				break;
-			default:
-				break;
-			}
+      //Get blend mode for the slot
+      //TODO::implement blend modes
+      switch (slot->data->blendMode) {
+      case SP_BLEND_MODE_NORMAL:
+        break;
+      case SP_BLEND_MODE_ADDITIVE:
+        break;
+      case SP_BLEND_MODE_MULTIPLY:
+        break;
+      case SP_BLEND_MODE_SCREEN:
+        break;
+      default:
+        break;
+      }
 
-			//Calculate tinting color
-			//TODO::use tinting color
-			float tintR = skeleton->color.r * slot->color.r;
-			float tintG = skeleton->color.g * slot->color.g;
-			float tintB = skeleton->color.b * slot->color.b;
-			float tintA = skeleton->color.a * slot->color.a;
+      //Calculate tinting color
+      //TODO::use tinting color
+      float tintR = skeleton->color.r * slot->color.r;
+      float tintG = skeleton->color.g * slot->color.g;
+      float tintB = skeleton->color.b * slot->color.b;
+      float tintA = skeleton->color.a * slot->color.a;
 
-			//Data for mesh setup
-			SingleTexture* texture;
-			//float* vertexPositions;
-			std::vector<float> vertexPositions;
-			std::vector<Vertex> vertices;
-			std::vector<unsigned> indices;
-			//According to the attachment type
-			if (attachment->type == SP_ATTACHMENT_REGION) {
-				//cast the current attachment to regional attachment
-				auto* regionAttachment = reinterpret_cast<spRegionAttachment*>(attachment);
-				//Get according texture
-				texture = static_cast<SingleTexture*>(static_cast<spAtlasRegion*>(regionAttachment->rendererObject)->page->rendererObject);
-				//Allocate buffer and load Vertex position data
-				vertexPositions.resize(8);
-				vertices.reserve(4);
-				indices.reserve(6);
-				spRegionAttachment_computeWorldVertices(regionAttachment, slot->bone, vertexPositions.data(), 0, 2);
+      //Data for mesh setup
+      SingleTexture* texture;
+      //float* vertexPositions;
+      std::vector<float> vertexPositions;
+      std::vector<Vertex> vertices;
+      std::vector<unsigned> indices;
+      //According to the attachment type
+      if (attachment->type == SP_ATTACHMENT_REGION) {
+        //cast the current attachment to regional attachment
+        auto* regionAttachment = reinterpret_cast<spRegionAttachment*>(attachment);
+        //Get according texture
+        texture = static_cast<SingleTexture*>(static_cast<spAtlasRegion*>(regionAttachment->rendererObject)->page->rendererObject);
+        //Allocate buffer and load Vertex position data
+        vertexPositions.resize(8);
+        vertices.reserve(4);
+        indices.reserve(6);
+        spRegionAttachment_computeWorldVertices(regionAttachment, slot->bone, vertexPositions.data(), 0, 2);
 
-				//Setup vertices data
-				vertices.emplace_back(
-					vertexPositions[0] * scale,
-					vertexPositions[1] * scale,
-					drawOrder,
-					tintR, tintG, tintB, tintA,
-					regionAttachment->uvs[0], regionAttachment->uvs[1]);
-				vertices.emplace_back(
-					vertexPositions[2] * scale,
-					vertexPositions[3] * scale,
-					drawOrder,
-					tintR, tintG, tintB, tintA,
-					regionAttachment->uvs[2], regionAttachment->uvs[3]);
-				vertices.emplace_back(
-					vertexPositions[4] * scale,
-					vertexPositions[5] * scale,
-					drawOrder,
-					tintR, tintG, tintB, tintA,
-					regionAttachment->uvs[4], regionAttachment->uvs[5]);
-				vertices.emplace_back(
-					vertexPositions[6] * scale,
-					vertexPositions[7] * scale,
-					drawOrder,
-					tintR, tintG, tintB, tintA,
-					regionAttachment->uvs[6], regionAttachment->uvs[7]);
+        //Setup vertices data
+        vertices.emplace_back(
+          vertexPositions[0] * scale,
+          vertexPositions[1] * scale,
+          drawOrder,
+          tintR, tintG, tintB, tintA,
+          regionAttachment->uvs[0], regionAttachment->uvs[1]);
+        vertices.emplace_back(
+          vertexPositions[2] * scale,
+          vertexPositions[3] * scale,
+          drawOrder,
+          tintR, tintG, tintB, tintA,
+          regionAttachment->uvs[2], regionAttachment->uvs[3]);
+        vertices.emplace_back(
+          vertexPositions[4] * scale,
+          vertexPositions[5] * scale,
+          drawOrder,
+          tintR, tintG, tintB, tintA,
+          regionAttachment->uvs[4], regionAttachment->uvs[5]);
+        vertices.emplace_back(
+          vertexPositions[6] * scale,
+          vertexPositions[7] * scale,
+          drawOrder,
+          tintR, tintG, tintB, tintA,
+          regionAttachment->uvs[6], regionAttachment->uvs[7]);
 
-				indices = { 0, 1, 3, 1, 2, 3 };
-			}
-			else if (attachment->type == SP_ATTACHMENT_MESH) {
-				//cast the current attachment to mesh attachment
-				auto* mesh = reinterpret_cast<spMeshAttachment*>(attachment);
+        indices = { 0, 1, 3, 1, 2, 3 };
+      }
+      else if (attachment->type == SP_ATTACHMENT_MESH) {
+        //cast the current attachment to mesh attachment
+        auto* mesh = reinterpret_cast<spMeshAttachment*>(attachment);
 
-				//Get according texture
-				texture = static_cast<SingleTexture*>(static_cast<spAtlasRegion*>(mesh->rendererObject)->page->rendererObject);
-				//Calculate Vertex position
-				const int verticesCount = mesh->super.verticesCount * 2;
-				//vertexPositions = new float[verticesCount];
-				vertexPositions.resize(verticesCount);
-				vertices.reserve(verticesCount / 2);
-				indices.reserve(mesh->trianglesCount);
-				spVertexAttachment* super = SUPER(mesh);
-				spVertexAttachment_computeWorldVertices(super, slot, 0, mesh->super.worldVerticesLength, vertexPositions.data(), 0, 2);
+        //Get according texture
+        texture = static_cast<SingleTexture*>(static_cast<spAtlasRegion*>(mesh->rendererObject)->page->rendererObject);
+        //Calculate Vertex position
+        const int verticesCount = mesh->super.verticesCount * 2;
+        //vertexPositions = new float[verticesCount];
+        vertexPositions.resize(verticesCount);
+        vertices.reserve(verticesCount / 2);
+        indices.reserve(mesh->trianglesCount);
+        spVertexAttachment* super = SUPER(mesh);
+        spVertexAttachment_computeWorldVertices(super, slot, 0, mesh->super.worldVerticesLength, vertexPositions.data(), 0, 2);
 
-				//feed in vertices data
-				for (size_t j = 0; j < static_cast<size_t>(mesh->super.worldVerticesLength); j += 2) {
-					// Silence the compiler warning
-					const size_t x_index = j;
-					const size_t y_index = j + 1;
-					vertices.emplace_back(
-						vertexPositions[x_index] * scale,
-						vertexPositions[y_index] * scale,
-						drawOrder,
-						tintR, tintG, tintB, tintA,
-						mesh->uvs[x_index],
-						mesh->uvs[y_index]
-					);
-				}
-				//feed in indices data
-				for (int j = 0; j < mesh->trianglesCount; ++j) {
-					int index = mesh->triangles[j];
-					indices.emplace_back(index);
-				}
-			}
-			else { continue; }
-			DrawMesh(vertices, indices, texture->id);
-		}
+        //feed in vertices data
+        for (size_t j = 0; j < static_cast<size_t>(mesh->super.worldVerticesLength); j += 2) {
+          // Silence the compiler warning
+          const size_t x_index = j;
+          const size_t y_index = j + 1;
+          vertices.emplace_back(
+            vertexPositions[x_index] * scale,
+            vertexPositions[y_index] * scale,
+            drawOrder,
+            tintR, tintG, tintB, tintA,
+            mesh->uvs[x_index],
+            mesh->uvs[y_index]
+          );
+        }
+        //feed in indices data
+        for (int j = 0; j < mesh->trianglesCount; ++j) {
+          int index = mesh->triangles[j];
+          indices.emplace_back(index);
+        }
+      }
+      else { continue; }
+      DrawMesh(vertices, indices, texture->id);
+    }
 
     spineShader.UnUse();
   }
@@ -192,6 +199,16 @@ namespace UWUEngine
     return skeleton->data;
   }
 
+  void SpineSkeleton::SetSkeletonData(SpineData& data)
+  {
+    if (skeleton)
+    {
+      //TODO:Free skeleton?
+    }
+    skeleton = spSkeleton_create(&data.GetSkeletonData());
+    scaleOffset = data.GetScaleOffset();
+  }
+
   const glm::mat4 SpineSkeletonComp::GetScaleOffSet(EntityID ID)
   {
     float scaleOffset = GetSkeleton(ID).scaleOffset;
@@ -200,16 +217,17 @@ namespace UWUEngine
 
   std::unordered_map<EntityID, SpineSkeleton>::iterator SpineSkeletonComp::Begin()
   {
-	  return skeletons.begin();
+    return skeletons.begin();
   }
 
   std::unordered_map<EntityID, SpineSkeleton>::iterator SpineSkeletonComp::End()
   {
-	  return skeletons.end();
+    return skeletons.end();
   }
 
   void SpineSkeletonComp::InitObject(EntityID ID)
   {
+    skeletons.insert({ID, SpineSkeleton(*this, ID)});
   }
 
   void SpineSkeletonComp::ShutdownObject(EntityID ID)

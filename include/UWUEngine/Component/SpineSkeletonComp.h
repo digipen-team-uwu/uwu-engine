@@ -53,6 +53,7 @@ namespace UWUEngine
   {
   public:
     //Constructors
+    explicit SpineSkeleton(SpineSkeletonComp&, EntityID);
     explicit SpineSkeleton(SpineSkeletonComp&, SpineData&, EntityID);
 
     //Functions
@@ -62,6 +63,9 @@ namespace UWUEngine
     //Getters
     [[nodiscard]] spSkeleton* GetSkeleton() const;
     [[nodiscard]] spSkeletonData* GetSkeletonData() const;
+
+    //Setters
+    void SetSkeletonData(SpineData&);
 
     friend SpineSkeletonComp;
 

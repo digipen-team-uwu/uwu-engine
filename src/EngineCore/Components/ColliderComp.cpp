@@ -46,11 +46,19 @@ ColliderComp::~ColliderComp()
   //EventSystem::UnRegister(listener_);
 }
 
-void ColliderComp::InitObject(EntityID ID) {}
+void ColliderComp::InitObject(EntityID ID)
+{
+  _collider.insert({ID, nullptr});
+}
 
 void ColliderComp::ShutdownObject(EntityID ID)
 {
-  delete GetCollider(ID);
+  const Collider* collider = GetCollider(ID);
+  if (collider)
+  {
+    delete GetCollider(ID);
+  }
+  
   _collider.erase(ID);
 }
 
@@ -64,38 +72,43 @@ void ColliderComp::SetCollider(EntityID ID, Collider const* collider)
   }
   Collider* newCollider = collider->Clone();
   newCollider->ID = ID;
-  _collider.insert({ ID, newCollider });
+  _collider.insert_or_assign(ID, newCollider);
 }
 
 void ColliderComp::SetPointCollider(EntityID ID, glm::vec2 position)
 {
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderPoint(*this, ID, position)) });
+  _collider.insert_or_assign(ID, static_cast<Collider*>(new ColliderPoint(*this, ID, position)));
 }
 
 void ColliderComp::SetLineCollider(EntityID ID, glm::vec2 p1, glm::vec2 p2)
 {
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderLine(*this, ID, p1, p2)) });
+  _collider.insert_or_assign(ID, static_cast<Collider*>(new ColliderLine(*this, ID, p1, p2)));
 }
 
 void ColliderComp::SetCircularCollider(EntityID ID, glm::vec2 center, float radius)
 {
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderCircle(*this, ID, center, radius)) });
+  _collider.insert_or_assign(ID, static_cast<Collider*>(new ColliderCircle(*this, ID, center, radius)));
 }
 
 void ColliderComp::SetRectangleCollider(EntityID ID)
 {
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderPolygon(*this, ID)) });
+  _collider.insert_or_assign(ID, static_cast<Collider*>(new ColliderPolygon(*this, ID)));
 }
 
 void ColliderComp::SetPolygonCollider(EntityID ID)
 {
   //insert a polygon collider with default center (0, 0)
-  _collider.insert({ ID, static_cast<Collider*>(new ColliderPolygon(*this, ID, {0,0})) });
+  _collider.insert_or_assign(ID, static_cast<Collider*>(new ColliderPolygon(*this, ID, {0,0})));
 }
 
 Collider const* ColliderComp::GetCollider(EntityID ID)
 {
-  return _collider.find(ID)->second;
+  const auto& collider = _collider.find(ID);
+  if (collider == _collider.end())
+  {
+    return nullptr;
+  }
+  return collider->second;
 }
 
 void ColliderComp::Serialize(std::ofstream& stream, EntityID id)
