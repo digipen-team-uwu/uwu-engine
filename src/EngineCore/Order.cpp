@@ -109,6 +109,12 @@ SystemOrder GetSystemOrder<SpineAnimationSys>()
   return SystemOrder::SpineAnimation;
 }
 
+template<>
+SystemOrder GetSystemOrder<EditorSys>()
+{
+  return SystemOrder::Editor;
+}
+
 #pragma endregion
 
 #pragma region Modules

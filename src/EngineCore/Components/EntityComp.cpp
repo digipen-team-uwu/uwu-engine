@@ -43,12 +43,27 @@ void EntityComp::SetDestroyed(EntityID id)
   destroyed.push(id);
 }
 
+void EntityComp::SetName(EntityID ID, std::string& name)
+{
+  names[ID] = name;
+}
+
+bool EntityComp::HasName(EntityID ID)
+{
+  return names.find(ID) == names.end();
+}
+
+std::string EntityComp::GetName(EntityID ID)
+{
+  return names[ID];
+}
+
 std::vector<EntityID>& EntityComp::GetIDs()
 {
   return ids;
 }
 
-size_t EntityComp::GetIDCount()
+size_t EntityComp::GetIDCount() const
 {
   return idCount;
 }
@@ -75,7 +90,7 @@ void EntityComp::AddVector(EntityVectorBase* vec)
   vectors.push_back(vec);
 }
 
-size_t EntityComp::GetVectorSize() 
+size_t EntityComp::GetVectorSize() const
 { 
   return vectorSize; 
 }

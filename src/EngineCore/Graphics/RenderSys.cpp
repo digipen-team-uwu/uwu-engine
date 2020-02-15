@@ -1,13 +1,15 @@
 #include <UWUEngine/Systems/RenderSys.h>
 #include <UWUEngine/Systems/LogSys.h>
 #include <UWUEngine/Systems/CompSpaceSys.h>
+#include <UWUEngine/Systems/EditorSys.h>
 
-#include <UWUEngine/Component/EntityComp.h>
 #include <UWUEngine/Component/SpineSkeletonComp.h>
 
 #include <UWUEngine/constants.h>
+#include <UWUEngine/EngineSettings.h>
 
 #include <GL/glew.h>
+#include <imgui_impl_opengl3.h>
 
 using namespace UWUEngine;
 namespace wc = WindowConstants;
@@ -39,6 +41,9 @@ System(p)
 	Get<LogSys>().Log(Get<LogSys>().WARNING) << "APU IS HERE:\n" << apu << std::endl;
 }
 
+RenderSys::~RenderSys()
+= default;
+
 void RenderSys::Update()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -50,6 +55,16 @@ void RenderSys::Update()
 	auto& compSys = Get<CompSpaceSys>();
 
 	RenderSpine(compSys.space_gameplay.Get<SpineSkeletonComp>());
+
+  if (EngineSettings::Editor)
+  {
+		ImGui_ImplOpenGL3_NewFrame();
+    if (Get<EditorSys>().IsActive())
+    {
+      ImGui::Render();
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+  }
 }
 
 void RenderSys::RenderSpine(SpineSkeletonComp& skelComp)

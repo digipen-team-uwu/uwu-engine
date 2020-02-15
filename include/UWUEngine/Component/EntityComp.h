@@ -4,10 +4,6 @@
 #include <unordered_map>
 #include <UWUEngine/Component/Component.h>
 
-
-
-
-
 namespace UWUEngine
 {
   class EntityVectorBase
@@ -86,7 +82,7 @@ namespace UWUEngine
 
     void ResizeVectors();
     void AddVector(EntityVectorBase* vec);
-    size_t GetVectorSize();
+    size_t GetVectorSize() const;
 
     void AddTag(EntityID id, Tag tag);
     void RemoveTag(EntityID id, Tag tag);
@@ -94,11 +90,15 @@ namespace UWUEngine
     void SetTags(EntityID id, Tag tag);
     Tag GetTags(EntityID ID) const;
 
-    size_t GetIDCount();
+    size_t GetIDCount() const;
     void SetIDCount(size_t count);
     std::stack<EntityID>& GetFreeIDs();
     std::vector<EntityID>& GetIDs();
     void SetDestroyed(EntityID id);
+
+    void SetName(EntityID ID, std::string& name);
+    bool HasName(EntityID ID);
+    std::string GetName(EntityID ID);
 
     virtual void InitObject(EntityID ID) {};
     virtual void ShutdownObject(EntityID ID) {};
@@ -111,5 +111,6 @@ namespace UWUEngine
     std::stack<EntityID> freeIDs;
     std::unordered_map<EntityID, Tag> tags{};
     std::stack<EntityID> destroyed;
+    std::unordered_map<EntityID, std::string> names;
   };
 };

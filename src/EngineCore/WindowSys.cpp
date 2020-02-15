@@ -40,6 +40,7 @@ WindowSys::~WindowSys()
 
 void WindowSys::Update()
 {
+  glfwPollEvents();
   glfwSwapBuffers(window_);
 }
 

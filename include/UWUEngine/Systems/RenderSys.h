@@ -11,7 +11,7 @@ namespace UWUEngine
   {
   public:
     RenderSys(ISpace*);
-    ~RenderSys() = default;
+    ~RenderSys();
     void Update() override;
 
   private:

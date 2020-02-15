@@ -17,6 +17,7 @@ namespace UWUEngine
       // Systems
       LogSys,
       WindowSys,
+      EditorSys,
       RenderSys,
       InputSys,
       FrameLimiterSys,

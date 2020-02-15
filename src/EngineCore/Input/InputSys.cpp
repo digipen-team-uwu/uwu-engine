@@ -230,7 +230,6 @@ ic::InputResult InputSys::InputKey(std::map<int, ic::InputResult>& map, int key)
 
 void InputSys::Update()
 {
-  glfwPollEvents();
   UpdateGamepads();
   if (scrollVec.y > 0)
   {

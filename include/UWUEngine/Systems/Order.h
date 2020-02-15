@@ -9,7 +9,6 @@ enum class SystemOrder : unsigned
 {
   Event,
   Log,
-  Input,
   FrameLimiter,
   SceneManager,
   Editor,
@@ -28,6 +27,8 @@ enum class SystemOrder : unsigned
   Action,
   Physics,
   Collider,
+  Input,
+
   
   Window, // last one PWEASE
 

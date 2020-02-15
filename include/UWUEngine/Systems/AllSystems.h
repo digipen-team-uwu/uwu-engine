@@ -13,6 +13,7 @@
 #include <UWUEngine/Systems/CameraSys.h>
 #include <UWUEngine/Systems/CompSpaceSys.h>
 #include <UWUEngine/Systems/LightSys.h>
+#include <UWUEngine/Systems/EditorSys.h>
 
 /* COMPONENT SYSTEMS */
 #include <UWUEngine/Systems/PhysicsSys.h>
