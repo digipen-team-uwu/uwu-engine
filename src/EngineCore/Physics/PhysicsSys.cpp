@@ -28,7 +28,7 @@ void PhysicsSys::UpdateSpace(EntityComp& entityComp, TransformComp& transformCom
 
   physicsComp.oldTranslation_.Swap(transformComp.translation_);
 
-  for (size_t i = 0; i < entityCount; ++i)
+  for (auto i : entityComp.GetIDs())
   {
     float dt = frameSys.GetDeltaTime<float>();
 

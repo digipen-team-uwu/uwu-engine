@@ -155,6 +155,18 @@ ComponentOrder GetComponentOrder<TextureComp>()
   return ComponentOrder::Texture;
 }
 
+template<>
+ComponentOrder GetComponentOrder<SpineAnimationComp>()
+{
+  return ComponentOrder::SpineSkeleton;
+}
+
+template<>
+ComponentOrder GetComponentOrder<SpineSkeletonComp>()
+{
+  return ComponentOrder::SpineAnimation;
+}
+
 #pragma endregion 
 
 } // namespace UWUEngine

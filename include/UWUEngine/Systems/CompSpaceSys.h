@@ -12,7 +12,7 @@ public:
   using EnvironmentSpace  = Space<IComponent, EntityComp, TransformComp, TextureComp/*, AnimationComp*/>;
   using UISpace           = Space<IComponent, EntityComp, TransformComp, PhysicsComp, TextureComp/*, AnimationComp, BehaviorComp*/>;
   using ParticleSpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp/*, AnimationComp, BehaviorComp*/>;
-  using GameplaySpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp/*, SpineAnimationComp, SpineSkeletonComp*/, ColliderComp>;
+  using GameplaySpace     = Space<IComponent, EntityComp, TransformComp, PhysicsComp, SpineAnimationComp, SpineSkeletonComp, ColliderComp>;
   using LightSpace        = Space<IComponent, EntityComp, TransformComp /*, LightingComp*/>;
   using DebugSpace        = Space<IComponent, EntityComp, TransformComp, TextureComp/*, BehaviorComp& */>;
 
