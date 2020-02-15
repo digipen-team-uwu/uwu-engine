@@ -90,6 +90,12 @@ SystemOrder GetSystemOrder<TextureLoaderMod>()
 }
 
 template<>
+SystemOrder GetSystemOrder<TextureAtlaserMod>()
+{
+  return SystemOrder::TextureAtlaser;
+}
+
+template<>
 SystemOrder GetSystemOrder<UBOMod>()
 {
   return SystemOrder::UBOMod;
@@ -127,6 +133,12 @@ template<>
 ComponentOrder GetComponentOrder<PhysicsComp>()
 {
   return ComponentOrder::Physics;
+}
+
+template<>
+ComponentOrder GetComponentOrder<TextureComp>()
+{
+  return ComponentOrder::Texture;
 }
 
 #pragma endregion 

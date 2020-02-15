@@ -19,3 +19,4 @@
 #include <UWUEngine/Modules/UBOMod.h>
 #include <UWUEngine/Modules/SSBOMod.h>
 #include <UWUEngine/Modules/SpineDataMod.h>
+#include <UWUEngine/Modules/TextureAtlaserMod.h>
