@@ -28,7 +28,7 @@ namespace UWUEngine
     void SetShininess(EntityID ID, const float shininess);
     float GetShininess(EntityID ID);
 
-    const EntityVector<float>& GetArrayShininess();
+    const std::vector<float>& GetArrayShininess();
 
   private:
     EntityVector<float> shininess_ = { parent };

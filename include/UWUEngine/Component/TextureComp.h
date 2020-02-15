@@ -70,13 +70,13 @@ namespace UWUEngine
 #pragma region Getter
     const std::string& getFilePath(EntityID ID, unsigned accessID);
 
-    const EntityVector<AtlasLayer>& GetArrayAtlasLayers() const;
-    const EntityVector<glm::vec2>& GetArrayAtlasUV() const;
-    const EntityVector<glm::vec2>& GetArrayAtlasScale() const;
+    const std::vector<AtlasLayer>& GetArrayAtlasLayers();
+    const std::vector<glm::vec2>& GetArrayAtlasUV();
+    const std::vector<glm::vec2>& GetArrayAtlasScale();
     
-    const EntityVector<glm::uvec2>& GetArrayDimensions() const;
-    const EntityVector<glm::vec2>& GetArrayUVS() const;
-    const EntityVector<glm::vec4>& GetArrayColors() const;
+    const std::vector<glm::uvec2>& GetArrayDimensions();
+    const std::vector<glm::vec2>& GetArrayUVS();
+    const std::vector<glm::vec4>& GetArrayColors();
 
     const std::unordered_map<EntityID, std::array<std::string, MAX_SPRITES>>& GetArrayFilePaths() const;
 #pragma endregion

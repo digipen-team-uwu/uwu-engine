@@ -194,32 +194,32 @@ void TextureComp::SetFilePaths(EntityID ID, const std::array<std::string, MAX_SP
 }
 
 #pragma region Array Getter
-const EntityVector<AtlasLayer>& TextureComp::GetArrayAtlasLayers() const
+const std::vector<AtlasLayer>& TextureComp::GetArrayAtlasLayers()
 {
   return atlas_layers;
 }
 
-const EntityVector<glm::vec2>& TextureComp::GetArrayAtlasUV() const
+const std::vector<glm::vec2>& TextureComp::GetArrayAtlasUV()
 {
   return atlas_uv;
 }
 
-const EntityVector<glm::vec2>& UWUEngine::TextureComp::GetArrayAtlasScale() const
+const std::vector<glm::vec2>& UWUEngine::TextureComp::GetArrayAtlasScale()
 {
   return atlas_scale;
 }
 
-const EntityVector<glm::uvec2>& TextureComp::GetArrayDimensions() const
+const std::vector<glm::uvec2>& TextureComp::GetArrayDimensions()
 {
   return dimensions_;
 }
 
-const EntityVector<glm::vec2>& TextureComp::GetArrayUVS() const
+const std::vector<glm::vec2>& TextureComp::GetArrayUVS()
 {
   return uvs_;
 }
 
-const EntityVector<glm::vec4>& TextureComp::GetArrayColors() const
+const std::vector<glm::vec4>& TextureComp::GetArrayColors()
 {
   return colors_;
 }

@@ -9,7 +9,8 @@ VAOMod::VAOMod(ISpace* space) : System(space),
   vao_space_ui(Mesh::GetEntityMesh()),
   vao_space_particle(Mesh::GetEntityMesh()),
   vao_space_gameplay(Mesh::GetEntityMesh()),
-  vao_space_debug(Mesh::GetEntityMesh())
+  vao_space_debug(Mesh::GetEntityMesh()),
+  vao_space_light(Mesh::GetEntityMesh())
 {
 }
 
@@ -20,4 +21,37 @@ VAOMod::~VAOMod()
   glDeleteVertexArrays(1, &std::get<1>(vao_space_particle));
   glDeleteVertexArrays(1, &std::get<1>(vao_space_gameplay));
   glDeleteVertexArrays(1, &std::get<1>(vao_space_debug));
+  glDeleteVertexArrays(1, &std::get<1>(vao_space_light));
 }
+
+#pragma region Getter
+const GLuint& VAOMod::GetVAOEnvironment() const
+{
+  return std::get<1>(vao_space_environment);
+}
+
+const GLuint& VAOMod::GetVAOUI() const
+{
+  return std::get<1>(vao_space_ui);
+}
+
+const GLuint& VAOMod::GetVAOParticle() const
+{
+  return std::get<1>(vao_space_particle);
+}
+
+const GLuint& VAOMod::GetVAOGamePlay() const
+{
+  return std::get<1>(vao_space_gameplay);
+}
+
+const GLuint& VAOMod::GetVAODebug() const
+{
+  return std::get<1>(vao_space_debug);
+}
+
+const GLuint& VAOMod::GetVAOLight() const
+{
+  return std::get<1>(vao_space_light);
+}
+#pragma endregion 

@@ -33,7 +33,7 @@ float LightComp::GetShininess(EntityID ID)
   return light.GetShininess();
 }
 
-const EntityVector<float>& LightComp::GetArrayShininess()
+const std::vector<float>& LightComp::GetArrayShininess()
 {
   return shininess_;
 }
