@@ -14,6 +14,7 @@ namespace UWUEngine
     void Step();
     using SystemSpace = Space<System,
 
+      // Systems
       LogSys,
       WindowSys,
       RenderSys,
@@ -29,6 +30,7 @@ namespace UWUEngine
       ColliderSys,
 
       //Modules
+      VAOMod,
       SpineDataMod,
       TextureLoaderMod,
       UBOMod,

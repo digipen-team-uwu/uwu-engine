@@ -23,3 +23,4 @@
 #include <UWUEngine/Modules/SSBOMod.h>
 #include <UWUEngine/Modules/SpineDataMod.h>
 #include <UWUEngine/Modules/TextureAtlaserMod.h>
+#include <UWUEngine/Modules/VAOMod.h>

@@ -37,6 +37,7 @@ enum class SystemOrder : unsigned
   SpineData,
   UBOMod,
   SSBOMod,
+  VAOMod,
 };
 
   // order does not matter at all

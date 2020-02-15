@@ -116,10 +116,17 @@ SystemOrder GetSystemOrder<SpineDataMod>()
 {
   return SystemOrder::SpineData;
 }
+
 template<>
 SystemOrder GetSystemOrder<SSBOMod>()
 {
   return SystemOrder::SSBOMod;
+}
+
+template<>
+SystemOrder GetSystemOrder<VAOMod>()
+{
+  return SystemOrder::VAOMod;
 }
 
 #pragma endregion 
