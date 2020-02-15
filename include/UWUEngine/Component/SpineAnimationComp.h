@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       SpineAnimationComponentManager.h
+\file       SpineAnimationComp.h
 \author     Yi Qian
 \date       2019/12/05
 \brief      Spine animation component manager,I hate file header comments
@@ -33,12 +33,12 @@ namespace UWUEngine
     void ChangeAnimation(const char* animationName, bool isLooping) const;
     void StartPlaying();
     void StopPlaying();
-    bool IsPlaying() const;
+    [[nodiscard]] bool IsPlaying() const;
 
     //Getters
-    spAnimationState* GetAnimationState() const;
-    const spAnimationStateData* GetAnimationStateData() const;
-    const spSkeletonData* GetSkeletonData() const;
+    [[nodiscard]] spAnimationState* GetAnimationState() const;
+    [[nodiscard]] const spAnimationStateData* GetAnimationStateData() const;
+    [[nodiscard]] const spSkeletonData* GetSkeletonData() const;
 
   private:
     //Data

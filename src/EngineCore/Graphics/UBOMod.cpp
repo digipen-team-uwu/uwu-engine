@@ -1,6 +1,9 @@
 #include <UWUEngine/Modules/UBOMod.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <UWUEngine/Systems/CameraSys.h>
+#include <UWUEngine/Component/TransformComp.h>
+#include <UWUEngine/Component/SpineSkeletonComp.h>
+#include <UWUEngine/Systems/CompSpaceSys.h>
 
 using namespace UWUEngine;
 namespace UBC = UniformBufferConstants;
@@ -73,19 +76,22 @@ void UBOMod::ShootDataToUniformBuffer(UBOMod::Type name, EntityID ID)
   //    glm::value_ptr(UIManager::GetView()));
   //  glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
   //}
-  //else if (name == Spine)
-  //{
-  //  glBindBuffer(GL_UNIFORM_BUFFER, data_[name].first);
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    0,
-  //    sizeof(glm::mat4),
-  //    glm::value_ptr(TransformComponentManager::GetSpineModelMatrix(ID)));
-  //  glBufferSubData(GL_UNIFORM_BUFFER,
-  //    sizeof(glm::mat4),
-  //    sizeof(glm::mat4),
-  //    glm::value_ptr(SpineSkeletonComponentManager::GetScaleOffSet(ID)));
-  //  glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
-  //}
+  else if (name == Spine)
+  {
+    auto& compSys = Get<CompSpaceSys>();
+    auto& gamePlaySpace = compSys.space_gameplay;
+
+    glBindBuffer(GL_UNIFORM_BUFFER, data_[name].first);
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      0,
+      sizeof(glm::mat4),
+      glm::value_ptr(gamePlaySpace.Get<TransformComp>().GetSpineModelMatrix(ID)));
+    glBufferSubData(GL_UNIFORM_BUFFER,
+      sizeof(glm::mat4),
+      sizeof(glm::mat4),
+      glm::value_ptr(gamePlaySpace.Get<SpineSkeletonComp>().GetScaleOffSet(ID)));
+    glBindBuffer(GL_UNIFORM_BUFFER, data_[name].second);
+  }
   //else if (name == Light)
   //{
   //  auto& lightPos = Lighting::GetLightPosition();

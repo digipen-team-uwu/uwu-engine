@@ -12,7 +12,6 @@ Copyright 2019 DigiPen, All rights reserved.
 
 #pragma once
 #include <unordered_map>
-#include <iostream>
 #include <UWUEngine/Component/Component.h>
 #include <UWUEngine/Systems/EventSys.h>
 #include <glm/glm.hpp>
@@ -62,7 +61,7 @@ public:
 	Collider(ColliderComp& p, EntityID ID, ShapeType type) : parent(p), ID(ID), type(type) {}
 	virtual ~Collider() = default;
 	Collider(Collider const&) = default;
-	Collider& operator=(Collider const&) = default;
+	Collider& operator=(Collider const&) = delete;
 
 	[[nodiscard]] virtual Collider* Clone() const { assert("y'aint supposed to instantiate this", 0); return nullptr; }
 	virtual void Serialize(std::ofstream& stream) const { assert("y'aint supposed to instantiate this", 0); }

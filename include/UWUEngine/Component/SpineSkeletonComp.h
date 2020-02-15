@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \par        Project Umbra
-\file       SpineSkeletonComponentManager.h
+\file       SpineSkeletonComp.h
 \author     Yi Qian
 \date       2019/12/05
 \brief      Spine skeleton component manager,I hate file header comments
@@ -24,14 +24,33 @@ namespace UWUEngine
 {
   //Forward Declaration
   struct Vertex;
-  class SpineSkeletonComp;
+  class SpineSkeleton;
+
+  //Manager
+  class SpineSkeletonComp final : public Component<SpineSkeletonComp, SpineSkeleton>
+  {
+  public:
+    SpineSkeletonComp(ISpace* p): Component<SpineSkeletonComp, SpineSkeleton>(p){}
+    void InitObject(EntityID ID) override;
+    void ShutdownObject(EntityID ID) override;
+
+    void SetSkeleton(EntityID ID, SpineData& spineData);
+    void SetSkeleton(EntityID ID, const char* name);
+    SpineSkeleton& GetSkeleton(EntityID);
+
+    const glm::mat4 GetScaleOffSet(EntityID ID);
+
+  private:
+    //Containers
+    std::unordered_map<EntityID, SpineSkeleton> skeletons;
+  };
 
   //Component
-  class SpineSkeleton
+  class SpineSkeleton : public Instance<SpineSkeletonComp>
   {
   public:
     //Constructors
-    explicit SpineSkeleton(SpineData&, EntityID);
+    explicit SpineSkeleton(SpineSkeletonComp&, SpineData&, EntityID);
 
     //Functions
     void Draw() const;
@@ -51,32 +70,13 @@ namespace UWUEngine
     float scaleOffset{ 1.0f };
 
     //Static Data Member
-    GLSLShader shader_;
+    static GLSLShader shader_;
 
     //Functions
-    void DrawMesh(
+    static void DrawMesh(
       std::vector<Vertex> vertices,
       std::vector<unsigned> indices,
       GLuint textureID
     );
-  };
-
-  //Manager
-  class SpineSkeletonComp : public Component<SpineSkeletonComp, SpineSkeleton>
-  {
-  public:
-    SpineSkeletonComp(ISpace* p): Component<SpineSkeletonComp, SpineSkeleton>(p){}
-    void InitObject(EntityID ID) override;
-    void ShutdownObject(EntityID ID) override;
-
-    void SetSkeleton(EntityID ID, SpineData& spineData);
-    void SetSkeleton(EntityID ID, const char* name);
-    SpineSkeleton& GetSkeleton(EntityID);
-
-    const glm::mat4 GetScaleOffSet(EntityID ID);
-
-  private:
-    //Containers
-    std::unordered_map<EntityID, SpineSkeleton> skeletons;
   };
 }

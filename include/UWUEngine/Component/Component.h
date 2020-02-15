@@ -8,6 +8,29 @@ namespace UWUEngine
 
 using EntityID = unsigned;
 
+template<class Comp>
+class Instance
+{
+public:
+  static_assert(std::is_base_of_v<IComponent, Comp>);
+  Instance(Comp& component) : parent(&component){}
+
+  template<class T>
+  auto Get() const -> std::enable_if_t<std::is_base_of_v<IComponent, T>, T&>
+  {
+    return parent->Get<T>();
+  }
+
+  template <class T>
+  auto Get() const -> std::enable_if_t<std::is_base_of_v<System, T>, T&>
+  {
+    return parent->Get<T>();
+  }
+
+private:
+  Comp* parent;
+};
+
 class IComponent : public NonCopyable
 {
 public:
