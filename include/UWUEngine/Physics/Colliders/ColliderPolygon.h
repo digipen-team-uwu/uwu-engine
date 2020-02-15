@@ -41,7 +41,6 @@ private:
 
 	//#ifdef  _DEBUG
 	GLuint lineVAO{ static_cast<GLuint>(-1) };
-	static GLSLShader shader;
 
 	std::vector<glm::vec2> vertexLoop;
 	//#endif

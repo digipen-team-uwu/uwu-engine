@@ -16,19 +16,16 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Helper.h>
 #include <glm/gtx/vector_angle.hpp>
 #include <magic_enum.hpp>
-//#include <UWUEngine/Graphics/ShaderModule.h>
+#include <UWUEngine/Modules/ShaderMod.h>
 //#include <UWUEngine/Serialization.h>
 #include <UWUEngine/Systems/LogSys.h>
 #include <UWUEngine/Physics/Colliders/ColliderPolygon.h>
-
 //#ifdef  _DEBUG
 #include <glm/gtx/transform.hpp>
 //#endif
 
 namespace UWUEngine
 {
-
-GLSLShader ColliderPolygon::shader{};
 
 ColliderPolygon::ColliderPolygon(ColliderComp& p, EntityID ID) :
   Collider(p, ID, ShapeType::RECTANGLE)
@@ -63,20 +60,8 @@ void ColliderPolygon::Render()
 {
   //#ifdef _DEBUG
   //If the vertex vector is empty, initialize it
-  if (!shader.GetHandle())
-  {
-    if (!shader.CompileShaderFromFile(GL_VERTEX_SHADER, "./data/shaders/colliderShader.vert"))
-    {
-      //TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/colliderShader.vert\"" << std::endl;
-      exit(-1);
-    }
-    if (!shader.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./data/shaders/colliderShader.frag"))
-    {
-      //TraceLogger::Log(TraceLogger::FAILURE) << "Failed to load shader: \"./data/shaders/colliderShader.frag\"" << std::endl;
-      exit(-1);
-    }
-    shader.Link();
-  }
+
+
   if (vertexLoop.empty())
   {
     for (auto i : vertices)
@@ -121,6 +106,7 @@ void ColliderPolygon::Render()
     glLineWidth(1);
   }
 
+  auto& shader = Get<ShaderMod>().GetColliderShader();
   glBindVertexArray(lineVAO);
   shader.Use();
   shader.SetUniform("model", Get<TransformComp>().GetModelMatrix(ID));
