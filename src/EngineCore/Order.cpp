@@ -136,6 +136,12 @@ SystemOrder GetSystemOrder<VAOMod>()
   return SystemOrder::VAOMod;
 }
 
+template<>
+SystemOrder GetSystemOrder<ShaderMod>()
+{
+  return SystemOrder::ShaderMod;
+}
+
 #pragma endregion 
 
 #pragma region Components

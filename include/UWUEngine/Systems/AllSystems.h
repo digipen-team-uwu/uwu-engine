@@ -25,3 +25,4 @@
 #include <UWUEngine/Modules/SpineDataMod.h>
 #include <UWUEngine/Modules/TextureAtlaserMod.h>
 #include <UWUEngine/Modules/VAOMod.h>
+#include <UWUEngine/Modules/ShaderMod.h>

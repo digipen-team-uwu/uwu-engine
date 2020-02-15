@@ -14,6 +14,7 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Graphics/SingleTexture.h>
 #include <UWUEngine/Modules/UBOMod.h>
 #include <UWUEngine/Systems/LogSys.h>
+#include <UWUEngine/Modules/ShaderMod.h>
 
 #include <glm/gtx/transform.hpp>
 #include <GL/glew.h>
@@ -22,7 +23,6 @@ Copyright 2019 DigiPen, All rights reserved.
 
 namespace UWUEngine
 {
-  GLSLShader SpineSkeleton::shader_;
 
   struct Vertex
   {
@@ -47,33 +47,11 @@ namespace UWUEngine
 
   void SpineSkeleton::Draw() const
   {
-		//If the spine shader does not already exist, create it
-    //TODO::free the shader
-		if (!shader_.GetHandle())
-		{
-			if (!shader_.CompileShaderFromFile(GL_VERTEX_SHADER, "./shaders/spineShader.vert"))
-			{
-				Get<LogSys>().Log(Get<LogSys>().FAILURE) << "Failed to load shader: \"./shaders/spineShader.vert\"" << std::endl;
-				exit(-1);
-			}
-
-			if (!shader_.CompileShaderFromFile(GL_FRAGMENT_SHADER, "./shaders/spineShader.frag"))
-			{
-				Get<LogSys>().Log(Get<LogSys>().FAILURE) << "Failed to load shader: \"./shaders/spineShader.frag\"" << std::endl;
-				exit(-1);
-			}
-			shader_.Link();
-		}
-
-		//If the shader is invalid, quit
-		if (!shader_.Validate())
-		{
-			Get<LogSys>().Log(Get<LogSys>().ERROR) << "Error::Spine shader invalid" << std::endl;
-			return;
-		}
+    auto& shaderMod = Get<ShaderMod>();
+    auto& spineShader = shaderMod.GetSpineShader();
 
 		//Send Uniform
-		shader_.Use();
+    spineShader.Use();
 		Get<UBOMod>().ShootDataToUniformBuffer(Get<UBOMod>().Spine, ID);
 		//Temporary draw order
 		float drawOrder = 0.0f;
@@ -196,7 +174,7 @@ namespace UWUEngine
 			DrawMesh(vertices, indices, texture->id);
 		}
 
-		shader_.UnUse();
+    spineShader.UnUse();
   }
 
   void SpineSkeleton::ChangeSkin(const char* skinName)

@@ -39,6 +39,7 @@ enum class SystemOrder : unsigned
   UBOMod,
   SSBOMod,
   VAOMod,
+  ShaderMod,
 };
 
   // order does not matter at all

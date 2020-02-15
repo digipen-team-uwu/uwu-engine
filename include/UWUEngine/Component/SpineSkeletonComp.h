@@ -69,9 +69,6 @@ namespace UWUEngine
     EntityID ID;
     float scaleOffset{ 1.0f };
 
-    //Static Data Member
-    static GLSLShader shader_;
-
     //Functions
     static void DrawMesh(
       std::vector<Vertex> vertices,

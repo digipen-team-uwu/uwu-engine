@@ -35,7 +35,8 @@ namespace UWUEngine
       SpineDataMod,
       TextureLoaderMod,
       UBOMod,
-      SSBOMod
+      SSBOMod,
+      ShaderMod
     >;
     SystemSpace& GetSystems() { return systems; }
   private:
