@@ -5,12 +5,13 @@
 using namespace UWUEngine;
 
 #include <UWUTest/Systems/HeadlessWindowSys.hpp>
+#include <UWUTest/Systems/LockedFrameLimiterSys.hpp>
 
 TEST_CASE("Physics")
 {
   SECTION("Velocity test - single component space")
   {
-    auto* engine = new UWUTest::Engine<LogSys, UWUTest::HeadlessWindowSys, FrameLimiterSys, PhysicsSys, EntitySys, CompSpaceSys>;
+    auto* engine = new UWUTest::Engine<LogSys, UWUTest::HeadlessWindowSys, UWUTest::LockedFrameLimiterSys<60>, PhysicsSys, EntitySys, CompSpaceSys>;
     auto& sys = engine->GetSystems();
 
     auto& game = sys.Get<CompSpaceSys>().space_gameplay;
