@@ -61,4 +61,5 @@ namespace UWUEngine
 #pragma region EventSpecialization
 #include <UWUEngine/Event/Type/Collision.h>
 #include <UWUEngine/Event/Type/NextScene.h>
+#include <UWUEngine/Event/Type/Test.h>
 #pragma endregion 

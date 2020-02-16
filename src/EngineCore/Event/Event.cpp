@@ -28,6 +28,7 @@ System(p)
   //Register all dispatchers
   dispatchers.insert({EventType::Collision, new EventDispatcher<EventType::Collision>});
   dispatchers.insert({EventType::SetNextScene, new EventDispatcher<EventType::SetNextScene>});
+  dispatchers.insert({EventType::Test, new EventDispatcher<EventType::Test>});
 }
 
 EventSys::~EventSys()

@@ -16,5 +16,6 @@ enum class EventType
   Collision,
   SetNextScene,
   Spine,
-  Sound
+  Sound,
+  Test
 };
