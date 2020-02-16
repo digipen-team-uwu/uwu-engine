@@ -26,7 +26,7 @@ namespace UWUEngine
 
 LogSys::LogStream::LogStream(std::ofstream& log, bool isNull)
   :
-  log_(&log), isNull(isNull)
+  isNull(isNull), log_(&log)
 {
 
 };

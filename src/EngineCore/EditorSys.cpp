@@ -2,6 +2,7 @@
 #include <UWUEngine/Systems/WindowSys.h>
 #include <UWUEngine/Systems/InputSys.h>
 #include <UWUEngine/Editors/WindowManager.h>
+#include <UWUEngine/EngineSettings.h>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -59,8 +60,11 @@ bool EditorSys::IsActive() const
 
 void EditorSys::ToggleActivate()
 {
-  if (Get<InputSys>().KeyPressed(GLFW_KEY_GRAVE_ACCENT))
+  if (EngineSettings::Editor)
   {
-    isActive = !isActive;
+    if (Get<InputSys>().KeyPressed(GLFW_KEY_GRAVE_ACCENT))
+    {
+      isActive = !isActive;
+    }
   }
 }
