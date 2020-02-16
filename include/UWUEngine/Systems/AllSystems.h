@@ -14,6 +14,7 @@
 #include <UWUEngine/Systems/CompSpaceSys.h>
 #include <UWUEngine/Systems/LightSys.h>
 #include <UWUEngine/Systems/EditorSys.h>
+#include <UWUEngine/Systems/BehaviorSys.h>
 
 /* COMPONENT SYSTEMS */
 #include <UWUEngine/Systems/PhysicsSys.h>

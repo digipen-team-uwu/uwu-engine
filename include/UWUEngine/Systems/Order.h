@@ -29,6 +29,7 @@ enum class SystemOrder : unsigned
   Collider,
   Input,
 
+  Behavior,
   
   Window, // last one PWEASE
 

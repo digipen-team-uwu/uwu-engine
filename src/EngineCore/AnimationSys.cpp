@@ -4,6 +4,7 @@
 #include <UWUEngine/Systems/FrameLimiterSys.h>
 #include <vector>
 #include "UWUEngine/Component/AnimationComp.h"
+#include <UWUEngine/Systems/CompSpaceSys.h>
 
 using namespace UWUEngine;
 
@@ -14,7 +15,11 @@ namespace UWUEngine
 
 void AnimationSys::Update()
 {
-
+  auto& comp = Get<CompSpaceSys>();
+  UpdateAnimations(dynamic_cast<ISpace*>(&(comp.space_environment)));
+  UpdateAnimations(dynamic_cast<ISpace*>(&(comp.space_ui)));
+  UpdateAnimations(dynamic_cast<ISpace*>(&(comp.space_particle)));
+  UpdateAnimations(dynamic_cast<ISpace*>(&(comp.space_debug)));
 }
 
 glm::vec2 AnimationSys::indexToUvs(ISpace * space, EntityID id, int index)

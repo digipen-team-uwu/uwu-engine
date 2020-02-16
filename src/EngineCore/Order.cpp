@@ -98,6 +98,13 @@ SystemOrder GetSystemOrder<ColliderSys>()
 }
 
 template<>
+SystemOrder GetSystemOrder<BehaviorSys>()
+{
+  return SystemOrder::Behavior;
+}
+
+
+template<>
 SystemOrder GetSystemOrder<AnimationSys>()
 {
   return SystemOrder::Animation;
@@ -183,6 +190,12 @@ ComponentOrder GetComponentOrder<PhysicsComp>()
 
 template<>
 ComponentOrder GetComponentOrder<ColliderComp>()
+{
+  return ComponentOrder::Collider;
+}
+
+template<>
+ComponentOrder GetComponentOrder<BehaviorComp>()
 {
   return ComponentOrder::Collider;
 }

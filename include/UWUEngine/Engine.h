@@ -30,6 +30,7 @@ namespace UWUEngine
       PhysicsSys,
       ColliderSys,
       AnimationSys,
+      BehaviorSys,
       SpineAnimationSys,
       LightSys,
 

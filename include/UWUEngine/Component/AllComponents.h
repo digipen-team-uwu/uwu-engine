@@ -9,3 +9,4 @@
 #include <UWUEngine/Component/AnimationComp.h>
 #include <UWUEngine/Component/HierarchyComp.h>
 #include <UWUEngine/Component/LightComp.h>
+#include <UWUEngine/Component/BehaviorComp.h>
