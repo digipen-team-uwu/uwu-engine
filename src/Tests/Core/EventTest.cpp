@@ -25,6 +25,8 @@ namespace
     CallAbleListener(int ID):ID(ID){}
     void operator()(const Event<EventType::Test>& event)
     {
+      UNSCOPED_INFO("Callable listener"<< ID <<" receives event");
+      UNSCOPED_INFO("Event content: " << event.content);
       switch (ID)
       {
         case 0:
@@ -40,8 +42,10 @@ namespace
       }
     }
 
-    void MemberListener(const Event<EventType::Test>& event)
+    void MemberListener(const Event<EventType::Test>& event) const
     {
+      UNSCOPED_INFO("Member function listener" << ID << " receives event");
+      UNSCOPED_INFO("Event content: " << event.content);
       Member1 = true;
     }
 
@@ -51,6 +55,8 @@ namespace
 
   void FunctionListener(const Event<EventType::Test>& event)
   {
+    UNSCOPED_INFO("Function listener receives event");
+    UNSCOPED_INFO("Event content: " << event.content);
     Function1 = true;
   }
 }
@@ -64,16 +70,48 @@ TEST_CASE("Event System")
 
   auto& eventSys = engine->GetSystems().Get<EventSys>();
 
+  SECTION("Listener registration")
+  {
+    const EventListener<EventType::Test> listener1{ FunctionListener };
+    const EventListener<EventType::Test> listener2{ FunctionListener };
+    const EventListener<EventType::Test> listener3{ FunctionListener };
+    const EventListener<EventType::Test> listener4{ FunctionListener };
+
+    INFO("Register listeners");
+    eventSys.Register(listener1);
+    eventSys.Register(listener2);
+    eventSys.Register(listener3);
+    eventSys.Register(listener4);
+
+    auto& dispatcher = eventSys.GetDispatcher<EventType::Test>();
+    REQUIRE(dispatcher.ListenerCount() == 4);
+
+    INFO("UnRegister listeners")
+    eventSys.UnRegister(listener1);
+    eventSys.UnRegister(listener2);
+    eventSys.UnRegister(listener3);
+    eventSys.UnRegister(listener4);
+    REQUIRE(dispatcher.ListenerCount() == 0);
+  }
+
   SECTION("Push a test event")
   {
     const EventListener<EventType::Test> listener1{ FunctionListener };
 
+    INFO("Register listeners");
     eventSys.Register(listener1);
 
-    eventSys.Push(Event<EventType::Test>("This is test event 1"));
+    INFO("Push a test event");
+    eventSys.Push(Event<EventType::Test>("This is function listener test"));
+
+    auto& dispatcher = eventSys.GetDispatcher<EventType::Test>();
+    REQUIRE(dispatcher.EventCount() == 1);
+
+    INFO("Dispatch events");
     engine->Step();
 
     REQUIRE(Function1);
+    eventSys.UnRegister(listener1);
   }
 
   SECTION("Callable Object")
@@ -87,11 +125,14 @@ TEST_CASE("Event System")
     eventSys.Register(listener1);
     eventSys.Register(listener2);
 
-    eventSys.Push(Event<EventType::Test>("This is test event 2"));
+    eventSys.Push(Event<EventType::Test>("This is a callable object test"));
     engine->Step();
 
     REQUIRE(Callable1);
     REQUIRE(Callable2);
+
+    eventSys.UnRegister(listener1);
+    eventSys.UnRegister(listener2);
   }
 
   SECTION("Member Function")
@@ -102,10 +143,13 @@ TEST_CASE("Event System")
     eventSys.Register(obj1.listener);
     eventSys.Register(obj2.listener);
 
-    eventSys.Push(Event<EventType::Test>("This is test event 3"));
+    eventSys.Push(Event<EventType::Test>("This is a member function test"));
     engine->Step();
 
     REQUIRE(Member1);
+
+    eventSys.UnRegister(obj1.listener);
+    eventSys.UnRegister(obj2.listener);
   }
 
   delete engine;

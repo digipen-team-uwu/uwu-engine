@@ -45,12 +45,13 @@ namespace UWUEngine
 
     template <EventType type>
     void Push(const Event<type>& event);
-
     template <EventType type>
     void Register(const EventListener<type>& listener);
-
     template <EventType type>
     void UnRegister(const EventListener<type>& listener);
+
+    template <EventType type>
+    EventDispatcher<type>& GetDispatcher();
 
   private:
     std::map<EventType, IEventDispatcher*> dispatchers;

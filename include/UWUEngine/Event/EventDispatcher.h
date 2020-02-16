@@ -30,6 +30,8 @@ namespace UWUEngine
 
     virtual void DispatchEvents() = 0;
     virtual void Push(const IEvent& event) = 0;
+    virtual size_t ListenerCount() = 0;
+    virtual size_t EventCount() = 0;
 
   private:
     EventType type_;
@@ -45,6 +47,9 @@ namespace UWUEngine
 
     void DispatchEvents() override;
     void Push(const IEvent& event) override;
+    size_t ListenerCount() override;
+    size_t EventCount() override;
+
     void AddListeners(const IEventListener& listener);
     void RemoveListener(const IEventListener& listener);
 

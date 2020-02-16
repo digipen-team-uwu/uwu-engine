@@ -38,4 +38,16 @@ namespace UWUEngine
 
     listeners_.erase(listenerType.GetID());
   }
+
+  template <EventType type>
+  size_t EventDispatcher<type>::ListenerCount()
+  {
+    return listeners_.size();
+  }
+
+  template <EventType type>
+  size_t EventDispatcher<type>::EventCount()
+  {
+    return events_.size();
+  }
 }

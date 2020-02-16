@@ -35,7 +35,7 @@ TEST_CASE("Physics")
 
   SECTION("Acceleration test - multiple component spaces")
   {
-    auto* engine = new UWUTest::Engine<LogSys, UWUTest::HeadlessWindowSys, FrameLimiterSys, PhysicsSys, EntitySys, CompSpaceSys>;
+    auto* engine = new UWUTest::Engine<LogSys, UWUTest::HeadlessWindowSys, UWUTest::LockedFrameLimiterSys<60>, PhysicsSys, EntitySys, CompSpaceSys>;
     auto& sys = engine->GetSystems();
 
     auto& game = sys.Get<CompSpaceSys>().space_gameplay;
