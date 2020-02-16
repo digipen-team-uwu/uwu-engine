@@ -14,7 +14,7 @@ namespace UWUEngine
   class BaseBehavior
   {
   public:
-    BaseBehavior(EntityID id);
+    BaseBehavior(EntityID id, ISpace *space);
     virtual ~BaseBehavior() = default;
     virtual void Update() {}
     // virtual void MakeImGUI(){}
@@ -24,10 +24,16 @@ namespace UWUEngine
     std::string GetKey() { return cachekey; }
     EntityComp::Tag GetTag() { return tag; };
     void SetTag(EntityComp::Tag tag_) { tag = tag_; }
+    template <class T>
+    T& Get()
+    {
+      return *static_cast<T*>(parent->GetObject(static_cast<unsigned>(GetOrder<T>())));
+    }
   private:
     std::string cachekey;
     EntityID id_;
     EntityComp::Tag tag;
+    ISpace* parent;
   };
 
   struct BaseCachedBehavior
@@ -53,14 +59,14 @@ namespace UWUEngine
   public:
     virtual void Update() {}
     //virtual void MakeImGUI();
-    Behavior(EntityID id) : BaseBehavior(id) { SetTag(T); }
+    Behavior(EntityID id, ISpace *space) : BaseBehavior(id, space) { SetTag(T); }
     ~Behavior() = default;
   };
 
   template<EntityComp::Tag T>
-  static BaseBehavior* MakeBehavior(EntityID id)
+  static BaseBehavior* MakeBehavior(EntityID id, ISpace * space)
   {
-    return static_cast<BaseBehavior*>(new Behavior<T>(id));
+    return static_cast<BaseBehavior*>(new Behavior<T>(id,space));
   }
 
   template<EntityComp::Tag T>
@@ -69,7 +75,7 @@ namespace UWUEngine
     return static_cast<BaseCachedBehavior*>(new CachedBehavior<T>());
   }
 
-  const std::map<EntityComp::Tag, BaseBehavior* (*const)(EntityID)> allBehaviors =
+  const std::map<EntityComp::Tag, BaseBehavior* (*const)(EntityID, ISpace *)> allBehaviors =
   {
     //whenever you make a specialization of a behavior, copy and paste another line below with the right type
   { EntityComp::Tag::FALLS, MakeBehavior<EntityComp::Tag::FALLS> },
@@ -90,6 +96,7 @@ namespace UWUEngine
 
     void InitObject(EntityID ID) override;
     void ShutdownObject(EntityID ID) override;
+    void AddBehavior(EntityID ID, EntityComp::Tag tag);
  
     auto GetBaseBehaviors(EntityID ID);
 
@@ -110,16 +117,9 @@ namespace UWUEngine
     }
     friend class BehaviorSys;
   private:
-    std::unordered_multimap<EntityID, BaseBehavior*> behaviors;
+    std::unordered_multimap<EntityID, BaseBehavior*> behaviors{};
   };
 }
 
-/*
-#include <UWUEngine/Behaviors/TextObject.h>
-#include <UWUEngine/Behaviors/ParticleSystem.h>
-#include <UWUEngine/GamePlay/PlayerController.h>
-#include <UWUEngine/GamePlay/PerceptionBehavior.h>
-#include <UWUEngine/GamePlay/FangBehavior.h>
-#include <UWUEngine/Behaviors/HUDBehaviors.h>
-#include <UWUEngine/Behaviors/DynamicCamera.h>
-*/
+
+#include <UWUEngine/Behaviors/GameplayTags.h>

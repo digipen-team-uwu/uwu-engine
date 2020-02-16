@@ -1,4 +1,5 @@
 #include <UWUEngine/Component/EntityComp.h>
+#include <UWUEngine/Component/BehaviorComp.h>
 
 namespace UWUEngine
 {
@@ -6,6 +7,7 @@ namespace UWUEngine
 void EntityComp::AddTag(EntityID id, EntityComp::Tag tag)
 {
   tags[id] = static_cast<Tag>(tags[id] | tag);
+  Get<BehaviorComp>().AddBehavior(id, tag);
 }
 
 void EntityComp::SetTags(EntityID id, EntityComp::Tag tag)

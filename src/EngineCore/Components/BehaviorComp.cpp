@@ -37,17 +37,20 @@ namespace UWUEngine
     return id_;
   }
 
-  BaseBehavior::BaseBehavior(EntityID id) : id_(id)
+  BaseBehavior::BaseBehavior(EntityID id, ISpace *space) : id_(id), parent(space)
   {
   }
 
   void BehaviorComp::InitObject(EntityID ID)
   {
-    //const auto funct = allBehaviors.find(Get<EntityComp>().GetTags(ID));
-    //if (funct != allBehaviors.end())
-    //{
-      //behaviors[ID] = funct->second(ID);
-    //}
+  }
+  void BehaviorComp::AddBehavior(EntityID ID, EntityComp::Tag tag)
+  {
+    const auto funct = allBehaviors.find(Get<EntityComp>().GetTags(ID));
+    if (funct != allBehaviors.end())
+    {
+      behaviors.emplace(ID, funct->second(ID, parent));
+    }
   }
 
   BaseCachedBehavior* BehaviorComp::CreateCachedBehavior(EntityComp::Tag type)

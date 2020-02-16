@@ -1,6 +1,7 @@
 #include <UWUEngine/Systems/BehaviorSys.h>
 #include <UWUEngine/Component/BehaviorComp.h>
 #include <UWUEngine/Systems/CompSpaceSys.h>
+
 using namespace UWUEngine;
 
 void BehaviorSys::Update()
