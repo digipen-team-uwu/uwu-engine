@@ -38,9 +38,11 @@ namespace UWUEngine
       VAOMod,
       SpineDataMod,
       TextureLoaderMod,
+      TextureAtlaserMod,
       UBOMod,
       SSBOMod,
-      ShaderMod
+      ShaderMod,
+      InstancingMod
     >;
     SystemSpace& GetSystems() { return systems; }
   private:

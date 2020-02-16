@@ -35,13 +35,14 @@ enum class SystemOrder : unsigned
 
   //Modules, Order doesn't matter
   CompSpace,
+  VAOMod,
+  ShaderMod,
   TextureLoader,
   TextureAtlaser,
   SpineData,
   UBOMod,
   SSBOMod,
-  VAOMod,
-  ShaderMod,
+  InstancingMod, // has to be after VAOMod
 };
 
   // order does not matter at all

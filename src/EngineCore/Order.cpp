@@ -167,6 +167,12 @@ SystemOrder GetSystemOrder<ShaderMod>()
   return SystemOrder::ShaderMod;
 }
 
+template<>
+SystemOrder GetSystemOrder<InstancingMod>()
+{
+  return SystemOrder::InstancingMod;
+}
+
 #pragma endregion 
 
 #pragma region Components
