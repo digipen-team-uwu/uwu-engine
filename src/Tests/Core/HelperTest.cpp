@@ -16,8 +16,6 @@ TEST_CASE("Vector derived from angle", "[Angle θ :=> <x, y>]")
 		constexpr t_float theta = glm::pi<float>() / 2.f;
 		glm::vec4 v = VectorFromAngle(float(theta));
 
-		std::cout << (0.f == t_float(v.x)) << std::endl;
-
 		REQUIRE((0.f == t_float(v.x)));
 		REQUIRE((1.f == t_float(v.y)));
 
@@ -29,8 +27,6 @@ TEST_CASE("Vector derived from angle", "[Angle θ :=> <x, y>]")
 	{
 		constexpr t_float theta = -glm::pi<float>() / 3.f;
 		glm::vec4 v = VectorFromAngle(float(theta));
-
-		std::cout << (t_float(v.x) == 1.f / 2) << std::endl;
 
 		REQUIRE((t_float(v.x) == 1.f / 2));
 		REQUIRE((t_float(v.y) == -std::sqrtf(3.f) / 2));
