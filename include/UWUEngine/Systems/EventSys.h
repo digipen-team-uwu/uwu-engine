@@ -54,6 +54,8 @@ namespace UWUEngine
 
   private:
     std::map<EventType, IEventDispatcher*> dispatchers;
+
+    void DispatcherNotFound(EventType);
   };
 }
 #include <UWUEngine/Event/Event.inl>

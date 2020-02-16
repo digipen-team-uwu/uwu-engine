@@ -1,6 +1,9 @@
 #include <UWUEngine/Systems/EventSys.h>
+#include <UWUEngine/Systems/LogSys.h>
 #include <UWUEngine/Event/EventListener.h>
 #include <UWUEngine/Event/EventDispatcher.h>
+
+#include <magic_enum.hpp>
 
 #define RegisterDispatcher(eventType) \
 dispatchers.insert({EventType::eventType, new eventType ## EventDispatcher()}); \
@@ -45,4 +48,10 @@ void EventSys::Update()
   {
     dispatcher.second->DispatchEvents();
   }
+}
+
+void EventSys::DispatcherNotFound(EventType type)
+{
+  Get<LogSys>().Log(LogSys::FAILURE) << "Failed to find dispatcher for {" << magic_enum::enum_name(type) << "} event" << std::endl;
+  assert(0);
 }

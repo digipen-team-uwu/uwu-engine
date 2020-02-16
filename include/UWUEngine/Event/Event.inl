@@ -6,8 +6,13 @@ namespace UWUEngine
   template <EventType type>
   void EventSys::Push(const Event<type>& event)
   {
-    IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
-    EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+    const auto& pair = dispatchers.find(type);
+    if (pair == dispatchers.end())
+    {
+      DispatcherNotFound(type);
+    }
+    IEventDispatcher* dispatcherBase = pair->second;
+    auto* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
 
     dispatcher->Push(event);
   }
@@ -15,8 +20,13 @@ namespace UWUEngine
   template <EventType type>
   void EventSys::Register(const EventListener<type>& listener)
   {
-    IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
-    EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+    const auto& pair = dispatchers.find(type);
+    if (pair == dispatchers.end())
+    {
+      DispatcherNotFound(type);
+    }
+    IEventDispatcher* dispatcherBase = pair->second;
+    auto* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
 
     dispatcher->AddListeners(listener);
   }
@@ -24,8 +34,13 @@ namespace UWUEngine
   template <EventType type>
   void EventSys::UnRegister(const EventListener<type>& listener)
   {
-    IEventDispatcher* dispatcherBase = dispatchers.find(type)->second;
-    EventDispatcher<type>* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
+    const auto& pair = dispatchers.find(type);
+    if (pair == dispatchers.end())
+    {
+      DispatcherNotFound(type);
+    }
+    IEventDispatcher* dispatcherBase = pair->second;
+    auto* dispatcher = dynamic_cast<EventDispatcher<type>*>(dispatcherBase);
 
     dispatcher->RemoveListener(listener);
   }

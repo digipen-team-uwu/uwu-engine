@@ -5,6 +5,7 @@
 #include <UWUTest/Systems/HeadlessWindowSys.hpp>
 
 #include <UWUEngine/Systems/EventSys.h>
+#include <UWUEngine/Systems/LogSys.h>
 
 using namespace UWUEngine;
 
@@ -56,7 +57,11 @@ namespace
 
 TEST_CASE("Event System")
 {
-  auto* engine = new UWUTest::Engine<EventSys, UWUTest::HeadlessWindowSys>;
+  auto* engine = new UWUTest::Engine<
+  LogSys,
+  EventSys,
+  UWUTest::HeadlessWindowSys>;
+
   auto& eventSys = engine->GetSystems().Get<EventSys>();
 
   SECTION("Push a test event")
