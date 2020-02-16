@@ -5,9 +5,8 @@
 #include <UWUTest/Helper/TestFloat.hpp>
 
 #include <glm/gtc/constants.hpp>
-#include <iostream>
 
-using namespace UWUTest;
+using UWUTest::t_float;
 
 TEST_CASE("Vector derived from angle", "[Angle θ :=> <x, y>]")
 {
