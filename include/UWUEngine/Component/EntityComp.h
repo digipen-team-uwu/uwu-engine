@@ -96,7 +96,7 @@ namespace UWUEngine
     std::vector<EntityID>& GetIDs();
     void SetDestroyed(EntityID id);
 
-    void SetName(EntityID ID, std::string& name);
+    void SetName(EntityID ID, const std::string& name);
     bool HasName(EntityID ID);
     std::string GetName(EntityID ID);
 

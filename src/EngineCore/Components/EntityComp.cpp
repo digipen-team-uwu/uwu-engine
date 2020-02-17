@@ -45,7 +45,7 @@ void EntityComp::SetDestroyed(EntityID id)
   destroyed.push(id);
 }
 
-void EntityComp::SetName(EntityID ID, std::string& name)
+void EntityComp::SetName(EntityID ID, const std::string& name)
 {
   names[ID] = name;
 }
