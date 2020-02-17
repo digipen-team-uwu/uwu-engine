@@ -11,7 +11,7 @@
 using namespace UWUEngine;
 
 EditorSys::EditorSys(ISpace* p):
-  System(p), isActive(false)
+  System(p), isActive(false), windowManager(p)
 {
   // Establishes ImGui context for the editor window
   ImGui::CreateContext();
@@ -20,9 +20,6 @@ EditorSys::EditorSys(ISpace* p):
 
   //Enable ImGui features/flags
   ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-  //Start up the editor window manager
-  Editors::WindowManager::StartUp();
 }
 
 EditorSys::~EditorSys()
@@ -47,10 +44,7 @@ void EditorSys::Update()
 
   MainMenu();
   DockSpace();
-  Editors::WindowManager::Update();
-
-  // Show demo window
-  ImGui::ShowDemoWindow();
+  windowManager.Update();
 }
 
 bool EditorSys::IsActive() const

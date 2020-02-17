@@ -71,6 +71,10 @@ void RenderSys::RenderSpine(SpineSkeletonComp& skelComp)
 {
 	for (auto i = skelComp.Begin(); i != skelComp.End(); ++i)
 	{
+    if (!i->second.GetSkeleton())
+    {
+      continue;
+    }
 	  i->second.Draw();
 	}
 }

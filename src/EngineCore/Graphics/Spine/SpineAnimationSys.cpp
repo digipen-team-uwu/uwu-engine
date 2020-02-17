@@ -18,7 +18,7 @@ void SpineAnimationSys::UpdateSpace(SpineAnimationComp& animComp, SpineSkeletonC
 {
 	for (auto i = animComp.Begin(); i != animComp.End(); ++i)
 	{
-    if (!i->second.GetAnimationStateData())
+    if (!i->second.GetAnimationState())
     {
       continue;
     }

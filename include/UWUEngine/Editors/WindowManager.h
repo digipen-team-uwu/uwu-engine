@@ -16,6 +16,8 @@ Copyright 2019 DigiPen, All rights reserved.
 
 namespace UWUEngine
 {
+  class ISpace;
+
   namespace Editors
   {
     //Forward declaration
@@ -24,14 +26,15 @@ namespace UWUEngine
     class WindowManager
     {
     public:
-      static void StartUp();
-      static void Update();
-      static void ToggleWindow(std::string& name);
-      static std::shared_ptr<const Window> GetWindow(const std::string& name);
-      static std::unordered_map<std::string, std::shared_ptr<Window> > GetWindows();
+      explicit WindowManager(ISpace* systemSpace);
+      void Update();
+      void ToggleWindow(std::string& name);
+      std::shared_ptr<const Window> GetWindow(const std::string& name);
+      [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<Window> > & GetWindows();
 
     private:
-      static std::unordered_map<std::string, std::shared_ptr<Window> > windows;
+      ISpace* systemSpace;
+      std::unordered_map<std::string, std::shared_ptr<Window> > windows;
     };
   }
   

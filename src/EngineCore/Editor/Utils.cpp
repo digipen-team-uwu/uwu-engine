@@ -14,17 +14,20 @@ Copyright 2019 DigiPen, All rights reserved.
 #include <UWUEngine/Systems/EventSys.h>
 #include <UWUEngine/Systems/SceneSys.h>
 #include <UWUEngine/Systems/FrameLimiterSys.h>
+
 #include <UWUEngine/Editors/Window.h>
 #include <UWUEngine/Editors/WindowManager.h>
+#include <UWUEngine/Editors/Utils.h>
 
 #include <imgui.h>
 
 using namespace UWUEngine;
 using namespace Editors;
 
+#pragma region Utils
 // Helper to display a little (?) mark which shows a tooltip when hovered.
 // In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
-void EditorSys::HelpMarker(const char* desc)
+void Editors::HelpMarker(const char* desc)
 {
   ImGui::TextDisabled("(?)");
   if (ImGui::IsItemHovered())
@@ -44,7 +47,7 @@ struct InputTextCallback_UserData
   void* ChainCallbackUserData;
 };
 
-static int InputTextCallback(ImGuiInputTextCallbackData* data)
+int InputTextCallback(ImGuiInputTextCallbackData* data)
 {
   InputTextCallback_UserData* user_data = (InputTextCallback_UserData*)data->UserData;
   if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
@@ -65,7 +68,7 @@ static int InputTextCallback(ImGuiInputTextCallbackData* data)
   return 0;
 }
 
-bool EditorSys::InputText(const char* label, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+bool Editors::InputText(const char* label, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
 {
   IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
   flags |= ImGuiInputTextFlags_CallbackResize;
@@ -77,7 +80,7 @@ bool EditorSys::InputText(const char* label, std::string* str, ImGuiInputTextFla
   return ImGui::InputText(label, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
 }
 
-bool EditorSys::InputTextMultiline(const char* label, std::string* str, const ImVec2& size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+bool Editors::InputTextMultiline(const char* label, std::string* str, const ImVec2& size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
 {
   IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
   flags |= ImGuiInputTextFlags_CallbackResize;
@@ -89,7 +92,7 @@ bool EditorSys::InputTextMultiline(const char* label, std::string* str, const Im
   return ImGui::InputTextMultiline(label, (char*)str->c_str(), str->capacity() + 1, size, flags, InputTextCallback, &cb_user_data);
 }
 
-bool EditorSys::InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+bool Editors::InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
 {
   IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
   flags |= ImGuiInputTextFlags_CallbackResize;
@@ -100,6 +103,8 @@ bool EditorSys::InputTextWithHint(const char* label, const char* hint, std::stri
   cb_user_data.ChainCallbackUserData = user_data;
   return ImGui::InputTextWithHint(label, hint, (char*)str->c_str(), str->capacity() + 1, flags, InputTextCallback, &cb_user_data);
 }
+
+#pragma endregion 
 
 enum class FileMenuActions
 {
@@ -205,7 +210,7 @@ void EditorSys::MainMenu()
 
     if (ImGui::BeginMenu("View"))
     {
-      for (auto window : WindowManager::GetWindows())
+      for (auto window : windowManager.GetWindows())
       {
         const std::string& windowName = window.first;
         const auto& windowContent = window.second;

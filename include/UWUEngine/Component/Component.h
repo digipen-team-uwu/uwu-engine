@@ -65,4 +65,11 @@ public:
   }
 };
 
+//Caution:This function only works if you pass in a component space!!!!!
+template <class T>
+auto GetComponent(ISpace* componentSpace)->std::enable_if_t<std::is_base_of_v<IComponent, T>, T&>
+{
+  return *static_cast<T*>(componentSpace->GetObject(static_cast<unsigned>(GetOrder<T>())));
+}
+
 } // namespace UWUEngine
